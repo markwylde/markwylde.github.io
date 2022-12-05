@@ -1,0 +1,25 @@
+{
+  "name": "markwylde.github.io",
+  "version": "1.0.0",
+  "description": "My personal website and github site",
+  "main": "index.js",
+  "scripts": {
+    "start": "statictron -w -o dist src & servatron -d dist",
+    "build": "statictron -o dist src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markwylde/markwylde.github.io.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/markwylde/markwylde.github.io/issues"
+  },
+  "homepage": "https://github.com/markwylde/markwylde.github.io#readme",
+  "devDependencies": {
+    "servatron": "^2.4.2",
+    "statictron": "^3.0.3"
+  }
+}
