@@ -1,25 +1,31 @@
 {
-  "name": "markwylde.github.io",
-  "version": "1.0.0",
-  "description": "My personal website and github site",
-  "main": "index.js",
+  "name": "markwylde",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "statictron -w -o dist src & servatron -d dist",
-    "build": "statictron -o dist src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node server",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "preview": "cross-env NODE_ENV=production node server"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/markwylde/markwylde.github.io.git"
+  "dependencies": {
+    "compression": "^1.8.0",
+    "express": "^5.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.6.1",
+    "sirv": "^3.0.1"
   },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/markwylde/markwylde.github.io/issues"
-  },
-  "homepage": "https://github.com/markwylde/markwylde.github.io#readme",
   "devDependencies": {
-    "servatron": "^2.4.2",
-    "statictron": "^3.0.3"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react-swc": "^3.8.0",
+    "cross-env": "^7.0.3",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.1"
   }
 }
