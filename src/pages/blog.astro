@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const blogPosts = [
+	{
+		title: "Building Simple Node.js Applications",
+		excerpt: "Learn the key principles for creating Node.js applications that are easy to understand and maintain.",
+		date: "2025-01-15",
+		slug: "simple-nodejs-applications",
+		tags: ["Node.js", "Simplicity", "YAGNI"]
+	},
+	{
+		title: "You Ain't Gonna Need It - A Developer's Guide",
+		excerpt: "Why YAGNI is one of the most important principles for sustainable software development.",
+		date: "2025-01-08",
+		slug: "yagni-developers-guide",
+		tags: ["YAGNI", "Philosophy", "Best Practices"]
+	},
+	{
+		title: "Simple Deployments for Web Apps",
+		excerpt: "How to deploy web applications without complex infrastructure and unnecessary tools.",
+		date: "2025-01-01",
+		slug: "simple-deployments-web-apps",
+		tags: ["Deployment", "Simplicity", "DevOps"]
+	}
+];
+---
+
+<Layout title="Blog - Mark Wylde" currentPage="blog">
+	<section class="section">
+		<div class="container">
+			<h2>Blog</h2>
+			<p style="text-align: center; margin-bottom: 3rem;">
+				Thoughts on web development, simplicity, and building things that work
+			</p>
+
+			<div class="blog-grid">
+				{blogPosts.map((post) => (
+					<article class="blog-card">
+						<div class="blog-meta">
+							<time datetime={post.date}>{new Date(post.date).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							})}</time>
+							<div class="blog-tags">
+								{post.tags.map((tag) => (
+									<span class="tag">{tag}</span>
+								))}
+							</div>
+						</div>
+						<h3 class="blog-title">
+							<a href={`/blog/${post.slug}`}>{post.title}</a>
+						</h3>
+						<p class="blog-excerpt">{post.excerpt}</p>
+						<a href={`/blog/${post.slug}`} class="read-more">Read More →</a>
+					</article>
+				))}
+			</div>
+
+			<div class="coming-soon">
+				<h3>More Posts Coming Soon</h3>
+				<p>I'm actively working on new content about simple, effective web development practices.</p>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 30px;
+		margin-bottom: 3rem;
+	}
+
+	.blog-card {
+		background-color: var(--secondary-bg);
+		padding: 25px;
+		border-radius: 8px;
+		box-shadow: 0 5px 15px var(--shadow-color);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		border: 1px solid var(--border-color);
+	}
+
+	.blog-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+	}
+
+	.blog-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 15px;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.blog-meta time {
+		color: var(--accent-color);
+		font-size: 0.9em;
+	}
+
+	.blog-tags {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		background-color: var(--primary-bg);
+		color: var(--text-color);
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 0.8em;
+		border: 1px solid var(--border-color);
+	}
+
+	.blog-title {
+		margin-bottom: 15px;
+	}
+
+	.blog-title a {
+		color: var(--heading-color);
+		text-decoration: none;
+	}
+
+	.blog-title a:hover {
+		color: var(--accent-color);
+	}
+
+	.blog-excerpt {
+		margin-bottom: 15px;
+		line-height: 1.6;
+	}
+
+	.read-more {
+		color: var(--accent-color);
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.3s ease;
+	}
+
+	.read-more:hover {
+		color: var(--heading-color);
+	}
+
+	.coming-soon {
+		text-align: center;
+		background-color: var(--secondary-bg);
+		padding: 40px 25px;
+		border-radius: 8px;
+		box-shadow: 0 5px 15px var(--shadow-color);
+		border: 1px solid var(--border-color);
+	}
+
+	.coming-soon h3 {
+		margin-bottom: 15px;
+		color: var(--heading-color);
+	}
+
+	.coming-soon p {
+		color: var(--accent-color);
+		margin-bottom: 0;
+	}
+</style>

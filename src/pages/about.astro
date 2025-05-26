@@ -1,0 +1,131 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Mark Wylde" currentPage="about">
+	<section class="section">
+		<div class="container">
+			<h2>About Me</h2>
+			<div class="about-content">
+				<div class="about-text">
+					<p>
+						Hello! I'm Mark Wylde, a web developer passionate about building simple, efficient solutions.
+						I believe in the philosophy of "You Ain't Gonna Need It" (YAGNI) and enjoy working on projects
+						that solve real problems without unnecessary complexity.
+					</p>
+					<p>
+						My journey into web development began with a love for creating things that work well and are
+						easy to understand. Since then, I've honed my skills in JavaScript, Node.js, and various web
+						technologies. I'm always eager to learn new things and explore innovative solutions.
+					</p>
+
+					<h3>My Approach</h3>
+					<p>
+						I believe great software comes from understanding both the technical challenges
+						and the human needs behind them. Whether I'm writing code, reviewing architecture,
+						or working with a team, I always ask: "How can we make this simpler and better?"
+					</p>
+
+					<h3>What I Focus On</h3>
+					<ul class="focus-list">
+						<li>Building web applications with modern JavaScript</li>
+						<li>Creating simple, maintainable backend systems</li>
+						<li>Open source contributions and community building</li>
+						<li>Sharing knowledge through writing and speaking</li>
+					</ul>
+				</div>
+
+				<div class="contact-section">
+					<div class="avatar-container">
+						<img src="/src/assets/avatar-juggle.png" alt="Mark Wylde Avatar" class="avatar" />
+					</div>
+					<h3>Get In Touch</h3>
+					<p>
+						I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great.
+						Feel free to reach out!
+					</p>
+					<div class="contact-methods">
+						<a href="mailto:mark@wylde.net">Email Me</a>
+						<a href="https://github.com/markwylde" target="_blank">GitHub</a>
+						<a href="https://linkedin.com/in/mwylde" target="_blank">LinkedIn</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.avatar-container {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 2rem;
+	}
+
+	.avatar {
+		width: 200px;
+		height: 200px;
+		border-radius: 50%;
+		object-fit: cover;
+		box-shadow: 0 5px 15px var(--shadow-color);
+	}
+
+	.about-content {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 40px;
+		margin-top: 2rem;
+	}
+
+	.about-text h3 {
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+	}
+
+	.focus-list {
+		margin-left: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.focus-list li {
+		margin-bottom: 0.5rem;
+	}
+
+	.contact-section {
+		background-color: var(--secondary-bg);
+		padding: 25px;
+		border-radius: 8px;
+		box-shadow: 0 5px 15px var(--shadow-color);
+		border: 1px solid var(--border-color);
+		height: fit-content;
+	}
+
+	.contact-methods {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-top: 15px;
+	}
+
+	.contact-methods a {
+		font-size: 1.1em;
+		padding: 10px 20px;
+		border: 1px solid var(--border-color);
+		border-radius: 5px;
+		transition: background-color 0.3s ease, color 0.3s ease;
+		text-align: center;
+	}
+
+	.contact-methods a:hover {
+		background-color: var(--accent-color);
+		color: var(--secondary-bg);
+		text-decoration: none;
+	}
+
+	@media (max-width: 768px) {
+		.about-content {
+			grid-template-columns: 1fr;
+			gap: 30px;
+		}
+	}
+</style>

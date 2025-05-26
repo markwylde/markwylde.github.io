@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import avatarImage from '../assets/avatar-3.png';
+---
+
+<Layout title="Mark Wylde - Personal Portfolio" currentPage="home">
+	<header class="hero">
+		<div class="container">
+			<div class="hero-content">
+				<div class="hero-text">
+					<p class="name">Hi, I'm Mark Wylde</p>
+					<p class="tagline">A web developer passionate about infrastructure and simple deployments.</p>
+					<div class="tech-tags">
+						<span class="tech-tag">NodeJS</span>
+						<span class="tech-tag">TypeScript</span>
+						<span class="tech-tag">Vite</span>
+						<span class="tech-tag">Postgres</span>
+						<span class="tech-tag">CI/CD</span>
+					</div>
+					<ul class="hero-bullets">
+						<li>Functional Programming</li>
+						<li>Continuous Deployments</li>
+						<li>Product Driven Development</li>
+					</ul>
+				</div>
+				<div class="hero-avatar">
+					<img src={avatarImage.src} alt="Mark Wylde - Avatar">
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<section id="about" class="section">
+		<div class="container">
+			<h2>About Me</h2>
+			<p>
+				Hello! I'm Mark Wylde, a web developer passionate about building simple, efficient solutions.
+				I believe in the philosophy of "You Ain't Gonna Need It" (YAGNI) and enjoy working on projects
+				that solve real problems without unnecessary complexity.
+			</p>
+			<p>
+				My journey into web development began with a love for creating things that work well and are
+				easy to understand. Since then, I've honed my skills in JavaScript, Node.js, and various web
+				technologies. I'm always eager to learn new things and explore innovative solutions.
+			</p>
+		</div>
+	</section>
+
+	<section id="projects" class="section">
+		<div class="container">
+			<h2>My Work</h2>
+			<div class="project-grid">
+				<div class="project-card">
+					<h3>Open Source Projects</h3>
+					<p>Contributing to and maintaining various open source projects focused on web development and developer tools.</p>
+					<p>
+						<a href="https://github.com/markwylde" target="_blank">GitHub Profile</a>
+					</p>
+				</div>
+
+				<div class="project-card">
+					<h3>Web Applications</h3>
+					<p>Building modern web applications with focus on performance, simplicity, and user experience.</p>
+				</div>
+
+				<div class="project-card">
+					<h3>Developer Tools</h3>
+					<p>Creating tools and utilities that make developers' lives easier and more productive.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="contact" class="section">
+		<div class="container">
+			<h2>Get In Touch</h2>
+			<p style="text-align: center;">
+				I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great. <br>
+				Feel free to reach out!
+			</p>
+			<div class="contact-methods">
+				<a href="mailto:mark@wylde.net">Email Me</a>
+				<a href="https://github.com/markwylde" target="_blank">GitHub</a>
+				<a href="https://linkedin.com/in/mwylde" target="_blank">LinkedIn</a>
+			</div>
+		</div>
+	</section>
+</Layout>
