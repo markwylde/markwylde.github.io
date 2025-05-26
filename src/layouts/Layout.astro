@@ -24,10 +24,10 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		<div class="site-header">
 			<div class="container site-header-content">
 				<div class="header-left">
-					<video autoplay muted class="header-avatar" style="transform: scaleX(-1);" playsinline poster={avatarHeaderFallback}>
+					<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src}>
 						<source src={avatarVideoWebm} type="video/webm" />
 						<source src={avatarVideoMp4} type="video/mp4" />
-						<img src={avatarHeaderFallback} alt="Mark Wylde - Avatar" style="transform: scaleX(-1);" />
+						<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
 					</video>
 					<span class="header-site-title">Mark Wylde</span>
 				</div>
@@ -244,7 +244,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		max-width: 100%;
 		width: 100%;
 	}
-	
+
 	.tech-tags::-webkit-scrollbar {
 		display: none;
 	}
