@@ -208,6 +208,8 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		flex: 1;
 		min-width: 300px;
 		padding-right: 40px;
+		max-width: 100%;
+		overflow: hidden;
 	}
 
 	.hero-text .name {
@@ -227,9 +229,18 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 
 	.tech-tags {
 		display: flex;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		gap: 10px;
 		margin-bottom: 1.5em;
+		overflow-x: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		max-width: 100%;
+		width: 100%;
+	}
+	
+	.tech-tags::-webkit-scrollbar {
+		display: none;
 	}
 
 	.tech-tag {
@@ -239,6 +250,8 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		border-radius: 20px;
 		font-size: 0.9em;
 		font-weight: 400;
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
 	.hero-bullets {
@@ -261,6 +274,8 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		background-size: contain;
 		background-repeat: no-repeat;
     width: 30px;
+		max-width: 30px;
+		min-width: 30px;
     aspect-ratio: 1 / 1;
 		position: absolute;
 		left: 0;
@@ -356,8 +371,6 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 
 		.hero-text .name { font-size: 2.2em; }
 		.hero-text .tagline { font-size: 1.1em; }
-		.hero-bullets li { font-size: 1em; padding: 8px 0 8px 25px;}
-		.hero-bullets li::before { width: 8px; height: 8px;}
 
 		.hero-content {
 			flex-direction: column;
