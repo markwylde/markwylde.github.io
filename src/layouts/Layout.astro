@@ -49,6 +49,33 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 			if (currentYearElement) {
 				currentYearElement.textContent = new Date().getFullYear().toString();
 			}
+
+			const siteHeader = document.querySelector('.site-header');
+			const headerAvatar = document.querySelector('.header-avatar');
+
+			if (siteHeader && headerAvatar) {
+				function playToMidpoint() {
+					headerAvatar.currentTime = 0;
+					headerAvatar.play();
+
+					const onTimeUpdate = () => {
+						if (headerAvatar.currentTime >= headerAvatar.duration * 0.5) {
+							headerAvatar.pause();
+							headerAvatar.removeEventListener('timeupdate', onTimeUpdate);
+						}
+					};
+
+					headerAvatar.addEventListener('timeupdate', onTimeUpdate);
+				}
+
+				function playFromMidpoint() {
+					headerAvatar.currentTime = headerAvatar.duration * 0.5;
+					headerAvatar.play();
+				}
+
+				siteHeader.addEventListener('mouseenter', playToMidpoint);
+				siteHeader.addEventListener('mouseleave', playFromMidpoint);
+			}
 		</script>
 	</body>
 </html>
