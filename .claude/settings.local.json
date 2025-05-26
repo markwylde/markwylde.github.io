@@ -5,7 +5,8 @@
       "Bash(ffmpeg:*)",
       "Bash(rm:*)",
       "Bash(npm install:*)",
-      "Bash(sharp:*)"
+      "Bash(sharp:*)",
+      "Bash(ffprobe:*)"
     ],
     "deny": []
   }
