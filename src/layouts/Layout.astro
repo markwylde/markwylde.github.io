@@ -1,5 +1,4 @@
 ---
-import avatarVideoWebm from '../assets/avatar-cartoon.webm';
 import avatarVideoMp4 from '../assets/avatar-cartoon.mp4';
 import avatarHeaderFallback from '../assets/avatar-cartoon.png';
 export interface Props {
@@ -25,7 +24,6 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 			<div class="container site-header-content">
 				<div class="header-left">
 					<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src}>
-						<source src={avatarVideoWebm} type="video/webm" />
 						<source src={avatarVideoMp4} type="video/mp4" />
 						<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
 					</video>
