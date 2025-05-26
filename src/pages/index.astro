@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import avatarVideoWebm from '../assets/avatar-typer.webm';
 import avatarVideoMp4 from '../assets/avatar-typer.mp4';
+import avatarFallback from '../assets/avatar-juggle.png';
 ---
 
 <Layout title="Mark Wylde - Personal Portfolio" currentPage="home">
@@ -12,8 +13,8 @@ import avatarVideoMp4 from '../assets/avatar-typer.mp4';
 					<p class="name">Hi, I'm Mark Wylde</p>
 					<p class="tagline">A web developer passionate about infrastructure and simple deployments.</p>
 					<div class="tech-tags">
-						<span class="tech-tag">NodeJS</span>
 						<span class="tech-tag">TypeScript</span>
+						<span class="tech-tag">NodeJS</span>
 						<span class="tech-tag">Vite</span>
 						<span class="tech-tag">Postgres</span>
 						<span class="tech-tag">CI/CD</span>
@@ -25,9 +26,10 @@ import avatarVideoMp4 from '../assets/avatar-typer.mp4';
 					</ul>
 				</div>
 				<div class="hero-avatar">
-					<video alt="Mark Wylde - Avatar" autoplay muted loop playsinline>
+					<video alt="Mark Wylde - Avatar" autoplay muted loop playsinline poster={avatarFallback}>
 						<source src={avatarVideoWebm} type="video/webm" />
 						<source src={avatarVideoMp4} type="video/mp4" />
+						<img src={avatarFallback} alt="Mark Wylde - Avatar" />
 					</video>
 				</div>
 			</div>

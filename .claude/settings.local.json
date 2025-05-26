@@ -3,7 +3,9 @@
     "allow": [
       "Bash(grep:*)",
       "Bash(ffmpeg:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npm install:*)",
+      "Bash(sharp:*)"
     ],
     "deny": []
   }
