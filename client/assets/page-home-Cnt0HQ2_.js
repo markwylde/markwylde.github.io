@@ -1,1 +1,0 @@
-import{j as e}from"./react-BWFZKfll.js";function n(){return e.jsxs("div",{children:[e.jsx("h1",{children:"Mark Wylde"}),e.jsx("p",{children:"Welcome to my personal web development site"}),e.jsx("p",{children:"I'm a passionate web developer focused on building modern, efficient applications."})]})}export{n as H};
