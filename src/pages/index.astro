@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import avatarVideo from '../assets/avatar-typer.mp4';
+import avatarVideoWebm from '../assets/avatar-typer.webm';
+import avatarVideoMp4 from '../assets/avatar-typer.mp4';
 ---
 
 <Layout title="Mark Wylde - Personal Portfolio" currentPage="home">
@@ -24,7 +25,10 @@ import avatarVideo from '../assets/avatar-typer.mp4';
 					</ul>
 				</div>
 				<div class="hero-avatar">
-					<video src={avatarVideo} alt="Mark Wylde - Avatar" autoplay muted loop></video>
+					<video alt="Mark Wylde - Avatar" autoplay muted loop playsinline>
+						<source src={avatarVideoWebm} type="video/webm" />
+						<source src={avatarVideoMp4} type="video/mp4" />
+					</video>
 				</div>
 			</div>
 		</div>

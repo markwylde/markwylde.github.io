@@ -1,5 +1,6 @@
 ---
-import avatarVideo from '../assets/avatar-cartoon.mp4';
+import avatarVideoWebm from '../assets/avatar-cartoon.webm';
+import avatarVideoMp4 from '../assets/avatar-cartoon.mp4';
 export interface Props {
 	title?: string;
 	currentPage?: string;
@@ -22,7 +23,10 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		<div class="site-header">
 			<div class="container site-header-content">
 				<div class="header-left">
-					<video src={avatarVideo} autoplay muted class="header-avatar" style="transform: scaleX(-1);"></video>
+					<video autoplay muted class="header-avatar" style="transform: scaleX(-1);" playsinline>
+						<source src={avatarVideoWebm} type="video/webm" />
+						<source src={avatarVideoMp4} type="video/mp4" />
+					</video>
 					<span class="header-site-title">Mark Wylde</span>
 				</div>
 				<nav class="main-nav">
