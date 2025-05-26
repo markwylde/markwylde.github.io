@@ -54,21 +54,35 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 			const headerAvatar = document.querySelector('.header-avatar');
 
 			if (siteHeader && headerAvatar) {
+				let currentTimeUpdateListener = null;
+
 				function playToMidpoint() {
+					// Remove any existing listener to prevent conflicts
+					if (currentTimeUpdateListener) {
+						headerAvatar.removeEventListener('timeupdate', currentTimeUpdateListener);
+					}
+
 					headerAvatar.currentTime = 0;
 					headerAvatar.play();
 
-					const onTimeUpdate = () => {
+					currentTimeUpdateListener = () => {
 						if (headerAvatar.currentTime >= headerAvatar.duration * 0.5) {
 							headerAvatar.pause();
-							headerAvatar.removeEventListener('timeupdate', onTimeUpdate);
+							headerAvatar.removeEventListener('timeupdate', currentTimeUpdateListener);
+							currentTimeUpdateListener = null;
 						}
 					};
 
-					headerAvatar.addEventListener('timeupdate', onTimeUpdate);
+					headerAvatar.addEventListener('timeupdate', currentTimeUpdateListener);
 				}
 
 				function playFromMidpoint() {
+					// Remove any existing listener to prevent interference
+					if (currentTimeUpdateListener) {
+						headerAvatar.removeEventListener('timeupdate', currentTimeUpdateListener);
+						currentTimeUpdateListener = null;
+					}
+
 					headerAvatar.currentTime = headerAvatar.duration * 0.5;
 					headerAvatar.play();
 				}
@@ -219,7 +233,8 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 	/* Hero Section Styles */
 	.hero {
 		background-color: rgb(248, 249, 255);
-		min-height: 80vh;
+		height: 80vh;
+		max-height: 800px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
