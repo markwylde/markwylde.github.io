@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import avatarImage from '../assets/avatar-juggle.png';
 ---
 
 <Layout title="About - Mark Wylde" currentPage="about">
@@ -37,7 +38,7 @@ import Layout from '../layouts/Layout.astro';
 
 				<div class="contact-section">
 					<div class="avatar-container">
-						<img src="/src/assets/avatar-juggle.png" alt="Mark Wylde Avatar" class="avatar" />
+						<img src={avatarImage.src} alt="Mark Wylde Avatar" class="avatar" />
 					</div>
 					<h3>Get In Touch</h3>
 					<p>
