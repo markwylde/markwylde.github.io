@@ -2,9 +2,9 @@
 
 ![Screenshot](screenshot.png)
 
-My personal website showcasing my work as a web developer passionate about infrastructure and simple deployments.
+My personal website showcasing my work, thoughts and opinions.
 
-Built with Astro and featuring sections for my work, about me, and blog.
+Built with Astro and Claude.
 
 Visit at [markwylde.com](https://markwylde.com)
 
