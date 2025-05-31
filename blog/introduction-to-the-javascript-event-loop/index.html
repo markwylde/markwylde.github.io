@@ -8,12 +8,13 @@
 <p>The task queue is where events or tasks that need to be processed by the event loop are placed. This could include things like I/O operations, timers, or other async events.</p>
 <p>The microtask queue is a separate queue that holds microtasks, which are smaller tasks that need to be executed after the current task has been completed. This could include things like promise callbacks or process.nextTick callbacks.</p>
 <p>The event loop phases refer to the different stages that the event loop goes through in order to process events and tasks. These phases include the following:</p>
-<p><strong>Timers phase</strong>: This phase is where timers that have been scheduled with setTimeout or setInterval are executed.</p>
-<p><strong>I/O callbacks phase</strong>: This phase is where callbacks for I/O operations (such as reading from a file or making an HTTP request) are executed.</p>
-<p><strong>Idle, prepare phase</strong>: This phase is a short, non-blocking phase that allows the event loop to do some internal bookkeeping.</p>
-<p><strong>Poll phase</strong>: This phase is where the event loop checks the task and microtask queues for events and tasks that are ready to be executed. If there are any tasks in the queues, they are executed in this phase.</p>
-<p><strong>Check phase</strong>: This phase is similar to the poll phase, but it’s specifically for executing microtasks that are in the microtask queue.</p>
-<p><strong>Close callbacks phase</strong>: This phase is where callbacks for any closed resources (such as sockets or file descriptors) are executed.</p>
+<p><strong>Timers phase</strong>: This phase executes callbacks scheduled by <code>setTimeout()</code> and <code>setInterval()</code> whose time thresholds have been reached.</p>
+<p><strong>Pending callbacks phase</strong>: This phase executes I/O callbacks deferred to the next loop iteration (previously called “I/O callbacks phase”).</p>
+<p><strong>Idle, prepare phase</strong>: This phase is used internally by Node.js for housekeeping tasks.</p>
+<p><strong>Poll phase</strong>: This is the most important phase where the event loop fetches new I/O events and executes I/O-related callbacks. If no timers are scheduled, the event loop will wait here for new events.</p>
+<p><strong>Check phase</strong>: This phase executes callbacks scheduled by <code>setImmediate()</code> immediately after the poll phase completes.</p>
+<p><strong>Close callbacks phase</strong>: This phase executes close event callbacks (e.g., <code>socket.on('close', ...)</code>).</p>
+<p>Importantly, <strong>microtasks</strong> (Promise callbacks, <code>process.nextTick</code>) are executed between each phase, not in a specific phase.</p>
 <p>After the event loop has gone through all of these phases, it will start again at the timers phase and repeat the process. This allows the event loop to continuously process events and tasks as they come in.</p>
 <h2 id="examples-of-async-code">Examples of Async Code</h2>
 <p>One common use case for the event loop is to schedule timers or intervals. This is done using the setTimeout and setInterval functions, which allow you to specify a callback function that will be executed after a certain amount of time has passed.</p>
@@ -22,16 +23,100 @@
 <span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'Hello, world!'</span><span style="color:#E1E4E8">);</span></span>
 <span class="line"><span style="color:#E1E4E8">}, </span><span style="color:#79B8FF">2000</span><span style="color:#E1E4E8">);</span></span></code></pre>
 <p>Another common use case is to process I/O operations asynchronously. This is done using the fs module, which provides functions for reading and writing files.</p>
-<p>For example, the following code reads a file asynchronously and logs its contents to the console:</p>
+<p>For example, the following code demonstrates how different async operations are handled:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> fs</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> require</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'fs'</span><span style="color:#E1E4E8">);</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">fs.</span><span style="color:#B392F0">readFile</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'my-file.txt'</span><span style="color:#E1E4E8">, (</span><span style="color:#FFAB70">err</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">data</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (err) </span><span style="color:#F97583">throw</span><span style="color:#E1E4E8"> err;</span></span>
-<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(data);</span></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'Start'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Timer (executed in Timers phase)</span></span>
+<span class="line"><span style="color:#B392F0">setTimeout</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'Timer callback'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">}, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// I/O operation (executed in Poll phase)</span></span>
+<span class="line"><span style="color:#E1E4E8">fs.</span><span style="color:#B392F0">readFile</span><span style="color:#E1E4E8">(__filename, () </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'File read callback'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">  </span></span>
+<span class="line"><span style="color:#6A737D">  // setImmediate inside I/O callback</span></span>
+<span class="line"><span style="color:#B392F0">  setImmediate</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'setImmediate inside I/O'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">  });</span></span>
+<span class="line"><span style="color:#E1E4E8">  </span></span>
+<span class="line"><span style="color:#6A737D">  // setTimeout inside I/O callback</span></span>
+<span class="line"><span style="color:#B392F0">  setTimeout</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'setTimeout inside I/O'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">  }, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// setImmediate (executed in Check phase)</span></span>
+<span class="line"><span style="color:#B392F0">setImmediate</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'setImmediate callback'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'End'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Typical output:</span></span>
+<span class="line"><span style="color:#6A737D">// Start</span></span>
+<span class="line"><span style="color:#6A737D">// End</span></span>
+<span class="line"><span style="color:#6A737D">// Timer callback</span></span>
+<span class="line"><span style="color:#6A737D">// setImmediate callback</span></span>
+<span class="line"><span style="color:#6A737D">// File read callback</span></span>
+<span class="line"><span style="color:#6A737D">// setImmediate inside I/O</span></span>
+<span class="line"><span style="color:#6A737D">// setTimeout inside I/O</span></span></code></pre>
+<p>Node.js also provides <code>process.nextTick()</code> and <code>setImmediate()</code> for different scheduling behaviors:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// process.nextTick has the highest priority</span></span>
+<span class="line"><span style="color:#E1E4E8">process.</span><span style="color:#B392F0">nextTick</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'1: process.nextTick'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// setImmediate is executed in the Check phase</span></span>
+<span class="line"><span style="color:#B392F0">setImmediate</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'2: setImmediate'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// setTimeout is executed in the Timers phase</span></span>
+<span class="line"><span style="color:#B392F0">setTimeout</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'3: setTimeout'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">}, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Promise callbacks are microtasks</span></span>
+<span class="line"><span style="color:#79B8FF">Promise</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">resolve</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">then</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'4: Promise'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'5: synchronous'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Output order: 5, 1, 4, 3, 2</span></span></code></pre>
+<h2 id="understanding-execution-order">Understanding Execution Order</h2>
+<p>The key to understanding the event loop is knowing the execution priority:</p>
+<ol>
+<li><strong>Synchronous code</strong> (call stack)</li>
+<li><strong>Microtasks</strong> (<code>process.nextTick</code>, Promise callbacks)</li>
+<li><strong>Timer callbacks</strong> (<code>setTimeout</code>, <code>setInterval</code>)</li>
+<li><strong>I/O callbacks</strong></li>
+<li><strong>setImmediate callbacks</strong></li>
+</ol>
+<h2 id="common-pitfalls-and-best-practices">Common Pitfalls and Best Practices</h2>
+<p>Understanding the event loop helps avoid common mistakes:</p>
+<p><strong>Avoid blocking the event loop:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// Bad: Blocking operation</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> result</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> fs.</span><span style="color:#B392F0">readFileSync</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'large-file.txt'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Good: Non-blocking operation</span></span>
+<span class="line"><span style="color:#E1E4E8">fs.</span><span style="color:#B392F0">readFile</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'large-file.txt'</span><span style="color:#E1E4E8">, (</span><span style="color:#FFAB70">err</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">data</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">  // Handle the result</span></span>
 <span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
-<p>Finally, Node.js also provides the process.nextTick function, which allows you to execute a callback function as soon as possible. This is useful if you need to execute a callback before any other I/O operations that may be pending.</p>
-<p>For example, the following code will log a message to the console before any I/O operations that may be pending:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#E1E4E8">process.</span><span style="color:#B392F0">nextTick</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'This will be executed first!'</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
-<p>As you can see, the event loop is a powerful and essential feature of Node.js that allows you to build scalable and efficient server-side applications. Now that you have a better understanding of how the event loop works, you’ll be better equipped to use it in your own applications.</p> </div> <footer class="blog-footer" data-astro-cid-7jjqptxk> <a href="/blog" class="back-link" data-astro-cid-7jjqptxk>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>  
+<p><strong>Be careful with <code>process.nextTick()</code> recursion:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// This will starve the event loop</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> recursiveNextTick</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">  process.</span><span style="color:#B392F0">nextTick</span><span style="color:#E1E4E8">(recursiveNextTick);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>The event loop is the heart of Node.js’s asynchronous, non-blocking I/O model. Understanding its phases and execution order is crucial for:</p>
+<ul>
+<li>Writing performant Node.js applications</li>
+<li>Debugging timing-related issues</li>
+<li>Optimizing application responsiveness</li>
+<li>Avoiding common event loop pitfalls</li>
+</ul>
+<p>By mastering these concepts, you’ll be better equipped to build scalable and efficient server-side applications that leverage Node.js’s full potential.</p> </div> <footer class="blog-footer" data-astro-cid-7jjqptxk> <a href="/blog" class="back-link" data-astro-cid-7jjqptxk>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>  
