@@ -71,14 +71,7 @@ const sortedPosts = blogPosts.sort((a, b) => new Date(b.data.date).getTime() - n
 		margin-bottom: 15px;
 	}
 
-	.blog-meta time {
-		color: var(--accent-color);
-		font-size: 0.9em;
-	}
-
 	.blog-tags {
-		display: flex;
-		gap: 8px;
 		overflow-x: auto;
 		white-space: nowrap;
 		margin-top: auto;
@@ -101,12 +94,6 @@ const sortedPosts = blogPosts.sort((a, b) => new Date(b.data.date).getTime() - n
 	}
 
 	.tag {
-		background-color: white;
-		color: var(--text-color);
-		padding: 4px 8px;
-		border-radius: 4px;
-		font-size: 0.8em;
-		border: 1px solid var(--border-color);
 		flex-shrink: 0;
 	}
 

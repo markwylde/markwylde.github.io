@@ -284,6 +284,31 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		text-decoration: none;
 	}
 
+	/* Shared Blog Styles */
+	.blog-meta {
+		align-items: center;
+	}
+
+	.blog-meta time {
+		color: var(--accent-color);
+		font-size: 0.9em;
+	}
+
+	.blog-tags {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		background-color: white;
+		color: var(--text-color);
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 0.8em;
+		border: 1px solid var(--border-color);
+	}
+
 	@media (max-width: 768px) {
 		h1 { font-size: 2.5em; }
 		h2 { font-size: 1.8em; }

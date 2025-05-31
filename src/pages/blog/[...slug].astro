@@ -16,7 +16,8 @@ const { Content } = await entry.render();
 <Layout title={`${entry.data.title} - Mark Wylde`} currentPage="blog">
 	<section class="section">
 		<div class="container">
-			<article class="blog-post">
+			<div class="blog-content-wrapper">
+				<article class="blog-post">
 				<header class="blog-header">
 					<h1>{entry.data.title}</h1>
 					<div class="blog-meta">
@@ -42,10 +43,20 @@ const { Content } = await entry.render();
 				</footer>
 			</article>
 		</div>
+		</div>
 	</section>
 </Layout>
 
 <style>
+	.blog-content-wrapper {
+		background-color: var(--secondary-bg);
+		border-radius: 12px;
+		padding: 3rem;
+		box-shadow: 0 5px 15px var(--shadow-color);
+		margin: 2rem auto;
+		max-width: 900px;
+	}
+
 	.blog-post {
 		max-width: 800px;
 		margin: 0 auto;
@@ -65,29 +76,8 @@ const { Content } = await entry.render();
 	.blog-meta {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-start;
 		flex-wrap: wrap;
 		gap: 10px;
-	}
-
-	.blog-meta time {
-		color: var(--accent-color);
-		font-size: 0.9em;
-	}
-
-	.blog-tags {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
-
-	.tag {
-		background-color: white;
-		color: var(--text-color);
-		padding: 4px 8px;
-		border-radius: 4px;
-		font-size: 0.8em;
-		border: 1px solid var(--border-color);
 	}
 
 	.blog-content {
@@ -190,6 +180,12 @@ const { Content } = await entry.render();
 	}
 
 	@media (max-width: 768px) {
+		.blog-content-wrapper {
+			margin: 1rem;
+			padding: 2rem;
+			border-radius: 8px;
+		}
+
 		.blog-meta {
 			flex-direction: column;
 			align-items: flex-start;

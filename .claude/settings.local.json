@@ -6,7 +6,9 @@
       "Bash(rm:*)",
       "Bash(npm install:*)",
       "Bash(sharp:*)",
-      "Bash(ffprobe:*)"
+      "Bash(ffprobe:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   },
