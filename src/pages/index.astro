@@ -10,7 +10,7 @@ import avatarFallback from '../assets/avatar-typing.png';
 			<div class="hero-content">
 				<div class="hero-text">
 					<p class="name">Hi, I'm Mark Wylde</p>
-					<p class="tagline">A web developer passionate about product driven web development.</p>
+					<p class="tagline">I love building cool products with web tech.</p>
 					<div class="tech-tags">
 						<span class="tech-tag">TypeScript</span>
 						<span class="tech-tag">NodeJS</span>
@@ -43,16 +43,32 @@ import avatarFallback from '../assets/avatar-typing.png';
 	<section id="about" class="section">
 		<div class="container">
 			<h2>About Me</h2>
-			<p>
-				Hello! I'm Mark Wylde, a web developer passionate about building simple, efficient solutions.
-				I believe in the philosophy of "You Ain't Gonna Need It" (YAGNI) and enjoy working on projects
-				that solve real problems without unnecessary complexity.
-			</p>
-			<p>
-				My journey into web development began with a love for creating things that work well and are
-				easy to understand. Since then, I've honed my skills in JavaScript, Node.js, and various web
-				technologies. I'm always eager to learn new things and explore innovative solutions.
-			</p>
+			<div class="about-grid">
+				<div class="about-card">
+					<h3>Experience</h3>
+					<ul class="about-bullets">
+						<li>15+ years developing web solutions</li>
+						<li>Helped teams escape technical rabbit holes</li>
+						<li>Focus on continuous delivery cycles</li>
+					</ul>
+				</div>
+				<div class="about-card">
+					<h3>Expertise</h3>
+					<ul class="about-bullets">
+						<li>Cut through complexity to identify what matters</li>
+						<li>Cross-industry & tech stack experience</li>
+						<li>Business-first approach to technical solutions</li>
+					</ul>
+				</div>
+				<div class="about-card">
+					<h3>Philosophy</h3>
+					<ul class="about-bullets">
+						<li>Ship early, iterate often, fail fast</li>
+						<li>Technology should solve real problems</li>
+						<li>Focus on shipping product, not perfect code</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</section>
 
@@ -83,7 +99,7 @@ import avatarFallback from '../assets/avatar-typing.png';
 
 	<section id="contact" class="section">
 		<div class="container">
-			<h2>Get In Touch</h2>
+			<h2 class="centered-heading">Get In Touch</h2>
 			<p style="text-align: center;">
 				I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great. <br>
 				Feel free to reach out!
@@ -96,3 +112,219 @@ import avatarFallback from '../assets/avatar-typing.png';
 		</div>
 	</section>
 </Layout>
+
+<style>
+	/* Hero Section Styles */
+	.hero {
+		background-color: rgb(248, 249, 255);
+		min-height: 80vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 40px 0;
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.hero-content {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	.hero-text {
+		flex: 1;
+		min-width: 300px;
+		padding-right: 40px;
+		max-width: 100%;
+		overflow: hidden;
+	}
+
+	.hero-text .name {
+		font-size: 2.8em;
+		font-weight: 700;
+		margin-bottom: 0.2em;
+		line-height: 1.2;
+		color: var(--heading-color);
+	}
+
+	.hero-text .tagline {
+		font-size: 1.3em;
+		font-weight: 300;
+		color: var(--accent-color);
+		margin-bottom: 1em;
+	}
+
+	.tech-tags {
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 10px;
+		margin-bottom: 1.5em;
+		overflow-x: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.tech-tags::-webkit-scrollbar {
+		display: none;
+	}
+
+	.tech-tag {
+		background-color: var(--accent-color);
+		color: var(--secondary-bg);
+		padding: 6px 12px;
+		border-radius: 20px;
+		font-size: 0.9em;
+		font-weight: 400;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.hero-bullets {
+		list-style: none;
+		padding-left: 0;
+		font-size: 1.1em;
+	}
+
+	.hero-bullets li {
+		padding: 10px 0 10px 35px;
+		position: relative;
+		font-weight: 400;
+		margin-bottom: 0.5em;
+	}
+
+	.hero-bullets li::before {
+		content: '';
+		display: inline-block;
+		background-image: url('../assets/bullet.png');
+		background-size: contain;
+		background-repeat: no-repeat;
+		width: 30px;
+		max-width: 30px;
+		min-width: 30px;
+		aspect-ratio: 1 / 1;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.hero-avatar {
+		flex: 1;
+		min-width: 300px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.hero-avatar video {
+		max-width: 400px;
+		width: 100%;
+		height: auto;
+		border-top-left-radius: 20%;
+		border-top-right-radius: 20%;
+		box-shadow: 0 10px 25px var(--shadow-color);
+		object-fit: cover;
+		aspect-ratio: 1 / 1;
+		background-color: #f5f5f8;
+	}
+
+	/* About Section Styles */
+	.about-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+		margin-top: 30px;
+	}
+
+	.about-card {
+		background-color: var(--secondary-bg);
+		padding: 25px;
+		border-radius: 12px;
+		border: 1px solid var(--border-color);
+	}
+
+	.about-card h3 {
+		color: var(--accent-color);
+		margin-bottom: 15px;
+		font-size: 1.2em;
+		font-weight: 600;
+	}
+
+	.about-bullets {
+		list-style: none;
+		padding-left: 0;
+		margin: 0;
+	}
+
+	.about-bullets li {
+		padding: 8px 0 8px 25px;
+		position: relative;
+		margin-bottom: 8px;
+		line-height: 1.4;
+	}
+
+	.about-bullets li::before {
+		content: '';
+		display: inline-block;
+		background-image: url('../assets/bullet.png');
+		background-size: contain;
+		background-repeat: no-repeat;
+		width: 20px;
+		height: 20px;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.centered-heading {
+		text-align: center;
+	}
+
+	@media (max-width: 900px) {
+		.hero-text {
+			padding-right: 20px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.hero-text .name { font-size: 2.2em; }
+		.hero-text .tagline { font-size: 1.1em; }
+
+		.hero-content {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.hero-text {
+			order: 2;
+			padding-right: 0;
+			margin-top: 30px;
+		}
+		
+		.hero-bullets {
+			text-align: left;
+			display: inline-block;
+		}
+
+		.hero-avatar {
+			order: 1;
+			width: 60%;
+			max-width: 250px;
+			margin: 0 auto;
+		}
+
+		.hero-avatar img {
+			max-width: 250px;
+		}
+
+		.about-grid {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+	}
+</style>

@@ -23,10 +23,12 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		<div class="site-header">
 			<div class="container site-header-content">
 				<div class="header-left">
-					<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src}>
-						<source src={avatarVideoMp4} type="video/mp4" />
-						<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
-					</video>
+					<a href="/" class="header-avatar-link">
+						<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src}>
+							<source src={avatarVideoMp4} type="video/mp4" />
+							<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
+						</video>
+					</a>
 					<span class="header-site-title">Mark Wylde</span>
 				</div>
 				<nav class="main-nav">
@@ -133,7 +135,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 	}
 
 	h1 { font-size: 3em; }
-	h2 { font-size: 2.2em; text-align: center; margin-bottom: 1.5em; padding-top: 1em;}
+	h2 { font-size: 2.2em; }
 	h3 { font-size: 1.5em; }
 
 	p {
@@ -168,11 +170,15 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		align-items: center;
 	}
 
+	.header-avatar-link {
+		display: block;
+		margin-right: 15px;
+	}
+
 	.header-avatar {
 		height: 75px;
 		width: 75px;
 		border-radius: 50%;
-		margin-right: 15px;
 		object-fit: cover;
 	}
 
@@ -214,7 +220,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 	}
 
 	.section {
-		padding-bottom: 60px;
+		padding: 60px 0;
 	}
 
 	.section:nth-child(even) {
@@ -230,123 +236,10 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 	}
 	.footer p { margin-bottom: 0; }
 
-	/* Hero Section Styles */
-	.hero {
-		background-color: rgb(248, 249, 255);
-		min-height: 80vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 40px 0;
-		border-bottom: 1px solid var(--border-color);
-	}
 
-	.hero-content {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-	}
 
-	.hero-text {
-		flex: 1;
-		min-width: 300px;
-		padding-right: 40px;
-		max-width: 100%;
-		overflow: hidden;
-	}
 
-	.hero-text .name {
-		font-size: 2.8em;
-		font-weight: 700;
-		margin-bottom: 0.2em;
-		line-height: 1.2;
-		color: var(--heading-color);
-	}
 
-	.hero-text .tagline {
-		font-size: 1.3em;
-		font-weight: 300;
-		color: var(--accent-color);
-		margin-bottom: 1em;
-	}
-
-	.tech-tags {
-		display: flex;
-		flex-wrap: nowrap;
-		gap: 10px;
-		margin-bottom: 1.5em;
-		overflow-x: auto;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-		max-width: 100%;
-		width: 100%;
-	}
-
-	.tech-tags::-webkit-scrollbar {
-		display: none;
-	}
-
-	.tech-tag {
-		background-color: var(--accent-color);
-		color: var(--secondary-bg);
-		padding: 6px 12px;
-		border-radius: 20px;
-		font-size: 0.9em;
-		font-weight: 400;
-		white-space: nowrap;
-		flex-shrink: 0;
-	}
-
-	.hero-bullets {
-		list-style: none;
-		padding-left: 0;
-		font-size: 1.1em;
-	}
-
-	.hero-bullets li {
-		padding: 10px 0 10px 35px;
-		position: relative;
-		font-weight: 400;
-		margin-bottom: 0.5em;
-	}
-
-	.hero-bullets li::before {
-		content: '';
-		display: inline-block;
-		background-image: url('../assets/bullet.png');
-		background-size: contain;
-		background-repeat: no-repeat;
-    width: 30px;
-		max-width: 30px;
-		min-width: 30px;
-    aspect-ratio: 1 / 1;
-		position: absolute;
-		left: 0;
-		top: 50%;
-		transform: translateY(-50%);
-	}
-
-	.hero-avatar {
-		flex: 1;
-		min-width: 300px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.hero-avatar video {
-		max-width: 400px;
-		width: 100%;
-		height: auto;
-		border-top-left-radius: 20%;
-		border-top-right-radius: 20%;
-		box-shadow: 0 10px 25px var(--shadow-color);
-		object-fit: cover;
-		aspect-ratio: 1 / 1;
-		background-color: #f5f5f8;
-	}
 
 	/* Project Grid Styles */
 	.project-grid {
@@ -391,12 +284,6 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 		text-decoration: none;
 	}
 
-	@media (max-width: 900px) {
-		.hero-text {
-			padding-right: 20px;
-		}
-	}
-
 	@media (max-width: 768px) {
 		h1 { font-size: 2.5em; }
 		h2 { font-size: 1.8em; }
@@ -415,33 +302,5 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } = Astr
 			padding: 6px 10px;
 		}
 
-		.hero-text .name { font-size: 2.2em; }
-		.hero-text .tagline { font-size: 1.1em; }
-
-		.hero-content {
-			flex-direction: column;
-			text-align: center;
-		}
-
-		.hero-text {
-			order: 2;
-			padding-right: 0;
-			margin-top: 30px;
-		}
-		 .hero-bullets {
-			text-align:left;
-			display: inline-block;
-		 }
-
-		.hero-avatar {
-			order: 1;
-			width: 60%;
-			max-width: 250px;
-			margin: 0 auto;
-		}
-
-		.hero-avatar img {
-			max-width: 250px;
-		}
 	}
 </style>
