@@ -9,6 +9,8 @@ When Anthropic released [Claude Code Action](https://github.com/anthropics/claud
 
 As someone who uses [Gitea](https://gitea.io/) for my personal projects, I wanted that same AI-powered workflow in my self-hosted environment. So I built [claude-code-gitea-action](https://github.com/markwylde/claude-code-gitea-action) - a port that brings Claude's capabilities to Gitea installations.
 
+<img src="https://github.com/markwylde/claude-code-gitea-action/blob/gitea/assets/preview.png?raw=true" alt="Claude Code Gitea Action Preview" style="width: 100%;" />
+
 ## The Challenge: API Differences and Local Operations
 
 The main challenge in adapting the GitHub Action for Gitea wasn't just changing API endpoints. While Gitea implements many of GitHub's APIs for compatibility, there are subtle differences in how certain operations work, especially around file management and branch operations.
@@ -34,7 +36,7 @@ export class GiteaApiClient {
     this.token = token;
     this.baseUrl = baseUrl.replace(/\/+$/, ""); // Remove trailing slashes
   }
-  
+
   // Gitea-specific API implementations...
 }
 ```
@@ -148,7 +150,7 @@ Whether you're running Gitea for privacy, cost, or customization reasons, you no
 
 ## 🚀 Try It Yourself
 
-Ready to bring Claude Code to your Gitea installation? 
+Ready to bring Claude Code to your Gitea installation?
 
 <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
   <a href="https://github.com/markwylde/claude-code-gitea-action" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #24292f; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
