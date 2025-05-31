@@ -1,20 +1,20 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(grep:*)",
-      "Bash(ffmpeg:*)",
-      "Bash(rm:*)",
-      "Bash(npm install:*)",
-      "Bash(sharp:*)",
-      "Bash(ffprobe:*)",
-      "Bash(cat:*)",
-      "Bash(sed:*)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:github.com)",
-      "Bash(git -C /Users/markwylde/Documents/Projects/claude-code-action log --oneline -10)",
-      "Bash(git -C:*)"
-    ],
-    "deny": []
-  },
-  "enableAllProjectMcpServers": false
+	"permissions": {
+		"allow": [
+			"Bash(grep:*)",
+			"Bash(ffmpeg:*)",
+			"Bash(rm:*)",
+			"Bash(npm install:*)",
+			"Bash(sharp:*)",
+			"Bash(ffprobe:*)",
+			"Bash(cat:*)",
+			"Bash(sed:*)",
+			"WebFetch(domain:github.com)",
+			"WebFetch(domain:github.com)",
+			"Bash(git -C /Users/markwylde/Documents/Projects/claude-code-action log --oneline -10)",
+			"Bash(git -C:*)"
+		],
+		"deny": []
+	},
+	"enableAllProjectMcpServers": false
 }

@@ -72,6 +72,7 @@ const { Content } = await entry.render();
 	.blog-header h1 {
 		margin-bottom: 1rem;
 		color: var(--heading-color);
+		font-size: 2.5em;
 	}
 
 	.blog-meta {
@@ -182,14 +183,29 @@ const { Content } = await entry.render();
 
 	@media (max-width: 768px) {
 		.blog-content-wrapper {
-			margin: 1rem;
-			padding: 2rem;
-			border-radius: 8px;
+			margin: 0;
+			padding: 1rem;
+			border-radius: 0;
+			box-shadow: none;
+		}
+
+		.blog-header {
+			margin-bottom: 1rem;
+		}
+
+		.blog-header h1 {
+			font-size: 1.4em;
+			line-height: 1.2;
+			margin-bottom: 0.5rem;
 		}
 
 		.blog-meta {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+
+		.blog-content {
+			margin-bottom: 1.5rem;
 		}
 	}
 </style>

@@ -221,7 +221,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 	}
 
 	.section {
-		padding: 60px 0;
+		padding: 30px 0;
 	}
 
 	.section:nth-child(even) {
@@ -311,12 +311,25 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 	}
 
 	@media (max-width: 768px) {
-		h1 { font-size: 2.5em; }
-		h2 { font-size: 1.8em; }
+		h1 { font-size: 1.8em; }
+		h2 { font-size: 1.4em; }
+
+		.site-header {
+			padding: 10px 0;
+		}
 
 		.site-header-content {
 			flex-direction: column;
-			gap: 15px;
+			gap: 10px;
+		}
+
+		.header-avatar {
+			height: 50px;
+			width: 50px;
+		}
+
+		.header-site-title {
+			font-size: 1.2em;
 		}
 
 		.main-nav {
@@ -326,6 +339,14 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 		.nav-link {
 			font-size: 0.9em;
 			padding: 6px 10px;
+		}
+
+		.container {
+			padding: 0 10px;
+		}
+
+		.section {
+			padding: 20px 0;
 		}
 
 	}
