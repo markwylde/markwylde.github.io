@@ -1,16 +1,16 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(grep:*)",
-      "Bash(ffmpeg:*)",
-      "Bash(rm:*)",
-      "Bash(npm install:*)",
-      "Bash(sharp:*)",
-      "Bash(ffprobe:*)",
-      "Bash(cat:*)",
-      "Bash(sed:*)"
-    ],
-    "deny": []
-  },
-  "enableAllProjectMcpServers": false
+	"permissions": {
+		"allow": [
+			"Bash(grep:*)",
+			"Bash(ffmpeg:*)",
+			"Bash(rm:*)",
+			"Bash(npm install:*)",
+			"Bash(sharp:*)",
+			"Bash(ffprobe:*)",
+			"Bash(cat:*)",
+			"Bash(sed:*)"
+		],
+		"deny": []
+	},
+	"enableAllProjectMcpServers": false
 }

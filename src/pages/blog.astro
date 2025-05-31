@@ -1,20 +1,59 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 
-const blogPosts = await getCollection('blog');
-const sortedPosts = blogPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const blogPosts = await getCollection("blog");
+const sortedPosts = blogPosts.sort(
+	(a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+
+// Group posts by month for list view
+const postsByMonth = sortedPosts.reduce((acc, post) => {
+	const date = new Date(post.data.date);
+	const monthYear = date.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+	});
+	if (!acc[monthYear]) {
+		acc[monthYear] = [];
+	}
+	acc[monthYear].push(post);
+	return acc;
+}, {});
 ---
 
 <Layout title="Blog - Mark Wylde" currentPage="blog">
 	<section class="section">
 		<div class="container">
-			<h2>Blog</h2>
-			<p style="text-align: center; margin-bottom: 3rem;">
-				Thoughts on web development, simplicity, and building things that work
-			</p>
+			<div class="blog-header">
+				<h1>Blog</h1>
+				<p>Thoughts on web development, simplicity, and building things that work</p>
+			</div>
 
-			<div class="blog-grid">
+			<div class="view-toggle">
+				<button class="toggle-btn active" data-view="card">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+						<rect x="3" y="3" width="7" height="7" rx="1"/>
+						<rect x="14" y="3" width="7" height="7" rx="1"/>
+						<rect x="3" y="14" width="7" height="7" rx="1"/>
+						<rect x="14" y="14" width="7" height="7" rx="1"/>
+					</svg>
+					Cards
+				</button>
+				<button class="toggle-btn" data-view="list">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<line x1="8" y1="6" x2="21" y2="6"/>
+						<line x1="8" y1="12" x2="21" y2="12"/>
+						<line x1="8" y1="18" x2="21" y2="18"/>
+						<line x1="3" y1="6" x2="3.01" y2="6"/>
+						<line x1="3" y1="12" x2="3.01" y2="12"/>
+						<line x1="3" y1="18" x2="3.01" y2="18"/>
+					</svg>
+					List
+				</button>
+			</div>
+
+			<div class="blog-grid" id="card-view">
 				{sortedPosts.map((post) => (
 					<article class="blog-card">
 						<h3 class="blog-title">
@@ -38,11 +77,56 @@ const sortedPosts = blogPosts.sort((a, b) => new Date(b.data.date).getTime() - n
 				))}
 			</div>
 
+			<div class="blog-list" id="list-view" style="display: none;">
+				{Object.entries(postsByMonth).map(([monthYear, posts]) => (
+					<div class="month-section">
+						<h3 class="month-heading">{monthYear}</h3>
+						<ul class="posts-list">
+							{posts.map((post) => (
+								<li class="post-item">
+									<div class="post-item-content">
+										<a href={`/blog/${post.slug}`} class="post-title">{post.data.title}</a>
+										<div class="post-meta">
+											<time datetime={post.data.date}>{new Date(post.data.date).toLocaleDateString('en-US', {
+												day: 'numeric'
+											})}</time>
+											<div class="post-tags">
+												{post.data.tags.map((tag) => (
+													<span class="tag">{tag}</span>
+												))}
+											</div>
+										</div>
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
+
 		</div>
 	</section>
 </Layout>
 
 <style>
+	.blog-header {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	.blog-header h1 {
+		font-size: 2.5rem;
+		margin-bottom: 1rem;
+		color: var(--heading-color);
+	}
+
+	.blog-header p {
+		font-size: 1.1rem;
+		color: var(--text-color);
+		opacity: 0.8;
+		margin-bottom: 0;
+	}
+
 	.blog-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -129,4 +213,181 @@ const sortedPosts = blogPosts.sort((a, b) => new Date(b.data.date).getTime() - n
 		color: var(--heading-color);
 	}
 
+	.view-toggle {
+		display: flex;
+		gap: 8px;
+		justify-content: center;
+		margin-bottom: 2rem;
+		background: var(--secondary-bg);
+		padding: 4px;
+		border-radius: 8px;
+		width: fit-content;
+		margin-left: auto;
+		margin-right: auto;
+		border: 1px solid var(--border-color);
+	}
+
+	.toggle-btn {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		border: none;
+		background: transparent;
+		color: var(--text-color);
+		border-radius: 6px;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: 500;
+		transition: all 0.2s ease;
+	}
+
+	.toggle-btn:hover {
+		background: var(--hover-bg, rgba(255, 255, 255, 0.1));
+	}
+
+	.toggle-btn.active {
+		background: var(--accent-color);
+		color: white;
+	}
+
+	.toggle-btn svg {
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.toggle-btn svg line {
+		stroke: currentColor;
+	}
+
+	.toggle-btn svg rect {
+		fill: currentColor;
+		stroke: none;
+	}
+
+	.toggle-btn.active svg line {
+		stroke: currentColor;
+	}
+
+	.toggle-btn.active svg rect {
+		fill: currentColor;
+	}
+
+	.blog-list {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.month-section {
+		margin-bottom: 3rem;
+	}
+
+	.month-heading {
+		font-size: 1.5rem;
+		color: var(--heading-color);
+		margin-bottom: 1rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid var(--accent-color);
+	}
+
+	.posts-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.post-item {
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.post-item:last-child {
+		border-bottom: none;
+	}
+
+	.post-item-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.post-title {
+		color: var(--heading-color);
+		text-decoration: none;
+		font-weight: 600;
+		flex-grow: 1;
+		transition: color 0.3s ease;
+	}
+
+	.post-title:hover {
+		color: var(--accent-color);
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-shrink: 0;
+	}
+
+	.post-meta time {
+		font-size: 0.9rem;
+		color: var(--text-color);
+		opacity: 0.7;
+		min-width: 2rem;
+		text-align: right;
+	}
+
+	.post-tags {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	@media (max-width: 768px) {
+		.post-item-content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+
+		.post-meta {
+			width: 100%;
+			justify-content: space-between;
+		}
+
+		.post-meta time {
+			min-width: auto;
+		}
+	}
+
 </style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const toggleBtns = document.querySelectorAll('.toggle-btn');
+		const cardView = document.getElementById('card-view');
+		const listView = document.getElementById('list-view');
+
+		toggleBtns.forEach(btn => {
+			btn.addEventListener('click', function() {
+				const view = this.dataset.view;
+				
+				// Update button states
+				toggleBtns.forEach(b => b.classList.remove('active'));
+				this.classList.add('active');
+
+				// Toggle views
+				if (view === 'card') {
+					cardView.style.display = 'grid';
+					listView.style.display = 'none';
+				} else {
+					cardView.style.display = 'none';
+					listView.style.display = 'block';
+				}
+			});
+		});
+	});
+</script>
