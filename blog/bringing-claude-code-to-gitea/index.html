@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.8.0"><title>Bringing Claude Code to Gitea: From GitHub Actions to Self-Hosted Git - Mark Wylde</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"><style>.blog-content-wrapper[data-astro-cid-7jjqptxk]{background-color:var(--secondary-bg);border-radius:12px;padding:3rem;box-shadow:0 5px 15px var(--shadow-color);margin:2rem auto;max-width:900px}.blog-post[data-astro-cid-7jjqptxk]{max-width:800px;margin:0 auto}.blog-header[data-astro-cid-7jjqptxk]{margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-color)}.blog-header[data-astro-cid-7jjqptxk] h1[data-astro-cid-7jjqptxk]{margin-bottom:1rem;color:var(--heading-color)}.blog-meta[data-astro-cid-7jjqptxk]{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}.blog-content[data-astro-cid-7jjqptxk]{line-height:1.7;margin-bottom:3rem}.blog-content[data-astro-cid-7jjqptxk] h1,.blog-content[data-astro-cid-7jjqptxk] h2,.blog-content[data-astro-cid-7jjqptxk] h3,.blog-content[data-astro-cid-7jjqptxk] h4,.blog-content[data-astro-cid-7jjqptxk] h5,.blog-content[data-astro-cid-7jjqptxk] h6{color:var(--heading-color);margin-top:2rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] h1{font-size:2rem}.blog-content[data-astro-cid-7jjqptxk] h2{font-size:1.5rem}.blog-content[data-astro-cid-7jjqptxk] h3{font-size:1.25rem}.blog-content[data-astro-cid-7jjqptxk] p{margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] code{background-color:var(--secondary-bg);padding:2px 4px;border-radius:3px;font-family:Courier New,monospace;font-size:.9em;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre{background-color:var(--secondary-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre code{background:none;padding:0;border:none}.blog-content[data-astro-cid-7jjqptxk] blockquote{border-left:4px solid var(--accent-color);padding-left:1rem;margin:1rem 0;font-style:italic;color:var(--accent-color)}.blog-content[data-astro-cid-7jjqptxk] ul,.blog-content[data-astro-cid-7jjqptxk] ol{padding-left:1.5rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] li{margin-bottom:.5rem}.blog-content[data-astro-cid-7jjqptxk] a{color:var(--accent-color);text-decoration:none}.blog-content[data-astro-cid-7jjqptxk] a:hover{text-decoration:underline}.blog-footer[data-astro-cid-7jjqptxk]{padding-top:2rem;border-top:1px solid var(--border-color)}.back-link[data-astro-cid-7jjqptxk]{color:var(--accent-color);text-decoration:none;font-weight:500;transition:color .3s ease}.back-link[data-astro-cid-7jjqptxk]:hover{color:var(--heading-color)}@media (max-width: 768px){.blog-content-wrapper[data-astro-cid-7jjqptxk]{margin:1rem;padding:2rem;border-radius:8px}.blog-meta[data-astro-cid-7jjqptxk]{flex-direction:column;align-items:flex-start}}
+:root{--primary-bg: #f8f9fa;--secondary-bg: #ffffff;--text-color: #343a40;--heading-color: #212529;--accent-color: #23303e;--border-color: #dee2e6;--shadow-color: rgba(0, 0, 0, .05)}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Montserrat,sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--primary-bg);font-weight:300}.container{max-width:1100px;margin:auto;padding:0 20px;overflow:hidden}h1,h2,h3{color:var(--heading-color);font-weight:600;margin-bottom:.75em}h1{font-size:3em}h2{font-size:2.2em}h3{font-size:1.5em}p{margin-bottom:1em}a{color:var(--accent-color);text-decoration:none;transition:color .3s ease}a:hover{color:var(--heading-color)}.site-header{background-color:var(--secondary-bg);padding:15px 0;border-bottom:1px solid var(--border-color);box-shadow:0 2px 4px var(--shadow-color)}.site-header-content{display:flex;align-items:center;justify-content:space-between}.header-left{display:flex;align-items:center}.header-avatar-link{display:block;margin-right:15px}.header-avatar{height:75px;width:75px;border-radius:50%;object-fit:cover}.header-site-title{font-size:1.5em;font-weight:600;color:var(--heading-color)}.main-nav{display:flex;gap:25px;align-items:center}.nav-link{color:var(--text-color);text-decoration:none;font-weight:400;padding:8px 12px;border-radius:4px;transition:background-color .3s ease,color .3s ease}.nav-link:hover{background-color:var(--primary-bg);color:var(--heading-color)}.nav-link-active{background-color:var(--accent-color);color:var(--secondary-bg);font-weight:500}.nav-link-active:hover{background-color:var(--heading-color);color:var(--secondary-bg)}.section{padding:60px 0}.section:nth-child(2n){background-color:var(--secondary-bg)}.footer{text-align:center;padding:30px 0;background-color:var(--heading-color);color:var(--primary-bg);font-size:.9em}.footer p{margin-bottom:0}.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}.project-card{background-color:var(--secondary-bg);padding:25px;border-radius:8px;box-shadow:0 5px 15px var(--shadow-color);transition:transform .3s ease,box-shadow .3s ease;border:1px solid var(--border-color)}.project-card:hover{box-shadow:0 8px 20px #00000014}.contact-methods{display:flex;justify-content:center;gap:20px;margin-top:20px;flex-wrap:wrap}.contact-methods a{font-size:1.1em;padding:10px 20px;border:1px solid var(--border-color);border-radius:5px;transition:background-color .3s ease,color .3s ease}.contact-methods a:hover{background-color:var(--accent-color);color:var(--secondary-bg);text-decoration:none}.blog-meta{align-items:center}.blog-meta time{color:var(--accent-color);font-size:.9em}.blog-tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background-color:#fff;color:var(--text-color);padding:4px 8px;border-radius:4px;font-size:.8em;border:1px solid var(--border-color)}@media (max-width: 768px){h1{font-size:2.5em}h2{font-size:1.8em}.site-header-content{flex-direction:column;gap:15px}.main-nav{gap:15px}.nav-link{font-size:.9em;padding:6px 10px}}
+</style></head> <body> <div class="site-header"> <div class="container site-header-content"> <div class="header-left"> <a href="/" class="header-avatar-link"> <video autoplay muted class="header-avatar" playsinline poster="/assets/avatar-portrait.C9S5t3ZG.png"> <source src="/assets/avatar-portrait-140.BjSyJAHW.mp4" type="video/mp4"> <img src="/assets/avatar-portrait.C9S5t3ZG.png" alt="Mark Wylde - Avatar"> </video> </a> <span class="header-site-title">Mark Wylde</span> </div> <nav class="main-nav"> <a href="/" class="nav-link ">Home</a> <a href="/about" class="nav-link ">About</a> <a href="/blog" class="nav-link nav-link-active">Blog</a> </nav> </div> </div> <main>  <section class="section" data-astro-cid-7jjqptxk> <div class="container" data-astro-cid-7jjqptxk> <div class="blog-content-wrapper" data-astro-cid-7jjqptxk> <article class="blog-post" data-astro-cid-7jjqptxk> <header class="blog-header" data-astro-cid-7jjqptxk> <h1 data-astro-cid-7jjqptxk>Bringing Claude Code to Gitea: From GitHub Actions to Self-Hosted Git</h1> <div class="blog-meta" data-astro-cid-7jjqptxk> <time datetime="2025-01-31" data-astro-cid-7jjqptxk> January 31, 2025 </time> <div class="blog-tags" data-astro-cid-7jjqptxk> <span class="tag" data-astro-cid-7jjqptxk>Gitea</span><span class="tag" data-astro-cid-7jjqptxk>AI</span><span class="tag" data-astro-cid-7jjqptxk>Claude</span><span class="tag" data-astro-cid-7jjqptxk>GitHub Actions</span><span class="tag" data-astro-cid-7jjqptxk>Open Source</span> </div> </div> </header> <div class="blog-content" data-astro-cid-7jjqptxk> <p>When Anthropic released <a href="https://github.com/anthropics/claude-code-action">Claude Code Action</a>, it was a game-changer for GitHub users. The ability to have Claude analyze code, implement changes, and provide reviews directly within pull request comments was revolutionary. But there was one problem for those of us running self-hosted Git solutions: it only worked with GitHub.</p>
+<p>As someone who uses <a href="https://gitea.io/">Gitea</a> for my personal projects, I wanted that same AI-powered workflow in my self-hosted environment. So I built <a href="https://github.com/markwylde/claude-code-gitea-action">claude-code-gitea-action</a> - a port that brings Claude’s capabilities to Gitea installations.</p>
+<h2 id="the-challenge-api-differences-and-local-operations">The Challenge: API Differences and Local Operations</h2>
+<p>The main challenge in adapting the GitHub Action for Gitea wasn’t just changing API endpoints. While Gitea implements many of GitHub’s APIs for compatibility, there are subtle differences in how certain operations work, especially around file management and branch operations.</p>
+<h3 id="key-technical-differences">Key Technical Differences</h3>
+<ol>
+<li>
+<p><strong>File Operations Strategy</strong>: The original GitHub Action relies heavily on GitHub’s file API for creating and updating files. Gitea’s API has more limited support for complex file operations, so I switched to using local git commands instead.</p>
+</li>
+<li>
+<p><strong>Branch Management</strong>: While GitHub’s API excels at programmatic branch creation and management, Gitea’s approach required a more traditional git-based workflow using local commands.</p>
+</li>
+<li>
+<p><strong>Authentication Flexibility</strong>: I added support for multiple authentication methods, including Claude Max OAuth credentials for users with subscriptions, in addition to direct API keys.</p>
+</li>
+</ol>
+<h2 id="implementation-deep-dive">Implementation Deep Dive</h2>
+<p>The core architectural change was introducing a <code>gitea-client.ts</code> that handles Gitea-specific API calls while maintaining compatibility with the existing Claude Code framework:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> GiteaApiClient</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  private</span><span style="color:#FFAB70"> baseUrl</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  private</span><span style="color:#FFAB70"> token</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  constructor</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">token</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">baseUrl</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> GITEA_API_URL</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">    this</span><span style="color:#E1E4E8">.token </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> token;</span></span>
+<span class="line"><span style="color:#79B8FF">    this</span><span style="color:#E1E4E8">.baseUrl </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> baseUrl.</span><span style="color:#B392F0">replace</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">/</span><span style="color:#85E89D;font-weight:bold">\/</span><span style="color:#F97583">+$</span><span style="color:#9ECBFF">/</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">); </span><span style="color:#6A737D">// Remove trailing slashes</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">  </span></span>
+<span class="line"><span style="color:#6A737D">  // Gitea-specific API implementations...</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="local-git-operations">Local Git Operations</h3>
+<p>Instead of relying on API-based file operations, the Gitea version uses local git commands through a <code>local-git.ts</code> utility:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#6A737D">/**</span></span>
+<span class="line"><span style="color:#6A737D"> * Check if a branch exists locally using git commands</span></span>
+<span class="line"><span style="color:#6A737D"> */</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> async</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> branchExists</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">branchName</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Promise</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#79B8FF">boolean</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">  try</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    await</span><span style="color:#B392F0"> $</span><span style="color:#9ECBFF">`git show-ref --verify --quiet refs/heads/${</span><span style="color:#E1E4E8">branchName</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">  } </span><span style="color:#F97583">catch</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>This approach is more reliable with Gitea’s API limitations and actually provides better performance for file-heavy operations.</p>
+<h3 id="workflow-configuration">Workflow Configuration</h3>
+<p>The Gitea version includes specific workflow examples that account for Gitea’s event system:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Claude Assistant for Gitea</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">on</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  issue_comment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    types</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">created</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">  issues</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    types</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">opened</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">assigned</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">jobs</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  claude-assistant</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    if</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">|</span></span>
+<span class="line"><span style="color:#9ECBFF">      (github.event_name == 'issue_comment' &#x26;&#x26; contains(github.event.comment.body, '@claude')) ||</span></span>
+<span class="line"><span style="color:#9ECBFF">      (github.event_name == 'issues' &#x26;&#x26; contains(github.event.issue.body, '@claude'))</span></span>
+<span class="line"><span style="color:#85E89D">    runs-on</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">ubuntu-latest</span></span>
+<span class="line"><span style="color:#85E89D">    steps</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">uses</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">markwylde/claude-code-gitea-action</span></span>
+<span class="line"><span style="color:#85E89D">        with</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">          gitea_token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">${{ secrets.GITEA_TOKEN }}</span></span>
+<span class="line"><span style="color:#85E89D">          anthropic_api_key</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">${{ secrets.ANTHROPIC_API_KEY }}</span></span></code></pre>
+<h2 id="enhanced-authentication-options">Enhanced Authentication Options</h2>
+<p>One improvement I made over the original is supporting multiple authentication methods:</p>
+<ul>
+<li><strong>Direct Anthropic API</strong> (original method)</li>
+<li><strong>Claude Max OAuth</strong> (for subscription users)</li>
+<li><strong>Amazon Bedrock</strong> (for enterprise users)</li>
+<li><strong>Google Vertex AI</strong> (for Google Cloud users)</li>
+</ul>
+<p>This flexibility allows teams to use their preferred authentication method and billing structure.</p>
+<h2 id="why-this-matters">Why This Matters</h2>
+<p>Self-hosted Git solutions like Gitea are increasingly popular among developers who want:</p>
+<ul>
+<li><strong>Privacy and Control</strong>: Keep code and AI interactions on your own infrastructure</li>
+<li><strong>Cost Management</strong>: Avoid per-seat licensing for large teams</li>
+<li><strong>Customization</strong>: Tailor the Git experience to your organization’s needs</li>
+</ul>
+<p>By bringing Claude Code to Gitea, developers can now have AI-powered code assistance without sacrificing the benefits of self-hosted Git.</p>
+<h2 id="real-world-usage">Real-World Usage</h2>
+<p>In my own projects, I’ve found the Gitea version particularly useful for:</p>
+<ul>
+<li><strong>Code Reviews</strong>: Automated analysis of pull requests with security and best practice suggestions</li>
+<li><strong>Documentation</strong>: Automatically updating README files when API endpoints change</li>
+<li><strong>Bug Fixes</strong>: Claude can often identify and fix issues directly from screenshots or descriptions</li>
+</ul>
+<p>The local git operations actually make certain workflows faster than the GitHub version, especially when dealing with large file changes or multiple commits.</p>
+<h2 id="the-open-source-advantage">The Open Source Advantage</h2>
+<p>Building on Anthropic’s open-source foundation made this adaptation possible. The original codebase was well-structured with clear separation between GitHub-specific code and the core Claude integration logic.</p>
+<p>Key files that required modification:</p>
+<ul>
+<li>API client implementation (<code>gitea-client.ts</code>)</li>
+<li>Local git operations (<code>local-git.ts</code>)</li>
+<li>Workflow examples (<code>gitea-claude.yml</code>)</li>
+<li>Authentication handling (OAuth support)</li>
+</ul>
+<p>Most of the core Claude Code logic remained unchanged, demonstrating the value of good architectural design in the original implementation.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>To try Claude Code with Gitea:</p>
+<ol>
+<li>Add the workflow file to your repository’s <code>.gitea/workflows/</code></li>
+<li>Configure your secrets (Gitea token and Claude credentials)</li>
+<li>Start using <code>@claude</code> in your issue and PR comments</li>
+</ol>
+<p>The setup is straightforward, and the experience is nearly identical to the GitHub version, with the added benefit of running on your own infrastructure.</p>
+<h2 id="looking-forward">Looking Forward</h2>
+<p>This project demonstrates how AI-powered development tools can be adapted across different platforms. As the ecosystem evolves, having choice in where and how we use these tools becomes increasingly important.</p>
+<p>The Gitea version is actively maintained and includes all the latest features from the upstream GitHub Action. It’s a testament to the power of open source collaboration and the importance of making AI tools accessible across different platforms.</p>
+<p>Whether you’re running Gitea for privacy, cost, or customization reasons, you no longer have to choose between self-hosted Git and AI-powered development assistance. You can have both.</p>
+<h2 id="-try-it-yourself">🚀 Try It Yourself</h2>
+<p>Ready to bring Claude Code to your Gitea installation?</p>
+<div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+  <a href="https://github.com/markwylde/claude-code-gitea-action" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #24292f; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+    </svg>
+    View on GitHub
+  </a>
+  <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+    Complete setup instructions, examples, and documentation
+  </p>
+</div> </div> <footer class="blog-footer" data-astro-cid-7jjqptxk> <a href="/blog" class="back-link" data-astro-cid-7jjqptxk>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>  
