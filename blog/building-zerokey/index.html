@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.8.0"><title>Building Zerokey: A Zero-Knowledge Cross-Domain Secret Sharing Library - Mark Wylde</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"><style>.blog-content-wrapper[data-astro-cid-7jjqptxk]{background-color:var(--secondary-bg);border-radius:12px;padding:3rem;box-shadow:0 5px 15px var(--shadow-color);margin:2rem auto;max-width:900px}.blog-post[data-astro-cid-7jjqptxk]{max-width:800px;margin:0 auto}.blog-header[data-astro-cid-7jjqptxk]{margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-color)}.blog-header[data-astro-cid-7jjqptxk] h1[data-astro-cid-7jjqptxk]{margin-bottom:1rem;color:var(--heading-color);font-size:2.5em}.blog-meta[data-astro-cid-7jjqptxk]{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}.blog-content[data-astro-cid-7jjqptxk]{line-height:1.7;margin-bottom:3rem}.blog-content[data-astro-cid-7jjqptxk] h1,.blog-content[data-astro-cid-7jjqptxk] h2,.blog-content[data-astro-cid-7jjqptxk] h3,.blog-content[data-astro-cid-7jjqptxk] h4,.blog-content[data-astro-cid-7jjqptxk] h5,.blog-content[data-astro-cid-7jjqptxk] h6{color:var(--heading-color);margin-top:2rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] h1{font-size:2rem}.blog-content[data-astro-cid-7jjqptxk] h2{font-size:1.5rem}.blog-content[data-astro-cid-7jjqptxk] h3{font-size:1.25rem}.blog-content[data-astro-cid-7jjqptxk] p{margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] code{background-color:var(--secondary-bg);padding:2px 4px;border-radius:3px;font-family:Courier New,monospace;font-size:.9em;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre{background-color:var(--secondary-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre code{background:none;padding:0;border:none}.blog-content[data-astro-cid-7jjqptxk] blockquote{border-left:4px solid var(--accent-color);padding-left:1rem;margin:1rem 0;font-style:italic;color:var(--accent-color)}.blog-content[data-astro-cid-7jjqptxk] ul,.blog-content[data-astro-cid-7jjqptxk] ol{padding-left:1.5rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] li{margin-bottom:.5rem}.blog-content[data-astro-cid-7jjqptxk] a{color:var(--accent-color);text-decoration:none}.blog-content[data-astro-cid-7jjqptxk] a:hover{text-decoration:underline}.blog-footer[data-astro-cid-7jjqptxk]{padding-top:2rem;border-top:1px solid var(--border-color)}.back-link[data-astro-cid-7jjqptxk]{color:var(--accent-color);text-decoration:none;font-weight:500;transition:color .3s ease}.back-link[data-astro-cid-7jjqptxk]:hover{color:var(--heading-color)}@media (max-width: 768px){.blog-content-wrapper[data-astro-cid-7jjqptxk]{margin:0;padding:1rem;border-radius:0;box-shadow:none}.blog-header[data-astro-cid-7jjqptxk]{margin-bottom:1rem}.blog-header[data-astro-cid-7jjqptxk] h1[data-astro-cid-7jjqptxk]{font-size:1.4em;line-height:1.2;margin-bottom:.5rem}.blog-meta[data-astro-cid-7jjqptxk]{flex-direction:column;align-items:flex-start}.blog-content[data-astro-cid-7jjqptxk]{margin-bottom:1.5rem}}
+:root{--primary-bg: #f8f9fa;--secondary-bg: #ffffff;--text-color: #343a40;--heading-color: #212529;--accent-color: #23303e;--border-color: #dee2e6;--shadow-color: rgba(0, 0, 0, .05)}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Montserrat,sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--primary-bg);font-weight:300}.container{max-width:1100px;margin:auto;padding:0 20px;overflow:hidden}h1,h2,h3{color:var(--heading-color);font-weight:600;margin-bottom:.75em}h1{font-size:3em}h2{font-size:2.2em}h3{font-size:1.5em}p{margin-bottom:1em}a{color:var(--accent-color);text-decoration:none;transition:color .3s ease}a:hover{color:var(--heading-color)}.site-header{background-color:var(--secondary-bg);padding:15px 0;border-bottom:1px solid var(--border-color);box-shadow:0 2px 4px var(--shadow-color)}.site-header-content{display:flex;align-items:center;justify-content:space-between}.header-left{display:flex;align-items:center}.header-avatar-link{display:block;margin-right:15px}.header-avatar{height:75px;width:75px;border-radius:50%;object-fit:cover}.header-site-title{font-size:1.5em;font-weight:600;color:var(--heading-color)}.main-nav{display:flex;gap:25px;align-items:center}.nav-link{color:var(--text-color);text-decoration:none;font-weight:400;padding:8px 12px;border-radius:4px;transition:background-color .3s ease,color .3s ease}.nav-link:hover{background-color:var(--primary-bg);color:var(--heading-color)}.nav-link-active{background-color:var(--accent-color);color:var(--secondary-bg);font-weight:500}.nav-link-active:hover{background-color:var(--heading-color);color:var(--secondary-bg)}.section{padding:30px 0}.section:nth-child(2n){background-color:var(--secondary-bg)}.footer{text-align:center;padding:30px 0;background-color:var(--heading-color);color:var(--primary-bg);font-size:.9em}.footer p{margin-bottom:0}.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}.project-card{background-color:var(--secondary-bg);padding:25px;border-radius:8px;box-shadow:0 5px 15px var(--shadow-color);transition:transform .3s ease,box-shadow .3s ease;border:1px solid var(--border-color)}.project-card:hover{box-shadow:0 8px 20px #00000014}.contact-methods{display:flex;justify-content:center;gap:20px;margin-top:20px;flex-wrap:wrap}.contact-methods a{font-size:1.1em;padding:10px 20px;border:1px solid var(--border-color);border-radius:5px;transition:background-color .3s ease,color .3s ease}.contact-methods a:hover{background-color:var(--accent-color);color:var(--secondary-bg);text-decoration:none}.blog-meta{align-items:center}.blog-meta time{color:var(--accent-color);font-size:.9em}.blog-tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background-color:#fff;color:var(--text-color);padding:4px 8px;border-radius:4px;font-size:.8em;border:1px solid var(--border-color)}@media (max-width: 768px){h1{font-size:1.8em}h2{font-size:1.4em}.site-header{padding:10px 0}.site-header-content{flex-direction:column;gap:10px}.header-avatar{height:50px;width:50px}.header-site-title{font-size:1.2em}.main-nav{gap:15px}.nav-link{font-size:.9em;padding:6px 10px}.container{padding:0 10px}.section{padding:20px 0}}
+</style></head> <body> <div class="site-header"> <div class="container site-header-content"> <div class="header-left"> <a href="/" class="header-avatar-link"> <video autoplay muted class="header-avatar" playsinline poster="/assets/avatar-portrait.C9S5t3ZG.png"> <source src="/assets/avatar-portrait-140.BjSyJAHW.mp4" type="video/mp4"> <img src="/assets/avatar-portrait.C9S5t3ZG.png" alt="Mark Wylde - Avatar"> </video> </a> <span class="header-site-title">Mark Wylde</span> </div> <nav class="main-nav"> <a href="/" class="nav-link ">Home</a> <a href="/about" class="nav-link ">About</a> <a href="/blog" class="nav-link nav-link-active">Blog</a> </nav> </div> </div> <main>  <section class="section" data-astro-cid-7jjqptxk> <div class="container" data-astro-cid-7jjqptxk> <div class="blog-content-wrapper" data-astro-cid-7jjqptxk> <article class="blog-post" data-astro-cid-7jjqptxk> <header class="blog-header" data-astro-cid-7jjqptxk> <h1 data-astro-cid-7jjqptxk>Building Zerokey: A Zero-Knowledge Cross-Domain Secret Sharing Library</h1> <div class="blog-meta" data-astro-cid-7jjqptxk> <time datetime="2025-06-26" data-astro-cid-7jjqptxk> June 26, 2025 </time> <div class="blog-tags" data-astro-cid-7jjqptxk> <span class="tag" data-astro-cid-7jjqptxk>Cryptography</span><span class="tag" data-astro-cid-7jjqptxk>Security</span><span class="tag" data-astro-cid-7jjqptxk>Web Development</span><span class="tag" data-astro-cid-7jjqptxk>Zero Knowledge</span><span class="tag" data-astro-cid-7jjqptxk>Privacy</span> </div> </div> </header> <div class="blog-content" data-astro-cid-7jjqptxk> <h2 id="the-problem-that-started-it-all">The Problem That Started It All</h2>
+<p>Picture this: You’re building a modern web application with end-to-end encryption. Your users log in on <code>auth.example.com</code>, where you derive an encryption key from their password. But your actual application lives on <code>app.example.com</code>.</p>
+<p>How do you get that encryption key from the auth domain to the app domain without the server ever seeing it?</p>
+<p>This isn’t a theoretical problem—it’s one I faced while building a privacy-focused application. The encryption key, derived from the user’s password, needed to remain entirely client-side. The server should never see it, not even encrypted. Not in cookies, not in headers, not anywhere.</p>
+<h2 id="why-traditional-approaches-dont-work">Why Traditional Approaches Don’t Work</h2>
+<p>My first instinct was to reach for the usual tools:</p>
+<p><strong>Cookies?</strong> They’re sent to the server with every request. Even with the <code>httpOnly</code> flag off, the server still receives them. That violates our zero-knowledge requirement.</p>
+<p><strong>LocalStorage with iframes?</strong> Modern browsers have strict same-origin policies. An iframe from <code>auth.example.com</code> can’t access the parent window’s localStorage on <code>app.example.com</code>. The browser treats them as completely separate worlds.</p>
+<p><strong>PostMessage API?</strong> This could work, but it requires both domains to be loaded simultaneously. It’s complex to coordinate and doesn’t work well with traditional redirect flows.</p>
+<p><strong>URL parameters?</strong> They’re logged in server access logs and browser history. Definitely not suitable for secrets.</p>
+<h2 id="the-inspiration-url-fragments">The Inspiration: URL Fragments</h2>
+<p>Then I remembered something fundamental about how browsers work: URL fragments (the part after <code>#</code>) are never sent to servers. They’re purely client-side.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>https://example.com/page#this-part-never-reaches-the-server</span></span></code></pre>
+<p>This was the key insight. But fragments are visible in the URL bar, so we couldn’t just put the secret there in plaintext. We needed encryption, and not just any encryption—we needed a way to encrypt on one domain and decrypt on another without any shared state.</p>
+<h2 id="enter-ecdh-elliptic-curve-diffie-hellman">Enter ECDH: Elliptic Curve Diffie-Hellman</h2>
+<p>ECDH allows two parties to establish a shared secret without ever transmitting that secret. Here’s how we adapted it for cross-domain use:</p>
+<ol>
+<li><strong>App domain</strong> generates an ephemeral ECDH keypair</li>
+<li><strong>App domain</strong> redirects to auth domain with the public key</li>
+<li><strong>Auth domain</strong> encrypts the secret with that public key</li>
+<li><strong>Auth domain</strong> redirects back with the encrypted secret in the fragment</li>
+<li><strong>App domain</strong> decrypts using the private key it kept</li>
+</ol>
+<p>The beauty is that each transfer uses a fresh keypair. There’s no long-term key management, and even if someone intercepts the encrypted data, it’s useless without the private key that never left the app domain.</p>
+<h2 id="implementation-deep-dive">Implementation Deep Dive</h2>
+<h3 id="the-crypto-layer">The Crypto Layer</h3>
+<p>We used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actual encryption:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> generateKeyPair</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> keyPair</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> crypto.subtle.</span><span style="color:#B392F0">generateKey</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#E1E4E8">      name: </span><span style="color:#9ECBFF">'ECDH'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">      namedCurve: </span><span style="color:#9ECBFF">'P-256'</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#79B8FF">    true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    [</span><span style="color:#9ECBFF">'deriveKey'</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    publicKey: </span><span style="color:#F97583">await</span><span style="color:#B392F0"> exportPublicKey</span><span style="color:#E1E4E8">(keyPair.publicKey),</span></span>
+<span class="line"><span style="color:#E1E4E8">    privateKey: keyPair.privateKey</span></span>
+<span class="line"><span style="color:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>The P-256 curve gives us good security with reasonable URL lengths when base64url encoded. We use hybrid encryption: ECDH for key agreement and AES-GCM for the actual secret encryption.</p>
+<h3 id="the-url-dance">The URL Dance</h3>
+<p>The redirect flow looks like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. App: https://app.example.com</span></span>
+<span class="line"><span>   → Generate keypair, store private key</span></span>
+<span class="line"><span>   → Redirect to...</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. Auth: https://auth.example.com/secret?</span></span>
+<span class="line"><span>         publicKey=&#x3C;base64url>&#x26;</span></span>
+<span class="line"><span>         redirect=&#x3C;encoded-url>&#x26;</span></span>
+<span class="line"><span>         state=&#x3C;random></span></span>
+<span class="line"><span>   → User logs in, derives encryption key</span></span>
+<span class="line"><span>   → Encrypt key with public key</span></span>
+<span class="line"><span>   → Redirect to...</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. App: https://app.example.com#</span></span>
+<span class="line"><span>        secret=&#x3C;encrypted-base64url>&#x26;</span></span>
+<span class="line"><span>        state=&#x3C;same-random></span></span>
+<span class="line"><span>   → Decrypt with stored private key</span></span>
+<span class="line"><span>   → Clear fragment from URL</span></span>
+<span class="line"><span>   → Store decrypted secret</span></span></code></pre>
+<h3 id="critical-security-details">Critical Security Details</h3>
+<p><strong>One-time keys</strong>: Each transfer generates a fresh keypair. The private key is stored temporarily and deleted after use.</p>
+<p><strong>5-minute expiration</strong>: Pending keys expire after 5 minutes to prevent replay attacks if someone abandons the flow.</p>
+<p><strong>State parameter</strong>: We include a random state parameter to prevent CSRF attacks. The app domain generates it and validates it on return.</p>
+<p><strong>Fragment clearing</strong>: We immediately clear the fragment from the URL after reading it. No sensitive data lingers in the browser history.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> clearFragment</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">  window.history.</span><span style="color:#B392F0">replaceState</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">''</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    window.location.pathname </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> window.location.search);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="the-testing-challenge">The Testing Challenge</h2>
+<p>Testing cross-domain flows is notoriously difficult. We needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.</p>
+<p>Enter Playwright. We set up two test servers:</p>
+<ul>
+<li><code>localhost:3001</code> acting as the app domain</li>
+<li><code>localhost:3002</code> acting as the auth domain</li>
+</ul>
+<p>This let us test the complete flow, including edge cases like:</p>
+<ul>
+<li>Browser back/forward navigation</li>
+<li>Page refreshes mid-flow</li>
+<li>Concurrent flows in multiple tabs</li>
+<li>Network failures</li>
+<li>Corrupted data handling</li>
+</ul>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'happy path - complete secret transfer flow'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">goto</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'http://localhost:3001'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'#requestSecret'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">  // Should redirect to auth domain</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">waitForURL</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">/</span><span style="color:#DBEDFF">localhost:3002</span><span style="color:#9ECBFF">/</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">  // Simulate login</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">fill</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'#password'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'my-secret-password'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'#login'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">  // Should redirect back with secret</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">waitForURL</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">/</span><span style="color:#DBEDFF">localhost:3001</span><span style="color:#9ECBFF">/</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(page.</span><span style="color:#B392F0">locator</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'#status'</span><span style="color:#E1E4E8">)).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'Secret received!'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<h3 id="what-worked-well">What Worked Well</h3>
+<p><strong>URL fragments as transport</strong>: This approach is simple, secure, and works everywhere. No special browser APIs, no compatibility issues.</p>
+<p><strong>Ephemeral keys</strong>: Generating fresh keys for each transfer eliminates key management complexity and improves security.</p>
+<p><strong>Web Crypto API</strong>: Despite its somewhat awkward promise-based API, it provides solid, hardware-accelerated cryptography.</p>
+<h3 id="unexpected-challenges">Unexpected Challenges</h3>
+<p><strong>Testing crypto.subtle</strong>: In our test environment, mocking the absence of crypto.subtle proved impossible. The browsers Playwright uses are too modern!</p>
+<p><strong>Fragment timing</strong>: We discovered that checking <code>window.location.hash</code> immediately after navigation might miss the fragment. A small delay or event listener solves this.</p>
+<p><strong>Error messages</strong>: Crypto errors are often opaque. We had to add careful error handling to provide meaningful feedback when things go wrong.</p>
+<h3 id="what-wed-do-differently">What We’d Do Differently</h3>
+<p><strong>TypeScript</strong>: The library would benefit from type definitions, especially for the crypto operations.</p>
+<p><strong>Streaming encryption</strong>: For larger secrets, we could implement streaming encryption to handle data that doesn’t fit comfortably in a URL.</p>
+<p><strong>WebAuthn integration</strong>: The library could be extended to work with WebAuthn for passwordless authentication flows.</p>
+<h2 id="when-should-you-use-zerokey">When Should You Use Zerokey?</h2>
+<p>Zerokey is perfect when you need to:</p>
+<ul>
+<li>Share secrets between different subdomains</li>
+<li>Maintain zero-knowledge architecture</li>
+<li>Avoid server-side session management</li>
+<li>Implement client-side encryption across domains</li>
+</ul>
+<p>It’s not suitable when:</p>
+<ul>
+<li>You need to share very large amounts of data</li>
+<li>The domains are not under your control</li>
+<li>You require persistent server-side sessions</li>
+<li>Older browser support is critical (pre-2017)</li>
+</ul>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>While zerokey provides strong security guarantees, remember:</p>
+<ol>
+<li><strong>HTTPS is mandatory</strong>: Both domains must use HTTPS in production</li>
+<li><strong>Domain validation</strong>: Consider adding additional validation for the redirect URLs</li>
+<li><strong>Content Security Policy</strong>: Set appropriate CSP headers to prevent XSS</li>
+<li><strong>Rate limiting</strong>: Consider rate-limiting the auth endpoint to prevent brute force attacks</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>Building zerokey taught me that sometimes the best solutions come from combining simple browser features with modern cryptography. URL fragments have been around since the early days of the web, but combined with ECDH and AES-GCM, they become a powerful tool for privacy-preserving applications.</p>
+<p>The library is now open source and available on <a href="https://www.npmjs.com/package/zerokey">npm</a>. If you’re building applications that prioritize user privacy and need cross-domain secret sharing, give it a try.</p>
+<p>Remember: in an age of increasing surveillance and data breaches, zero-knowledge architectures aren’t just nice to have—they’re essential for protecting user privacy. Every secret that never reaches your server is a secret that can’t be stolen from it.</p>
+<h2 id="-try-it-yourself">🚀 Try It Yourself</h2>
+<p>Ready to implement zero-knowledge secret sharing in your applications?</p>
+<div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+  <a href="https://github.com/markwylde/zerokey" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #24292f; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+    </svg>
+    View on GitHub
+  </a>
+  <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+    Complete documentation, examples, and implementation details
+  </p>
+</div>
+<div style="text-align: center; margin: 2rem 0;">
+  <a href="https://www.npmjs.com/package/zerokey" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #cb3837; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+    <svg width="20" height="20" viewBox="0 0 780 250" fill="currentColor">
+      <path d="M240 250h100v-50h100V0H240v250zM340 50h50v100h-50V50zM480 0v200h100V50h50v150h50V50h50v150h50V0H480zM0 200h100V50h50v150h50V0H0v200z"></path>
+    </svg>
+    Install from npm
+  </a>
+  <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+    npm install zerokey
+  </p>
+</div> </div> <footer class="blog-footer" data-astro-cid-7jjqptxk> <a href="/blog" class="back-link" data-astro-cid-7jjqptxk>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>  
