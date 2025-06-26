@@ -6,16 +6,16 @@
 <p>This isn’t a theoretical problem—it’s one I faced while building a privacy-focused application. The encryption key, derived from the user’s password, needed to remain entirely client-side. The server should never see it, not even encrypted. Not in cookies, not in headers, not anywhere.</p>
 <h2 id="why-traditional-approaches-dont-work">Why Traditional Approaches Don’t Work</h2>
 <p>My first instinct was to reach for the usual tools:</p>
-<p><strong>Cookies?</strong> They’re sent to the server with every request. Even with the <code>httpOnly</code> flag off, the server still receives them. That violates our zero-knowledge requirement.</p>
+<p><strong>Cookies?</strong> They’re sent to the server with every request. Even with the <code>httpOnly</code> flag off, the server still receives them. That violates the zero-knowledge requirement.</p>
 <p><strong>LocalStorage with iframes?</strong> Modern browsers have strict same-origin policies. An iframe from <code>auth.example.com</code> can’t access the parent window’s localStorage on <code>app.example.com</code>. The browser treats them as completely separate worlds.</p>
 <p><strong>PostMessage API?</strong> This could work, but it requires both domains to be loaded simultaneously. It’s complex to coordinate and doesn’t work well with traditional redirect flows.</p>
 <p><strong>URL parameters?</strong> They’re logged in server access logs and browser history. Definitely not suitable for secrets.</p>
 <h2 id="the-inspiration-url-fragments">The Inspiration: URL Fragments</h2>
 <p>Then I remembered something fundamental about how browsers work: URL fragments (the part after <code>#</code>) are never sent to servers. They’re purely client-side.</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>https://example.com/page#this-part-never-reaches-the-server</span></span></code></pre>
-<p>This was the key insight. But fragments are visible in the URL bar, so we couldn’t just put the secret there in plaintext. We needed encryption, and not just any encryption—we needed a way to encrypt on one domain and decrypt on another without any shared state.</p>
+<p>This was the key insight. But fragments are visible in the URL bar, so I couldn’t just put the secret there in plaintext. I needed encryption, and not just any encryption—I needed a way to encrypt on one domain and decrypt on another without any shared state.</p>
 <h2 id="enter-ecdh-elliptic-curve-diffie-hellman">Enter ECDH: Elliptic Curve Diffie-Hellman</h2>
-<p>ECDH allows two parties to establish a shared secret without ever transmitting that secret. Here’s how we adapted it for cross-domain use:</p>
+<p>ECDH allows two parties to establish a shared secret without ever transmitting that secret. Here’s how I adapted it for cross-domain use:</p>
 <ol>
 <li><strong>App domain</strong> generates an ephemeral ECDH keypair</li>
 <li><strong>App domain</strong> redirects to auth domain with the public key</li>
@@ -26,7 +26,7 @@
 <p>The beauty is that each transfer uses a fresh keypair. There’s no long-term key management, and even if someone intercepts the encrypted data, it’s useless without the private key that never left the app domain.</p>
 <h2 id="implementation-deep-dive">Implementation Deep Dive</h2>
 <h3 id="the-crypto-layer">The Crypto Layer</h3>
-<p>We used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actual encryption:</p>
+<p>I used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actual encryption:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> generateKeyPair</span><span style="color:#E1E4E8">() {</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> keyPair</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> crypto.subtle.</span><span style="color:#B392F0">generateKey</span><span style="color:#E1E4E8">(</span></span>
 <span class="line"><span style="color:#E1E4E8">    {</span></span>
@@ -42,7 +42,7 @@
 <span class="line"><span style="color:#E1E4E8">    privateKey: keyPair.privateKey</span></span>
 <span class="line"><span style="color:#E1E4E8">  };</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
-<p>The P-256 curve gives us good security with reasonable URL lengths when base64url encoded. We use hybrid encryption: ECDH for key agreement and AES-GCM for the actual secret encryption.</p>
+<p>The P-256 curve gives good security with reasonable URL lengths when base64url encoded. I use hybrid encryption: ECDH for key agreement and AES-GCM for the actual secret encryption.</p>
 <h3 id="the-url-dance">The URL Dance</h3>
 <p>The redirect flow looks like this:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. App: https://app.example.com</span></span>
@@ -66,20 +66,20 @@
 <h3 id="critical-security-details">Critical Security Details</h3>
 <p><strong>One-time keys</strong>: Each transfer generates a fresh keypair. The private key is stored temporarily and deleted after use.</p>
 <p><strong>5-minute expiration</strong>: Pending keys expire after 5 minutes to prevent replay attacks if someone abandons the flow.</p>
-<p><strong>State parameter</strong>: We include a random state parameter to prevent CSRF attacks. The app domain generates it and validates it on return.</p>
-<p><strong>Fragment clearing</strong>: We immediately clear the fragment from the URL after reading it. No sensitive data lingers in the browser history.</p>
+<p><strong>State parameter</strong>: I include a random state parameter to prevent CSRF attacks. The app domain generates it and validates it on return.</p>
+<p><strong>Fragment clearing</strong>: I immediately clear the fragment from the URL after reading it. No sensitive data lingers in the browser history.</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> clearFragment</span><span style="color:#E1E4E8">() {</span></span>
 <span class="line"><span style="color:#E1E4E8">  window.history.</span><span style="color:#B392F0">replaceState</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">''</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    window.location.pathname </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> window.location.search);</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
 <h2 id="the-testing-challenge">The Testing Challenge</h2>
-<p>Testing cross-domain flows is notoriously difficult. We needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.</p>
-<p>Enter Playwright. We set up two test servers:</p>
+<p>Testing cross-domain flows is notoriously difficult. I needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.</p>
+<p>Enter Playwright. I set up two test servers:</p>
 <ul>
 <li><code>localhost:3001</code> acting as the app domain</li>
 <li><code>localhost:3002</code> acting as the auth domain</li>
 </ul>
-<p>This let us test the complete flow, including edge cases like:</p>
+<p>This let me test the complete flow, including edge cases like:</p>
 <ul>
 <li>Browser back/forward navigation</li>
 <li>Page refreshes mid-flow</li>
@@ -108,12 +108,12 @@
 <p><strong>Ephemeral keys</strong>: Generating fresh keys for each transfer eliminates key management complexity and improves security.</p>
 <p><strong>Web Crypto API</strong>: Despite its somewhat awkward promise-based API, it provides solid, hardware-accelerated cryptography.</p>
 <h3 id="unexpected-challenges">Unexpected Challenges</h3>
-<p><strong>Testing crypto.subtle</strong>: In our test environment, mocking the absence of crypto.subtle proved impossible. The browsers Playwright uses are too modern!</p>
-<p><strong>Fragment timing</strong>: We discovered that checking <code>window.location.hash</code> immediately after navigation might miss the fragment. A small delay or event listener solves this.</p>
-<p><strong>Error messages</strong>: Crypto errors are often opaque. We had to add careful error handling to provide meaningful feedback when things go wrong.</p>
-<h3 id="what-wed-do-differently">What We’d Do Differently</h3>
+<p><strong>Testing crypto.subtle</strong>: In my test environment, mocking the absence of crypto.subtle proved impossible. The browsers Playwright uses are too modern!</p>
+<p><strong>Fragment timing</strong>: I discovered that checking <code>window.location.hash</code> immediately after navigation might miss the fragment. A small delay or event listener solves this.</p>
+<p><strong>Error messages</strong>: Crypto errors are often opaque. I had to add careful error handling to provide meaningful feedback when things go wrong.</p>
+<h3 id="what-id-do-differently">What I’d Do Differently</h3>
 <p><strong>TypeScript</strong>: The library would benefit from type definitions, especially for the crypto operations.</p>
-<p><strong>Streaming encryption</strong>: For larger secrets, we could implement streaming encryption to handle data that doesn’t fit comfortably in a URL.</p>
+<p><strong>Streaming encryption</strong>: For larger secrets, I could implement streaming encryption to handle data that doesn’t fit comfortably in a URL.</p>
 <p><strong>WebAuthn integration</strong>: The library could be extended to work with WebAuthn for passwordless authentication flows.</p>
 <h2 id="when-should-you-use-zerokey">When Should You Use Zerokey?</h2>
 <p>Zerokey is perfect when you need to:</p>
