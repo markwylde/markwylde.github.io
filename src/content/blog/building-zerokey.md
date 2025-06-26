@@ -17,7 +17,7 @@ This isn't a theoretical problem—it's one I faced while building a privacy-foc
 
 My first instinct was to reach for the usual tools:
 
-**Cookies?** They're sent to the server with every request. Even with the `httpOnly` flag off, the server still receives them. That violates our zero-knowledge requirement.
+**Cookies?** They're sent to the server with every request. Even with the `httpOnly` flag off, the server still receives them. That violates the zero-knowledge requirement.
 
 **LocalStorage with iframes?** Modern browsers have strict same-origin policies. An iframe from `auth.example.com` can't access the parent window's localStorage on `app.example.com`. The browser treats them as completely separate worlds.
 
@@ -33,11 +33,11 @@ Then I remembered something fundamental about how browsers work: URL fragments (
 https://example.com/page#this-part-never-reaches-the-server
 ```
 
-This was the key insight. But fragments are visible in the URL bar, so we couldn't just put the secret there in plaintext. We needed encryption, and not just any encryption—we needed a way to encrypt on one domain and decrypt on another without any shared state.
+This was the key insight. But fragments are visible in the URL bar, so I couldn't just put the secret there in plaintext. I needed encryption, and not just any encryption—I needed a way to encrypt on one domain and decrypt on another without any shared state.
 
 ## Enter ECDH: Elliptic Curve Diffie-Hellman
 
-ECDH allows two parties to establish a shared secret without ever transmitting that secret. Here's how we adapted it for cross-domain use:
+ECDH allows two parties to establish a shared secret without ever transmitting that secret. Here's how I adapted it for cross-domain use:
 
 1. **App domain** generates an ephemeral ECDH keypair
 2. **App domain** redirects to auth domain with the public key
@@ -51,7 +51,7 @@ The beauty is that each transfer uses a fresh keypair. There's no long-term key 
 
 ### The Crypto Layer
 
-We used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actual encryption:
+I used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actual encryption:
 
 ```javascript
 async function generateKeyPair() {
@@ -71,7 +71,7 @@ async function generateKeyPair() {
 }
 ```
 
-The P-256 curve gives us good security with reasonable URL lengths when base64url encoded. We use hybrid encryption: ECDH for key agreement and AES-GCM for the actual secret encryption.
+The P-256 curve gives good security with reasonable URL lengths when base64url encoded. I use hybrid encryption: ECDH for key agreement and AES-GCM for the actual secret encryption.
 
 ### The URL Dance
 
@@ -104,9 +104,9 @@ The redirect flow looks like this:
 
 **5-minute expiration**: Pending keys expire after 5 minutes to prevent replay attacks if someone abandons the flow.
 
-**State parameter**: We include a random state parameter to prevent CSRF attacks. The app domain generates it and validates it on return.
+**State parameter**: I include a random state parameter to prevent CSRF attacks. The app domain generates it and validates it on return.
 
-**Fragment clearing**: We immediately clear the fragment from the URL after reading it. No sensitive data lingers in the browser history.
+**Fragment clearing**: I immediately clear the fragment from the URL after reading it. No sensitive data lingers in the browser history.
 
 ```javascript
 function clearFragment() {
@@ -117,13 +117,13 @@ function clearFragment() {
 
 ## The Testing Challenge
 
-Testing cross-domain flows is notoriously difficult. We needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.
+Testing cross-domain flows is notoriously difficult. I needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.
 
-Enter Playwright. We set up two test servers:
+Enter Playwright. I set up two test servers:
 - `localhost:3001` acting as the app domain
 - `localhost:3002` acting as the auth domain
 
-This let us test the complete flow, including edge cases like:
+This let me test the complete flow, including edge cases like:
 - Browser back/forward navigation
 - Page refreshes mid-flow
 - Concurrent flows in multiple tabs
@@ -160,17 +160,17 @@ test('happy path - complete secret transfer flow', async ({ page }) => {
 
 ### Unexpected Challenges
 
-**Testing crypto.subtle**: In our test environment, mocking the absence of crypto.subtle proved impossible. The browsers Playwright uses are too modern!
+**Testing crypto.subtle**: In my test environment, mocking the absence of crypto.subtle proved impossible. The browsers Playwright uses are too modern!
 
-**Fragment timing**: We discovered that checking `window.location.hash` immediately after navigation might miss the fragment. A small delay or event listener solves this.
+**Fragment timing**: I discovered that checking `window.location.hash` immediately after navigation might miss the fragment. A small delay or event listener solves this.
 
-**Error messages**: Crypto errors are often opaque. We had to add careful error handling to provide meaningful feedback when things go wrong.
+**Error messages**: Crypto errors are often opaque. I had to add careful error handling to provide meaningful feedback when things go wrong.
 
-### What We'd Do Differently
+### What I'd Do Differently
 
 **TypeScript**: The library would benefit from type definitions, especially for the crypto operations.
 
-**Streaming encryption**: For larger secrets, we could implement streaming encryption to handle data that doesn't fit comfortably in a URL.
+**Streaming encryption**: For larger secrets, I could implement streaming encryption to handle data that doesn't fit comfortably in a URL.
 
 **WebAuthn integration**: The library could be extended to work with WebAuthn for passwordless authentication flows.
 
