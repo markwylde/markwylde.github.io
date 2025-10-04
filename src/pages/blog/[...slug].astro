@@ -165,6 +165,13 @@ const { Content } = await entry.render();
 		text-decoration: underline;
 	}
 
+	.blog-content :global(img) {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		margin: 1.5rem 0;
+	}
+
 	.blog-footer {
 		padding-top: 2rem;
 		border-top: 1px solid var(--border-color);
