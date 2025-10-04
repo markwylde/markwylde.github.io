@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.14.1"><title>AutoRules: AI-Powered Code Validation - Mark Wylde</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"><style>.blog-content-wrapper[data-astro-cid-7jjqptxk]{background-color:var(--secondary-bg);border-radius:12px;padding:3rem;box-shadow:0 5px 15px var(--shadow-color);margin:2rem auto;max-width:1100px}.blog-post[data-astro-cid-7jjqptxk]{max-width:1100px;margin:0 auto}.blog-header[data-astro-cid-7jjqptxk]{margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-color)}.blog-header[data-astro-cid-7jjqptxk] h1[data-astro-cid-7jjqptxk]{margin-bottom:1rem;color:var(--heading-color);font-size:2.5em}.blog-meta[data-astro-cid-7jjqptxk]{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}.blog-content[data-astro-cid-7jjqptxk]{line-height:1.7;margin-bottom:3rem}.blog-content[data-astro-cid-7jjqptxk] h1,.blog-content[data-astro-cid-7jjqptxk] h2,.blog-content[data-astro-cid-7jjqptxk] h3,.blog-content[data-astro-cid-7jjqptxk] h4,.blog-content[data-astro-cid-7jjqptxk] h5,.blog-content[data-astro-cid-7jjqptxk] h6{color:var(--heading-color);margin-top:2rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] h1{font-size:2rem}.blog-content[data-astro-cid-7jjqptxk] h2{font-size:1.5rem}.blog-content[data-astro-cid-7jjqptxk] h3{font-size:1.25rem}.blog-content[data-astro-cid-7jjqptxk] p{margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] code{background-color:var(--secondary-bg);padding:2px 4px;border-radius:3px;font-family:Courier New,monospace;font-size:.9em;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre{background-color:var(--secondary-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border-color)}.blog-content[data-astro-cid-7jjqptxk] pre code{background:none;padding:0;border:none}.blog-content[data-astro-cid-7jjqptxk] blockquote{border-left:4px solid var(--accent-color);padding-left:1rem;margin:1rem 0;font-style:italic;color:var(--accent-color)}.blog-content[data-astro-cid-7jjqptxk] ul,.blog-content[data-astro-cid-7jjqptxk] ol{padding-left:1.5rem;margin-bottom:1rem}.blog-content[data-astro-cid-7jjqptxk] li{margin-bottom:.5rem}.blog-content[data-astro-cid-7jjqptxk] a{color:var(--accent-color);text-decoration:none}.blog-content[data-astro-cid-7jjqptxk] a:hover{text-decoration:underline}.blog-content[data-astro-cid-7jjqptxk] img{width:100%;height:auto;border-radius:8px;margin:1.5rem 0}.blog-footer[data-astro-cid-7jjqptxk]{padding-top:2rem;border-top:1px solid var(--border-color)}.back-link[data-astro-cid-7jjqptxk]{color:var(--accent-color);text-decoration:none;font-weight:500;transition:color .3s ease}.back-link[data-astro-cid-7jjqptxk]:hover{color:var(--heading-color)}@media (max-width: 768px){.blog-content-wrapper[data-astro-cid-7jjqptxk]{margin:0;padding:1rem;border-radius:0;box-shadow:none}.blog-header[data-astro-cid-7jjqptxk]{margin-bottom:1rem}.blog-header[data-astro-cid-7jjqptxk] h1[data-astro-cid-7jjqptxk]{font-size:1.4em;line-height:1.2;margin-bottom:.5rem}.blog-meta[data-astro-cid-7jjqptxk]{flex-direction:column;align-items:flex-start}.blog-content[data-astro-cid-7jjqptxk]{margin-bottom:1.5rem}}
+:root{--primary-bg: #f8f9fa;--secondary-bg: #ffffff;--text-color: #343a40;--heading-color: #212529;--accent-color: #23303e;--border-color: #dee2e6;--shadow-color: rgba(0, 0, 0, .05)}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Montserrat,sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--primary-bg);font-weight:300}.container{max-width:1100px;margin:auto;padding:0 20px;overflow:hidden}h1,h2,h3{color:var(--heading-color);font-weight:600;margin-bottom:.75em}h1{font-size:3em}h2{font-size:2.2em}h3{font-size:1.5em}p{margin-bottom:1em}a{color:var(--accent-color);text-decoration:none;transition:color .3s ease}a:hover{color:var(--heading-color)}.site-header{background-color:var(--secondary-bg);padding:15px 0;border-bottom:1px solid var(--border-color);box-shadow:0 2px 4px var(--shadow-color)}.site-header-content{display:flex;align-items:center;justify-content:space-between}.header-left{display:flex;align-items:center}.header-avatar-link{display:block;margin-right:15px}.header-avatar{height:75px;width:75px;border-radius:50%;object-fit:cover}.header-site-title{font-size:1.5em;font-weight:600;color:var(--heading-color)}.main-nav{display:flex;gap:25px;align-items:center}.nav-link{color:var(--text-color);text-decoration:none;font-weight:400;padding:8px 12px;border-radius:4px;transition:background-color .3s ease,color .3s ease}.nav-link:hover{background-color:var(--primary-bg);color:var(--heading-color)}.nav-link-active{background-color:var(--accent-color);color:var(--secondary-bg);font-weight:500}.nav-link-active:hover{background-color:var(--heading-color);color:var(--secondary-bg)}.section{padding:30px 0}.section:nth-child(2n){background-color:var(--secondary-bg)}.footer{text-align:center;padding:30px 0;background-color:var(--heading-color);color:var(--primary-bg);font-size:.9em}.footer p{margin-bottom:0}.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}.project-card{background-color:var(--secondary-bg);padding:25px;border-radius:8px;box-shadow:0 5px 15px var(--shadow-color);transition:transform .3s ease,box-shadow .3s ease;border:1px solid var(--border-color)}.project-card:hover{box-shadow:0 8px 20px #00000014}.contact-methods{display:flex;justify-content:center;gap:20px;margin-top:20px;flex-wrap:wrap}.contact-methods a{font-size:1.1em;padding:10px 20px;border:1px solid var(--border-color);border-radius:5px;transition:background-color .3s ease,color .3s ease}.contact-methods a:hover{background-color:var(--accent-color);color:var(--secondary-bg);text-decoration:none}.blog-meta{align-items:center}.blog-meta time{color:var(--accent-color);font-size:.9em}.blog-tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background-color:#fff;color:var(--text-color);padding:4px 8px;border-radius:4px;font-size:.8em;border:1px solid var(--border-color)}@media (max-width: 768px){h1{font-size:1.8em}h2{font-size:1.4em}.site-header{padding:10px 0}.site-header-content{flex-direction:column;gap:10px}.header-avatar{height:50px;width:50px}.header-site-title{font-size:1.2em}.main-nav{gap:15px}.nav-link{font-size:.9em;padding:6px 10px}.container{padding:0 10px}.section{padding:20px 0}}
+</style></head> <body> <div class="site-header"> <div class="container site-header-content"> <div class="header-left"> <a href="/" class="header-avatar-link"> <video autoplay muted class="header-avatar" playsinline poster="/assets/avatar-portrait.C9S5t3ZG.png"> <source src="/assets/avatar-portrait-140.BjSyJAHW.mp4" type="video/mp4"> <img src="/assets/avatar-portrait.C9S5t3ZG.png" alt="Mark Wylde - Avatar"> </video> </a> <span class="header-site-title">Mark Wylde</span> </div> <nav class="main-nav"> <a href="/" class="nav-link ">Home</a> <a href="/about" class="nav-link ">About</a> <a href="/blog" class="nav-link nav-link-active">Blog</a> </nav> </div> </div> <main>  <section class="section" data-astro-cid-7jjqptxk> <div class="container" data-astro-cid-7jjqptxk> <div class="blog-content-wrapper" data-astro-cid-7jjqptxk> <article class="blog-post" data-astro-cid-7jjqptxk> <header class="blog-header" data-astro-cid-7jjqptxk> <h1 data-astro-cid-7jjqptxk>AutoRules: AI-Powered Code Validation</h1> <div class="blog-meta" data-astro-cid-7jjqptxk> <time datetime="2025-10-04" data-astro-cid-7jjqptxk> October 4, 2025 </time> <div class="blog-tags" data-astro-cid-7jjqptxk> <span class="tag" data-astro-cid-7jjqptxk>AI</span><span class="tag" data-astro-cid-7jjqptxk>Code Quality</span><span class="tag" data-astro-cid-7jjqptxk>Security</span><span class="tag" data-astro-cid-7jjqptxk>Testing</span><span class="tag" data-astro-cid-7jjqptxk>Open Source</span> </div> </div> </header> <div class="blog-content" data-astro-cid-7jjqptxk> <h2 id="the-problem-with-building-zero-knowledge-auth">The Problem with Building Zero-Knowledge Auth</h2>
+<p>I’ve been building <a href="https://github.com/puzed/darkauth">DarkAuth</a>, a zero-knowledge OAuth/OIDC server that uses OPAQUE (RFC 9380) to ensure users’ passwords and derived encryption keys never reach the server. It’s proper zero-knowledge - the server literally can’t see the password, not even encrypted.</p>
+<p>As you can imagine, this project has some pretty serious concerns:</p>
+<p><strong>Security risks:</strong></p>
+<ol>
+<li>Accidentally sending the user’s password to the server</li>
+<li>Accidentally sending the user’s derived encryption key to the server</li>
+<li>Introducing vulnerabilities in controllers or models</li>
+</ol>
+<p><strong>Code quality:</strong></p>
+<ol start="4">
+<li>Not following the established code style patterns</li>
+<li>Not making generic functions pure and abstractable</li>
+</ol>
+<p>I could use Claude Code or Cursor to review the code, but they’re slow and often miss files or folders. They’ll tell me everything’s fine when it isn’t. I needed something systematic.</p>
+<h2 id="so-i-built-autorules">So I built AutoRules</h2>
+<p><a href="https://github.com/markwylde/autorules">AutoRules</a> is an open source tool that asks AI a bunch of questions about every file in your project based on a pattern you define.</p>
+<p>The basic idea: run an AI model against every file that matches a pattern, asking it specific questions. Get back a report showing passes, failures, and exactly which files have issues.</p>
+<p>Here’s what I run for DarkAuth:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">autorules</span><span style="color:#79B8FF"> --workers=3</span><span style="color:#79B8FF"> --model=openai/gpt-oss-120b</span><span style="color:#79B8FF"> --provider-sort=throughput</span></span></code></pre>
+<p>It checks 148 files in about 70 seconds for $0.0077. Not even a cent. And I’m getting around 300 tokens per second.</p>
+<p><img alt="AutoRules CLI in progress" loading="lazy" decoding="async" fetchpriority="auto" width="2386" height="874" src="/assets/screenshot-autorules-cli.ByCSVjje_Z1Wqt29.webp" ></p>
+<p>When it’s done, you get a full HTML report:</p>
+<p><img alt="AutoRules Report" loading="lazy" decoding="async" fetchpriority="auto" width="2746" height="1540" src="/assets/screenshot-autorules.Ct-lHGM1_ZaAk4H.webp" ></p>
+<p><strong><a href="/autorules-example-report.pdf">📄 View Example Report (PDF)</a></strong></p>
+<h2 id="how-it-works">How it works</h2>
+<p>AutoRules looks for <code>autorules</code> folders in your project. For DarkAuth, I have one at <code>/packages/api/autorules</code>.</p>
+<p>Inside that folder, you create rule files as Markdown documents. Each rule is a separate <code>.md</code> file with a simple structure:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#E1E4E8">title: Never send the users password to the server</span></span>
+<span class="line"><span style="color:#E1E4E8">files: src/*</span><span style="color:#E1E4E8;font-style:italic">*/*</span><span style="color:#E1E4E8">.ts</span></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">This file should not send the user's password to the server in any way.</span></span>
+<span class="line"><span style="color:#E1E4E8">Look for fetch calls, axios requests, or any HTTP methods that might</span></span>
+<span class="line"><span style="color:#E1E4E8">include password data in the request body or headers.</span></span></code></pre>
+<p>That’s it. Title, glob pattern, separator, then natural language criteria.</p>
+<p>The glob pattern targets which files to check:</p>
+<ul>
+<li><code>src/**/*.ts</code> - all TypeScript files</li>
+<li><code>packages/*/controllers/*.ts</code> - just controllers</li>
+<li><code>**/*.{js,ts}</code> - both JS and TS files</li>
+</ul>
+<p>Here’s what happens when you run it:</p>
+<p><strong>1. Scan</strong>: Finds all <code>autorules</code> folders in your project</p>
+<p><strong>2. Parse</strong>: Loads the rule files and extracts the criteria</p>
+<p><strong>3. Match</strong>: Uses glob patterns to find files to check</p>
+<p><strong>4. Analyze</strong>: Sends each file to the AI with your rule criteria. The AI responds with PASS or FAIL plus specific reasoning.</p>
+<p><strong>5. Report</strong>: After all files are checked, the AI does one final analysis looking at all the results together. This catches patterns across files that individual checks might miss. Then it generates an interactive HTML report.</p>
+<p>The report shows:</p>
+<ul>
+<li>Total files checked per rule</li>
+<li>Pass/fail counts</li>
+<li>Which specific files failed and why</li>
+<li>Token usage and cost</li>
+<li>Expandable details for each check</li>
+</ul>
+<h2 id="why-its-fast">Why it’s fast</h2>
+<p>Speed comes from three things:</p>
+<p><strong>1. Parallel workers</strong>: Multiple files checked simultaneously. I use 3 workers which keeps things moving.</p>
+<p><strong>2. Fast models</strong>: I’m using <code>openai/gpt-oss-120b</code> on providers sorted by throughput. Cerebras and Groq are particularly good for this - they’re optimized for speed.</p>
+<p><strong>3. Simple task</strong>: Each check is independent. No conversation history, no context building. Just a file and a question.</p>
+<p>300 tokens per second means I can validate my entire codebase in the time it takes to make coffee.</p>
+<h2 id="notes">Notes</h2>
+<p><strong>AI is non-deterministic</strong>: Run the same check twice and you might get different results. Sometimes there are false positives. Sometimes it flags things that aren’t real issues. But that’s still useful - these flags serve as pointers for deeper investigation. When AutoRules highlights something, I’ll hand it off to Claude Code or Cursor for proper analysis. It’s like having a first-pass filter that catches potential problems.</p>
+<p><strong>False positives happen</strong>: Especially with older or smaller models. But gpt-oss-120b has been excellent. It understands context and gives reliable answers most of the time. When it does flag something incorrectly, it’s still worth knowing why the AI thought it was an issue.</p>
+<p><strong>Specificity matters</strong>: Vague questions get vague answers. “Does this file have security issues?” is too broad. “Does this file send the user’s password to the server?” is specific and actionable.</p>
+<p><strong>Cost is negligible</strong>: Less than a cent to check 148 files. I can run this on every commit without worrying about cost.</p>
+<p><strong>Reports are documentation</strong>: The HTML report becomes a security audit trail. I can share it with contributors or reference it later.</p>
+<h2 id="future-ideas">Future ideas</h2>
+<p>I’m thinking this could work really well in GitHub Actions. Imagine:</p>
+<ul>
+<li>Run AutoRules on every pull request</li>
+<li>Post results as a comment</li>
+<li>Block merges if critical rules fail</li>
+</ul>
+<p>You could have rules like:</p>
+<ul>
+<li>“Does this file use deprecated functions?”</li>
+<li>“Are there any SQL injection vulnerabilities?”</li>
+<li>“Does this follow our error handling patterns?”</li>
+<li>“Are secrets properly handled?”</li>
+</ul>
+<p>It’s like having an AI code reviewer that actually checks every file systematically, not just the ones it happens to look at.</p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>AutoRules is great for:</p>
+<ul>
+<li>Security-critical codebases where specific patterns must never appear</li>
+<li>Enforcing code style consistency across large projects</li>
+<li>Auditing third-party code or dependencies</li>
+<li>Pre-commit validation of specific rules</li>
+<li>Continuous monitoring of code quality</li>
+</ul>
+<p>Not ideal for:</p>
+<ul>
+<li>Complex logic validation (AI can miss subtle bugs)</li>
+<li>Anything requiring deep understanding of business logic</li>
+<li>Real-time validation during development (it’s fast but not instant)</li>
+</ul>
+<h2 id="the-implementation">The implementation</h2>
+<p>It’s built with Node.js and supports multiple AI providers through a unified interface. You can use OpenAI, Anthropic, Groq, Cerebras, or any OpenRouter-compatible provider.</p>
+<p>The worker pool keeps things efficient. Results stream in as they complete rather than waiting for everything to finish.</p>
+<p>Error handling is solid - if a file fails to check, it’s reported but doesn’t stop the whole run.</p>
+<h2 id="whats-next">What’s next</h2>
+<p>I’ve only got one rule so far for DarkAuth, but I’m planning to add more:</p>
+<ul>
+<li>Check for encryption key leaks</li>
+<li>Validate controller authorization patterns</li>
+<li>Ensure database queries use parameterized statements</li>
+<li>Verify error messages don’t leak sensitive info</li>
+</ul>
+<p>The tool is flexible enough to handle all of these.</p>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>AutoRules does one thing well: systematically validate your codebase against specific rules using AI. It’s fast, cheap, and reliable.</p>
+<p>For security-critical projects like DarkAuth, having this kind of automated validation gives me confidence that I haven’t accidentally introduced issues. It’s not perfect - AI can make mistakes - but it’s way better than manual review or hoping I don’t miss something.</p>
+<p>The source is on GitHub. Give it a try if you need systematic AI-powered code validation.</p>
+<h2 id="-try-it-yourself">🚀 Try It Yourself</h2>
+<p>Ready to validate your codebase with AI?</p>
+<div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+  <a href="https://github.com/markwylde/autorules" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #24292f; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+    </svg>
+    View on GitHub
+  </a>
+  <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+    Documentation, examples, and installation instructions
+  </p>
+</div>
+<div style="text-align: center; margin: 2rem 0;">
+  <a href="https://www.npmjs.com/package/autorules" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #cb3837; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+    <svg width="20" height="20" viewBox="0 0 780 250" fill="currentColor">
+      <path d="M240 250h100v-50h100V0H240v250zM340 50h50v100h-50V50zM480 0v200h100V50h50v150h50V50h50v150h50V0H480zM0 200h100V50h50v150h50V0H0v200z"></path>
+    </svg>
+    Install from npm
+  </a>
+  <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+    npm install -g autorules
+  </p>
+</div> </div> <footer class="blog-footer" data-astro-cid-7jjqptxk> <a href="/blog" class="back-link" data-astro-cid-7jjqptxk>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>  
