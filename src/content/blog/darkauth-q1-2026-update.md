@@ -2,78 +2,100 @@
 title: "DarkAuth: Hardening the Zero-Knowledge Auth Server"
 date: "2026-03-02"
 tags: ["DarkAuth", "Security", "OIDC", "Zero Knowledge", "Open Source"]
-excerpt: "January and February were a massive 'security sprint' for DarkAuth. From a total overhaul of the session model to building a standardized UI, here's how I'm taking it from prototype to production-ready."
+excerpt: "January and February were a massive security sprint for DarkAuth. From overhauling session security to tightening ZK/OIDC flows and modernizing RBAC, here's what actually shipped."
 ---
 
-I've been quiet on the blog for a few weeks because I've been deep in the trenches with [DarkAuth](https://github.com/puzed/darkauth). 
+I've been quiet on the blog for a few weeks because I've been deep in the trenches with [DarkAuth](https://github.com/puzed/darkauth).
 
 If you're new here, DarkAuth is my attempt at a zero-knowledge OAuth/OIDC server. It uses the OPAQUE protocol so the server never actually sees your password, and it can deliver encryption keys (DRKs) to clients without them ever hitting the backend.
 
 The project is still very much in its early days, but the last two months have been about moving away from "it works on my machine" toward something I'd actually trust to run in production.
 
+Between January 1 and March 2, that turned into 61 merged PRs, 228 commits, and 29 releases.
+
 ## The Shift to Server-Managed Sessions
 
-In the early prototype days, I was obsessed with the idea that *nothing* sensitive should ever touch the server, not even in an encrypted form. I was building DarkAuth as a pure SPA where the client handled everything, storing tokens and secrets in `localStorage` just to keep them away from the server's reach.
+In the early prototype days, I was obsessed with the idea that nothing sensitive should ever touch the server, not even in an encrypted form. I was building DarkAuth as a pure SPA where the client handled everything, storing tokens and secrets in `localStorage` just to keep them away from the server's reach.
 
-But as the project evolved, I realized this created its own set of problems--mostly around security and the lack of a proper session lifecycle. 
+But as the project evolved, I realized this created its own set of problems, mostly around security and the lack of a proper session lifecycle.
 
-I've since simplified my stance: as long as the server can't read or decrypt the keys, it's okay for the server to hold onto the "envelopes." By accepting that the server can store wrapped Data Root Keys (DRKs) that only the client can unwrap, I was able to move back to a much more robust and standard OIDC flow.
+I've since simplified my stance: as long as the server can't read or decrypt the keys, it's okay for the server to hold onto the envelopes. By accepting that the server can store wrapped Data Root Keys (DRKs) that only the client can unwrap, I was able to move back to a much more robust and standard OIDC flow.
 
-## The "Cookie-Only" Security Model
+## The Cookie-Only Security Model
 
-With that shift, I've completely ditched `localStorage` for session management. Storing JWTs in the browser's local storage is common, but if you have an XSS vulnerability, your session is gone. 
+With that shift, I've completely ditched `localStorage` for session management. I was treating the auth flows like a pure SPA, but that model doesn't give me the security guarantees I actually want.
 
-Now, DarkAuth enforces a strict **cookie-only first-party session model**. I've moved the token and refresh token handling to server-managed cookies with all the safety flags you'd expect: `HttpOnly`, `Secure`, and `SameSite=Lax`.
+Now, DarkAuth enforces a strict cookie-only first-party session model. I've moved token and refresh handling to server-managed cookies with the safety flags you'd expect: `HttpOnly`, `Secure`, and `SameSite=Lax`.
 
-I even split the cookies by cohort:
-*   `__Host-DarkAuth-User`: For the user-facing OIDC flow.
-*   `__Host-DarkAuth-Admin`: For the administrative dashboard.
+I also split cookies by cohort:
 
-This isolation means that even if a session is compromised on the user side, the admin side remains untouched. I also added double-submit CSRF protection for all state-changing requests, which was a bit of a pain to coordinate across the monorepo but absolutely worth it for the peace of mind.
+- `__Host-DarkAuth-User`: user-facing OIDC flow
+- `__Host-DarkAuth-Admin`: administrative dashboard
 
-## Hardening the ZK Flow
+I added cohort-specific CSRF cookies and double-submit CSRF checks for state-changing requests. This was one of those changes that touches everything, but it was worth the pain.
 
-The "magic" of DarkAuth remains the Zero-Knowledge (ZK) delivery of Data Root Keys. Even though the server now stores the wrapped DRK, it still has no way to decrypt it without the `export_key` derived from the user's password (via OPAQUE).
+## Hardening the ZK + OIDC Flow
 
-To make this flow rock-solid, I implemented strict hash binding (`drk_hash`) for authorization requests. 
+The magic of DarkAuth is still the zero-knowledge delivery of Data Root Keys. Even though the server now stores wrapped DRKs, it still can't decrypt them without the `export_key` derived from the user's password (via OPAQUE).
 
-The flow now looks like this:
-1. Client initiates auth with an ephemeral key and a hash of the DRK they expect.
-2. The server binds the pending authorization to that specific hash.
-3. During token exchange, the server validates the binding before releasing the JWE.
+To make this flow much harder to break, I tightened a few critical paths:
 
-This ensures the entire exchange is cryptographically bound to the initiating session, preventing replay or interception attacks.
+1. Strict `drk_hash` binding in authorize/finalize.
+2. Nonce persistence and validation in the auth code flow.
+3. Constant-time PKCE challenge comparison.
+4. Atomic single-use auth code redemption.
+5. Refresh token hardening (hashed lookup, single-use rotation, client binding, transport boundaries).
 
-## Standardizing the UI (Finally)
+The goal was to remove as many edge-case footguns as possible from the auth pipeline.
 
-Until recently, the Admin and User UIs were a bit of a mess of different components and styles. It made building new features twice as slow because I was constantly reinventing the wheel.
+## UI and Product Work
 
-I spent a week standardizing the UI library across the entire project. Now, both UIs share a consistent set of components, sortable tables, and better error handling. 
+I did a lot of UI work in this window, across admin-ui and user-ui. But I didn't end up building a single unified component library that I really want.
+
+What actually shipped:
+
+- Better admin table/list UX and standardized list contracts.
+- Improved row actions and error handling in admin flows.
+- OTP auto-submit when a 6-digit code is complete.
+- Better branding preview/theme behavior.
+- Login/config loading fixes to remove flicker and false error flashes.
+- Dashboard card settings and client icon support across admin + user surfaces.
+
+So the UX got materially better, just not via a single unified component package.
 
 ![DarkAuth Admin UI](../../assets/darkauth-admin-2026.png)
 
-*The new Admin UI with standardized tables and RBAC management.*
+*The Admin UI after table and RBAC workflow improvements.*
 
-## Role-Based Access Control (RBAC)
+## RBAC Changes
 
-I finally landed the full RBAC implementation. Previously, permissions were a bit "all or nothing." Now, I've got a proper system for:
-*   **Permissions:** Granular actions (e.g., `client:create`, `user:delete`).
-*   **Groups:** Bundles of permissions.
-*   **Organization Scoping:** Ensuring that an admin in one org can't see users in another.
+RBAC evolved a lot.
+
+I landed organization-scoped roles and permissions, standardized admin list endpoints, and then removed the legacy groups runtime/pages that were still hanging around.
+
+So if you looked at an older snapshot of the project, the old groups model is no longer the right mental model now.
+
+## Email Verification and Template Flows
+
+A big late-February/early-March addition was email verification:
+
+- verification tokens and SMTP integration in the API
+- email templates and verification flows in admin-ui/user-ui
+- auth gating so unverified users get routed correctly
 
 ## Running on Node 24
 
-I've also moved the entire project to **Node 24**. Using the native TypeScript runtime has been a game-changer--it’s faster, simpler, and means fewer dependencies to manage in the build pipeline. 
+I've also moved the project to Node 24-compatible runtime patterns, including native TypeScript runtime support and Docker/runtime cleanup.
 
-If you're running the Docker image (`ghcr.io/puzed/darkauth:latest`), you're already using this new runtime.
+If you're running the Docker image (`ghcr.io/puzed/darkauth:latest`), you're on that newer runtime path.
 
 ## What's Next?
 
-The goal for the rest of Q1 is to keep improving the documentation and making the "first-run" experience as smooth as possible. I've added a lot of power features recently, but I don't want to lose the simplicity that makes DarkAuth easy to self-host.
+The goal for the rest of Q1 is to keep improving documentation and make first-run setup smoother. I've added a lot of power features recently, but I don't want to lose the simplicity that makes DarkAuth easy to self-host.
 
 If you want to poke around the code or try running it yourself, it's all on GitHub. It's still early, but it's getting closer to where I want it to be.
 
-## 🚀 Try It Yourself
+## Try It Yourself
 
 Ready to run your own zero-knowledge auth server?
 
