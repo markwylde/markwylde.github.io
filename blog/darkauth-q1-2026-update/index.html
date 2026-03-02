@@ -3,48 +3,63 @@
 </style></head> <body> <div class="site-header"> <div class="container site-header-content"> <div class="header-left"> <a href="/" class="header-avatar-link"> <video autoplay muted class="header-avatar" playsinline poster="/assets/avatar-portrait.C9S5t3ZG.png"> <source src="/assets/avatar-portrait-140.BjSyJAHW.mp4" type="video/mp4"> <img src="/assets/avatar-portrait.C9S5t3ZG.png" alt="Mark Wylde - Avatar"> </video> </a> <span class="header-site-title">Mark Wylde</span> </div> <nav class="main-nav"> <a href="/" class="nav-link ">Home</a> <a href="/about" class="nav-link ">About</a> <a href="/blog" class="nav-link nav-link-active">Blog</a> </nav> </div> </div> <main>  <section class="section" data-astro-cid-7jjqptxk> <div class="container" data-astro-cid-7jjqptxk> <div class="blog-content-wrapper" data-astro-cid-7jjqptxk> <article class="blog-post" data-astro-cid-7jjqptxk> <header class="blog-header" data-astro-cid-7jjqptxk> <h1 data-astro-cid-7jjqptxk>DarkAuth: Hardening the Zero-Knowledge Auth Server</h1> <div class="blog-meta" data-astro-cid-7jjqptxk> <time datetime="2026-03-02" data-astro-cid-7jjqptxk> March 2, 2026 </time> <div class="blog-tags" data-astro-cid-7jjqptxk> <span class="tag" data-astro-cid-7jjqptxk>DarkAuth</span><span class="tag" data-astro-cid-7jjqptxk>Security</span><span class="tag" data-astro-cid-7jjqptxk>OIDC</span><span class="tag" data-astro-cid-7jjqptxk>Zero Knowledge</span><span class="tag" data-astro-cid-7jjqptxk>Open Source</span> </div> </div> </header> <div class="blog-content" data-astro-cid-7jjqptxk> <p>I’ve been quiet on the blog for a few weeks because I’ve been deep in the trenches with <a href="https://github.com/puzed/darkauth">DarkAuth</a>.</p>
 <p>If you’re new here, DarkAuth is my attempt at a zero-knowledge OAuth/OIDC server. It uses the OPAQUE protocol so the server never actually sees your password, and it can deliver encryption keys (DRKs) to clients without them ever hitting the backend.</p>
 <p>The project is still very much in its early days, but the last two months have been about moving away from “it works on my machine” toward something I’d actually trust to run in production.</p>
+<p>Between January 1 and March 2, that turned into 61 merged PRs, 228 commits, and 29 releases.</p>
 <h2 id="the-shift-to-server-managed-sessions">The Shift to Server-Managed Sessions</h2>
-<p>In the early prototype days, I was obsessed with the idea that <em>nothing</em> sensitive should ever touch the server, not even in an encrypted form. I was building DarkAuth as a pure SPA where the client handled everything, storing tokens and secrets in <code>localStorage</code> just to keep them away from the server’s reach.</p>
-<p>But as the project evolved, I realized this created its own set of problems—mostly around security and the lack of a proper session lifecycle.</p>
-<p>I’ve since simplified my stance: as long as the server can’t read or decrypt the keys, it’s okay for the server to hold onto the “envelopes.” By accepting that the server can store wrapped Data Root Keys (DRKs) that only the client can unwrap, I was able to move back to a much more robust and standard OIDC flow.</p>
-<h2 id="the-cookie-only-security-model">The “Cookie-Only” Security Model</h2>
-<p>With that shift, I’ve completely ditched <code>localStorage</code> for session management. Storing JWTs in the browser’s local storage is common, but if you have an XSS vulnerability, your session is gone.</p>
-<p>Now, DarkAuth enforces a strict <strong>cookie-only first-party session model</strong>. I’ve moved the token and refresh token handling to server-managed cookies with all the safety flags you’d expect: <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Lax</code>.</p>
-<p>I even split the cookies by cohort:</p>
+<p>In the early prototype days, I was obsessed with the idea that nothing sensitive should ever touch the server, not even in an encrypted form. I was building DarkAuth as a pure SPA where the client handled everything, storing tokens and secrets in <code>localStorage</code> just to keep them away from the server’s reach.</p>
+<p>But as the project evolved, I realized this created its own set of problems, mostly around security and the lack of a proper session lifecycle.</p>
+<p>I’ve since simplified my stance: as long as the server can’t read or decrypt the keys, it’s okay for the server to hold onto the envelopes. By accepting that the server can store wrapped Data Root Keys (DRKs) that only the client can unwrap, I was able to move back to a much more robust and standard OIDC flow.</p>
+<h2 id="the-cookie-only-security-model">The Cookie-Only Security Model</h2>
+<p>With that shift, I’ve completely ditched <code>localStorage</code> for session management. I was treating the auth flows like a pure SPA, but that model doesn’t give me the security guarantees I actually want.</p>
+<p>Now, DarkAuth enforces a strict cookie-only first-party session model. I’ve moved token and refresh handling to server-managed cookies with the safety flags you’d expect: <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Lax</code>.</p>
+<p>I also split cookies by cohort:</p>
 <ul>
-<li><code>__Host-DarkAuth-User</code>: For the user-facing OIDC flow.</li>
-<li><code>__Host-DarkAuth-Admin</code>: For the administrative dashboard.</li>
+<li><code>__Host-DarkAuth-User</code>: user-facing OIDC flow</li>
+<li><code>__Host-DarkAuth-Admin</code>: administrative dashboard</li>
 </ul>
-<p>This isolation means that even if a session is compromised on the user side, the admin side remains untouched. I also added double-submit CSRF protection for all state-changing requests, which was a bit of a pain to coordinate across the monorepo but absolutely worth it for the peace of mind.</p>
-<h2 id="hardening-the-zk-flow">Hardening the ZK Flow</h2>
-<p>The “magic” of DarkAuth remains the Zero-Knowledge (ZK) delivery of Data Root Keys. Even though the server now stores the wrapped DRK, it still has no way to decrypt it without the <code>export_key</code> derived from the user’s password (via OPAQUE).</p>
-<p>To make this flow rock-solid, I implemented strict hash binding (<code>drk_hash</code>) for authorization requests.</p>
-<p>The flow now looks like this:</p>
+<p>I added cohort-specific CSRF cookies and double-submit CSRF checks for state-changing requests. This was one of those changes that touches everything, but it was worth the pain.</p>
+<h2 id="hardening-the-zk--oidc-flow">Hardening the ZK + OIDC Flow</h2>
+<p>The magic of DarkAuth is still the zero-knowledge delivery of Data Root Keys. Even though the server now stores wrapped DRKs, it still can’t decrypt them without the <code>export_key</code> derived from the user’s password (via OPAQUE).</p>
+<p>To make this flow much harder to break, I tightened a few critical paths:</p>
 <ol>
-<li>Client initiates auth with an ephemeral key and a hash of the DRK they expect.</li>
-<li>The server binds the pending authorization to that specific hash.</li>
-<li>During token exchange, the server validates the binding before releasing the JWE.</li>
+<li>Strict <code>drk_hash</code> binding in authorize/finalize.</li>
+<li>Nonce persistence and validation in the auth code flow.</li>
+<li>Constant-time PKCE challenge comparison.</li>
+<li>Atomic single-use auth code redemption.</li>
+<li>Refresh token hardening (hashed lookup, single-use rotation, client binding, transport boundaries).</li>
 </ol>
-<p>This ensures the entire exchange is cryptographically bound to the initiating session, preventing replay or interception attacks.</p>
-<h2 id="standardizing-the-ui-finally">Standardizing the UI (Finally)</h2>
-<p>Until recently, the Admin and User UIs were a bit of a mess of different components and styles. It made building new features twice as slow because I was constantly reinventing the wheel.</p>
-<p>I spent a week standardizing the UI library across the entire project. Now, both UIs share a consistent set of components, sortable tables, and better error handling.</p>
-<p><img alt="DarkAuth Admin UI" loading="lazy" decoding="async" fetchpriority="auto" width="1400" height="800" src="/assets/darkauth-admin-2026.CtBxvb3p_1CD2mn.webp" ></p>
-<p><em>The new Admin UI with standardized tables and RBAC management.</em></p>
-<h2 id="role-based-access-control-rbac">Role-Based Access Control (RBAC)</h2>
-<p>I finally landed the full RBAC implementation. Previously, permissions were a bit “all or nothing.” Now, I’ve got a proper system for:</p>
+<p>The goal was to remove as many edge-case footguns as possible from the auth pipeline.</p>
+<h2 id="ui-and-product-work">UI and Product Work</h2>
+<p>I did a lot of UI work in this window, across admin-ui and user-ui. But I didn’t end up building a single unified component library that I really want.</p>
+<p>What actually shipped:</p>
 <ul>
-<li><strong>Permissions:</strong> Granular actions (e.g., <code>client:create</code>, <code>user:delete</code>).</li>
-<li><strong>Groups:</strong> Bundles of permissions.</li>
-<li><strong>Organization Scoping:</strong> Ensuring that an admin in one org can’t see users in another.</li>
+<li>Better admin table/list UX and standardized list contracts.</li>
+<li>Improved row actions and error handling in admin flows.</li>
+<li>OTP auto-submit when a 6-digit code is complete.</li>
+<li>Better branding preview/theme behavior.</li>
+<li>Login/config loading fixes to remove flicker and false error flashes.</li>
+<li>Dashboard card settings and client icon support across admin + user surfaces.</li>
+</ul>
+<p>So the UX got materially better, just not via a single unified component package.</p>
+<p><img alt="DarkAuth Admin UI" loading="lazy" decoding="async" fetchpriority="auto" width="1400" height="800" src="/assets/darkauth-admin-2026.CtBxvb3p_1CD2mn.webp" ></p>
+<p><em>The Admin UI after table and RBAC workflow improvements.</em></p>
+<h2 id="rbac-changes">RBAC Changes</h2>
+<p>RBAC evolved a lot.</p>
+<p>I landed organization-scoped roles and permissions, standardized admin list endpoints, and then removed the legacy groups runtime/pages that were still hanging around.</p>
+<p>So if you looked at an older snapshot of the project, the old groups model is no longer the right mental model now.</p>
+<h2 id="email-verification-and-template-flows">Email Verification and Template Flows</h2>
+<p>A big late-February/early-March addition was email verification:</p>
+<ul>
+<li>verification tokens and SMTP integration in the API</li>
+<li>email templates and verification flows in admin-ui/user-ui</li>
+<li>auth gating so unverified users get routed correctly</li>
 </ul>
 <h2 id="running-on-node-24">Running on Node 24</h2>
-<p>I’ve also moved the entire project to <strong>Node 24</strong>. Using the native TypeScript runtime has been a game-changer—it’s faster, simpler, and means fewer dependencies to manage in the build pipeline.</p>
-<p>If you’re running the Docker image (<code>ghcr.io/puzed/darkauth:latest</code>), you’re already using this new runtime.</p>
+<p>I’ve also moved the project to Node 24-compatible runtime patterns, including native TypeScript runtime support and Docker/runtime cleanup.</p>
+<p>If you’re running the Docker image (<code>ghcr.io/puzed/darkauth:latest</code>), you’re on that newer runtime path.</p>
 <h2 id="whats-next">What’s Next?</h2>
-<p>The goal for the rest of Q1 is to keep improving the documentation and making the “first-run” experience as smooth as possible. I’ve added a lot of power features recently, but I don’t want to lose the simplicity that makes DarkAuth easy to self-host.</p>
+<p>The goal for the rest of Q1 is to keep improving documentation and make first-run setup smoother. I’ve added a lot of power features recently, but I don’t want to lose the simplicity that makes DarkAuth easy to self-host.</p>
 <p>If you want to poke around the code or try running it yourself, it’s all on GitHub. It’s still early, but it’s getting closer to where I want it to be.</p>
-<h2 id="-try-it-yourself">🚀 Try It Yourself</h2>
+<h2 id="try-it-yourself">Try It Yourself</h2>
 <p>Ready to run your own zero-knowledge auth server?</p>
 <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
   <a href="https://github.com/puzed/darkauth" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #24292f; font-weight: 600; text-decoration: none; font-size: 1.1rem;">
