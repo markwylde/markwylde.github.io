@@ -1,24 +1,24 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
 
 const blogPosts = await getCollection("blog");
 const sortedPosts = blogPosts.sort(
-	(a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
 
 // Group posts by month for list view
 const postsByMonth = sortedPosts.reduce((acc, post) => {
-	const date = new Date(post.data.date);
-	const monthYear = date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "long",
-	});
-	if (!acc[monthYear]) {
-		acc[monthYear] = [];
-	}
-	acc[monthYear].push(post);
-	return acc;
+  const date = new Date(post.data.date);
+  const monthYear = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
+  if (!acc[monthYear]) {
+    acc[monthYear] = [];
+  }
+  acc[monthYear].push(post);
+  return acc;
 }, {});
 ---
 

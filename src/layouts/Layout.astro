@@ -1,14 +1,14 @@
 ---
-import ThemeToggle from "../components/ThemeToggle.tsx";
-import avatarVideoMp4 from "../assets/avatar-portrait-140.mp4";
 import avatarHeaderFallback from "../assets/avatar-portrait.png";
+import avatarVideoMp4 from "../assets/avatar-portrait-140.mp4";
+import ThemeToggle from "../components/ThemeToggle.tsx";
 export interface Props {
-	title?: string;
-	currentPage?: string;
+  title?: string;
+  currentPage?: string;
 }
 
 const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
-	Astro.props;
+  Astro.props;
 ---
 
 <!doctype html>
