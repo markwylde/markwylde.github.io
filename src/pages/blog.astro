@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 
 const blogPosts = await getCollection("blog");
+const getPostSlug = (post) => post.id;
 const sortedPosts = blogPosts.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
@@ -57,7 +58,7 @@ const postsByMonth = sortedPosts.reduce((acc, post) => {
 				{sortedPosts.map((post) => (
 					<article class="blog-card">
 						<h3 class="blog-title">
-							<a href={`/blog/${post.slug}`}>{post.data.title}</a>
+							<a href={`/blog/${getPostSlug(post)}`}>{post.data.title}</a>
 						</h3>
 						<div class="blog-meta">
 							<time datetime={post.data.date}>{new Date(post.data.date).toLocaleDateString('en-US', {
@@ -67,7 +68,7 @@ const postsByMonth = sortedPosts.reduce((acc, post) => {
 							})}</time>
 						</div>
 						<p class="blog-excerpt">{post.data.excerpt}</p>
-						<a href={`/blog/${post.slug}`} class="read-more">Read More →</a>
+						<a href={`/blog/${getPostSlug(post)}`} class="read-more">Read More →</a>
 						<div class="blog-tags">
 							{post.data.tags.map((tag) => (
 								<span class="tag">{tag}</span>
@@ -85,7 +86,7 @@ const postsByMonth = sortedPosts.reduce((acc, post) => {
 							{posts.map((post) => (
 								<li class="post-item">
 									<div class="post-item-content">
-										<a href={`/blog/${post.slug}`} class="post-title">{post.data.title}</a>
+										<a href={`/blog/${getPostSlug(post)}`} class="post-title">{post.data.title}</a>
 										<div class="post-meta">
 											<time datetime={post.data.date}>{new Date(post.data.date).toLocaleDateString('en-US', {
 												day: 'numeric'
