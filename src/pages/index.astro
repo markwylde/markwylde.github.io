@@ -116,7 +116,7 @@ import avatarFallback from "../assets/avatar-typing.png";
 <style>
 	/* Hero Section Styles */
 	.hero {
-		background-color: rgb(248, 249, 255);
+		background-color: var(--hero-bg, var(--primary-bg));
 		min-height: 80vh;
 		display: flex;
 		align-items: center;
@@ -229,7 +229,7 @@ import avatarFallback from "../assets/avatar-typing.png";
 		box-shadow: 0 10px 25px var(--shadow-color);
 		object-fit: cover;
 		aspect-ratio: 1 / 1;
-		background-color: #f5f5f8;
+		background-color: var(--avatar-bg, #1a1a2e);
 	}
 
 	/* About Section Styles */
