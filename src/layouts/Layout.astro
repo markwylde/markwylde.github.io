@@ -5,10 +5,14 @@ import ThemeToggle from "../components/ThemeToggle.tsx";
 export interface Props {
   title?: string;
   currentPage?: string;
+  preloadImages?: Array<{ src: string }>;
 }
 
-const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
-  Astro.props;
+const {
+  title = "Mark Wylde - Personal Portfolio",
+  currentPage = "home",
+  preloadImages = [],
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -19,6 +23,9 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		{preloadImages.map((image) => <link rel="preload" as="image" href={image.src} />)}
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<script is:inline>
 			(function() {
@@ -34,7 +41,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 			<div class="container site-header-content">
 				<div class="header-left">
 					<a href="/" class="header-avatar-link">
-						<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src}>
+						<video autoplay muted class="header-avatar" playsinline poster={avatarHeaderFallback.src} width="75" height="75">
 							<source src={avatarVideoMp4} type="video/mp4" />
 							<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
 						</video>
@@ -120,6 +127,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 		--shadow-color: rgba(0, 0, 0, 0.05);
 		--hero-bg: #f1f5f9;
 		--avatar-bg: #f8fafc;
+		--container-padding: 20px;
 	}
 
 	[data-theme="dark"] {
@@ -149,9 +157,10 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 	}
 
 	.container {
+		width: 100%;
 		max-width: 1400px;
 		margin: auto;
-		padding: 0 20px;
+		padding: 0 var(--container-padding);
 		overflow: hidden;
 	}
 
@@ -432,7 +441,7 @@ const { title = "Mark Wylde - Personal Portfolio", currentPage = "home" } =
 		}
 
 		.container {
-			padding: 0 10px;
+			--container-padding: 10px;
 		}
 
 		.section {
