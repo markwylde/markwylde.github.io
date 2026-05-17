@@ -1,7 +1,83 @@
 ---
-import avatarVideoMp4 from "../assets/avatar-typing.mp4";
-import avatarFallback from "../assets/avatar-typing.png";
+import avatarImage from "../assets/avatar-typing-transparent.png";
+import allianzDarkLogo from "../assets/logos/allianz-dark.png";
+import allianzLightLogo from "../assets/logos/allianz-light.svg";
+import aucloudDarkLogo from "../assets/logos/aucloud-dark.png";
+import aucloudLightLogo from "../assets/logos/aucloud-light.png";
+import checkatradeDarkLogo from "../assets/logos/checkatrade-dark.svg";
+import checkatradeLightLogo from "../assets/logos/checkatrade-light.svg";
+import legal500DarkLogo from "../assets/logos/legal500-dark.svg";
+import legal500LightLogo from "../assets/logos/legal500-light.svg";
+import rbsDarkLogo from "../assets/logos/rbs-dark.svg";
+import rbsLightLogo from "../assets/logos/rbs-light.svg";
+import darkAuthLogo from "../assets/projects/darkauth.svg";
+import pagedNetLogo from "../assets/projects/pagednet.svg";
+import terminayLogo from "../assets/projects/terminay.svg";
+import wrapGuardLogo from "../assets/projects/wrapguard.svg";
 import Layout from "../layouts/Layout.astro";
+
+const careerClients = [
+  {
+    name: "RBS",
+    lightLogo: rbsLightLogo,
+    darkLogo: rbsDarkLogo,
+    className: "client-logo-rbs",
+  },
+  {
+    name: "Allianz",
+    lightLogo: allianzLightLogo,
+    darkLogo: allianzDarkLogo,
+    className: "client-logo-allianz",
+  },
+  {
+    name: "AUCloud",
+    lightLogo: aucloudLightLogo,
+    darkLogo: aucloudDarkLogo,
+    className: "client-logo-aucloud",
+  },
+  {
+    name: "Checkatrade",
+    lightLogo: checkatradeLightLogo,
+    darkLogo: checkatradeDarkLogo,
+    className: "client-logo-checkatrade",
+  },
+  {
+    name: "Legal 500",
+    lightLogo: legal500LightLogo,
+    darkLogo: legal500DarkLogo,
+    className: "client-logo-legal500",
+  },
+];
+
+const personalProjects = [
+  {
+    name: "Terminay",
+    description:
+      "A desktop terminal workspace built with Electron, React, and Vite.",
+    href: "https://github.com/markwylde/terminay",
+    logo: terminayLogo,
+  },
+  {
+    name: "DarkAuth",
+    description: "Zero-knowledge authentication with OIDC compatibility.",
+    href: "https://github.com/puzed/darkauth",
+    logo: darkAuthLogo,
+  },
+  {
+    name: "WrapGuard",
+    description:
+      "Userspace WireGuard proxy for routing app traffic without kernel modules.",
+    href: "https://github.com/puzed/wrapguard",
+    logo: wrapGuardLogo,
+  },
+  {
+    name: "PagedNet",
+    description:
+      "Static-site hosting for uploading, managing, and moderating deployed sites.",
+    href: "https://git.i.wylde.net/puzed/paged.net",
+    logo: pagedNetLogo,
+  },
+];
 ---
 
 <Layout title="Mark Wylde - Personal Portfolio" currentPage="home">
@@ -10,35 +86,106 @@ import Layout from "../layouts/Layout.astro";
 			<div class="hero-content">
 				<div class="hero-text">
 					<p class="name">Hi, I'm Mark Wylde</p>
-					<p class="tagline">I love building cool products with web tech.</p>
+					<p class="tagline">I build useful, reliable products with modern web tech.</p>
 					<div class="tech-tags">
 						<span class="tech-tag">TypeScript</span>
-						<span class="tech-tag">NodeJS</span>
-						<span class="tech-tag">Vite</span>
+						<span class="tech-tag">Node.js</span>
+						<span class="tech-tag">React</span>
 						<span class="tech-tag">Postgres</span>
 						<span class="tech-tag">CI/CD</span>
+						<span class="tech-tag">AWS</span>
 						<span class="tech-tag">AI</span>
-						<span class="tech-tag">Databases</span>
-						<span class="tech-tag">Frontend</span>
-						<span class="tech-tag">Backend</span>
-						<span class="tech-tag">Infrastructure</span>
-						<span class="tech-tag">Cloud</span>
 					</div>
-					<ul class="hero-bullets">
-						<li>Functional Programming</li>
-						<li>Continuous Deployments</li>
-						<li>Product Driven Development</li>
-					</ul>
+					
+					<div class="hero-features">
+						<div class="feature-item">
+							<div class="feature-icon ai-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+							</div>
+							<div class="feature-content">
+								<strong>AI-Assisted Development</strong>
+								<span>Using AI tools to ship faster and smarter.</span>
+							</div>
+						</div>
+						<div class="feature-item">
+							<div class="feature-icon rocket-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-5c1.62-2.2 5-3 5-3"/><path d="M12 15v5s3.03-.55 5-2c2.2-1.62 3-5 3-5"/></svg>
+							</div>
+							<div class="feature-content">
+								<strong>Continuous Deployments</strong>
+								<span>Shipping iteratively with confidence.</span>
+							</div>
+						</div>
+						<div class="feature-item">
+							<div class="feature-icon user-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+							</div>
+							<div class="feature-content">
+								<strong>Product Driven Development</strong>
+								<span>Solving real problems for real people.</span>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="hero-avatar">
-					<video autoplay muted loop playsinline poster={avatarFallback.src}>
-						<source src={avatarVideoMp4} type="video/mp4" />
-						<img src={avatarFallback.src} alt="Mark Wylde - Avatar" />
-					</video>
+					<img src={avatarImage.src} alt="Mark Wylde - Avatar" class="hero-image" />
+				</div>
+			</div>
+
+			<div class="hero-clients">
+				<p class="hero-clients-heading">Career Clients</p>
+				<div class="client-grid" aria-label="Career clients">
+					{careerClients.map((client) => (
+						<div class="client-card">
+							<div class={`client-logo ${client.className ?? ""}`} role="img" aria-label={client.name}>
+								<img
+									src={client.lightLogo.src}
+									alt=""
+									class="client-logo-image client-logo-image-light"
+									loading="lazy"
+								/>
+								<img
+									src={client.darkLogo.src}
+									alt=""
+									class="client-logo-image client-logo-image-dark"
+									loading="lazy"
+								/>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>
 	</header>
+
+	<section id="projects" class="section">
+		<div class="container">
+			<div class="section-heading project-heading">
+				<h2>Personal Projects</h2>
+			</div>
+			<div class="personal-project-grid">
+				{personalProjects.map((project) => (
+					<div class="personal-project-card">
+						<div class="project-header">
+							<img src={project.logo.src} alt="" class="project-logo" loading="lazy" />
+							<div class="project-title-area">
+								<strong>{project.name}</strong>
+								<span>{project.description}</span>
+							</div>
+						</div>
+						<a
+							class="view-project-btn"
+							href={project.href}
+							target="_blank"
+							rel="noreferrer"
+						>
+							View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; flex-shrink: 0;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+						</a>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
 
 	<section id="about" class="section">
 		<div class="container">
@@ -72,56 +219,77 @@ import Layout from "../layouts/Layout.astro";
 		</div>
 	</section>
 
-	<section id="projects" class="section">
-		<div class="container">
-			<h2>My Work</h2>
-			<div class="project-grid">
-				<div class="project-card">
-					<h3>Open Source Projects</h3>
-					<p>Contributing to and maintaining various open source projects focused on web development and developer tools.</p>
-					<p>
-						<a href="https://github.com/markwylde" target="_blank">GitHub Profile</a>
-					</p>
-				</div>
-
-				<div class="project-card">
-					<h3>Web Applications</h3>
-					<p>Building modern web applications with focus on performance, simplicity, and user experience.</p>
-				</div>
-
-				<div class="project-card">
-					<h3>Developer Tools</h3>
-					<p>Creating tools and utilities that make developers' lives easier and more productive.</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="contact" class="section">
+	<section id="contact" class="section" style="padding-bottom: 80px;">
 		<div class="container">
 			<h2 class="centered-heading">Get In Touch</h2>
-			<p style="text-align: center;">
+			<p style="text-align: center; color: var(--text-color);">
 				I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great. <br>
 				Feel free to reach out!
 			</p>
-			<div class="contact-methods">
+			<div class="home-contact-links">
 				<a href="mailto:mark@wylde.net">Email Me</a>
 				<a href="https://github.com/markwylde" target="_blank">GitHub</a>
 				<a href="https://linkedin.com/in/mwylde" target="_blank">LinkedIn</a>
 			</div>
 		</div>
 	</section>
+
+	<script>
+		const heroAvatarVideo = document.querySelector("[data-hero-avatar-video]");
+
+		if (heroAvatarVideo instanceof HTMLVideoElement) {
+			const heroAvatarSource = heroAvatarVideo.querySelector("source");
+
+			function syncHeroAvatarVideo() {
+				const isDark =
+					document.documentElement.getAttribute("data-theme") === "dark";
+				const nextSrc = isDark
+					? heroAvatarVideo.dataset.darkSrc
+					: heroAvatarVideo.dataset.lightSrc;
+				const nextPoster = isDark
+					? heroAvatarVideo.dataset.darkPoster
+					: heroAvatarVideo.dataset.lightPoster;
+
+				if (!heroAvatarSource || !nextSrc) {
+					return;
+				}
+
+				if (nextPoster) {
+					heroAvatarVideo.poster = nextPoster;
+				}
+
+				if (heroAvatarSource.getAttribute("src") === nextSrc) {
+					return;
+				}
+
+				heroAvatarSource.setAttribute("src", nextSrc);
+				heroAvatarVideo.load();
+				heroAvatarVideo.play().catch(() => {});
+			}
+
+			syncHeroAvatarVideo();
+
+			new MutationObserver(syncHeroAvatarVideo).observe(
+				document.documentElement,
+				{
+					attributeFilter: ["data-theme"],
+					attributes: true,
+				},
+			);
+		}
+	</script>
 </Layout>
 
 <style>
 	/* Hero Section Styles */
 	.hero {
 		background-color: var(--hero-bg, var(--primary-bg));
-		min-height: 80vh;
+		background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+		background-size: 30px 30px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 40px 0;
+		padding: 80px 0 60px;
 		border-bottom: 1px solid var(--border-color);
 	}
 
@@ -131,29 +299,30 @@ import Layout from "../layouts/Layout.astro";
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
+		gap: 40px;
 	}
 
 	.hero-text {
-		flex: 1;
+		flex: 1.5;
 		min-width: 300px;
-		padding-right: 40px;
-		max-width: 100%;
-		overflow: hidden;
 	}
 
 	.hero-text .name {
-		font-size: 2.8em;
+		font-size: 3.5rem;
 		font-weight: 700;
-		margin-bottom: 0.2em;
-		line-height: 1.2;
+		margin-bottom: 0.5rem;
+		line-height: 1.1;
 		color: var(--heading-color);
+		letter-spacing: -0.02em;
+		white-space: nowrap;
 	}
 
 	.hero-text .tagline {
-		font-size: 1.3em;
-		font-weight: 300;
-		color: var(--accent-color);
-		margin-bottom: 1em;
+		font-size: 1.5rem;
+		font-weight: 400;
+		color: var(--text-color);
+		margin-bottom: 1.5rem;
+		line-height: 1.4;
 	}
 
 	.tech-tags {
@@ -183,33 +352,45 @@ import Layout from "../layouts/Layout.astro";
 		flex-shrink: 0;
 	}
 
-	.hero-bullets {
-		list-style: none;
-		padding-left: 0;
-		font-size: 1.1em;
+	.hero-features {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 
-	.hero-bullets li {
-		padding: 10px 0 10px 35px;
-		position: relative;
-		font-weight: 400;
-		margin-bottom: 0.5em;
+	.feature-item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		max-width: 450px;
 	}
 
-	.hero-bullets li::before {
-		content: '';
-		display: inline-block;
-		background-image: url('../assets/bullet.png');
-		background-size: contain;
-		background-repeat: no-repeat;
-		width: 30px;
-		max-width: 30px;
-		min-width: 30px;
-		aspect-ratio: 1 / 1;
-		position: absolute;
-		left: 0;
-		top: 50%;
-		transform: translateY(-50%);
+	.feature-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		color: var(--accent-color);
+		flex-shrink: 0;
+	}
+
+	.feature-content {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.feature-content strong {
+		font-size: 1rem;
+		color: var(--heading-color);
+		font-weight: 600;
+	}
+
+	.feature-content span {
+		font-size: 0.85rem;
+		color: var(--text-color);
+		opacity: 0.8;
 	}
 
 	.hero-avatar {
@@ -220,38 +401,186 @@ import Layout from "../layouts/Layout.astro";
 		align-items: center;
 	}
 
-	.hero-avatar video {
-		max-width: 400px;
+	.hero-avatar img {
 		width: 100%;
+		max-width: 450px;
 		height: auto;
-		border-top-left-radius: 20%;
-		border-top-right-radius: 20%;
-		box-shadow: 0 10px 25px var(--shadow-color);
-		object-fit: cover;
-		aspect-ratio: 1 / 1;
-		background-color: var(--avatar-bg, #1a1a2e);
+		object-fit: contain;
+	}
+
+	.hero-clients {
+		margin-top: 80px;
+		width: 100%;
+	}
+
+	.hero-clients-heading {
+		font-size: 0.85rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--text-color);
+		opacity: 0.6;
+		margin-bottom: 24px;
+		text-align: center;
+	}
+
+	.section-heading {
+		margin-bottom: 30px;
+	}
+
+	.section-heading h2 {
+		font-size: 1.8rem;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+	}
+
+	.client-grid {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 20px;
+		align-items: center;
+	}
+
+	.client-card {
+		--client-logo-width: 178px;
+		--client-logo-height: 52px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.client-logo {
+		display: grid;
+		place-items: center;
+		width: 100%;
+		height: 68px;
+	}
+
+	.client-logo-image {
+		grid-area: 1 / 1;
+		display: block;
+		width: min(100%, var(--client-logo-width));
+		height: var(--client-logo-height);
+		object-fit: contain;
+		filter: grayscale(100%) opacity(0.7);
+	}
+
+	.client-logo-rbs {
+		--client-logo-width: 118px;
+		--client-logo-height: 34px;
+	}
+
+	.client-logo-allianz {
+		--client-logo-width: 152px;
+		--client-logo-height: 44px;
+	}
+
+	.client-logo-aucloud {
+		--client-logo-width: 174px;
+		--client-logo-height: 46px;
+	}
+
+	.client-logo-checkatrade {
+		--client-logo-width: 180px;
+		--client-logo-height: 42px;
+	}
+
+	.client-logo-legal500 {
+		--client-logo-width: 166px;
+		--client-logo-height: 46px;
+	}
+
+	.client-logo-image-dark {
+		display: none;
+	}
+
+	:global([data-theme="dark"]) .client-logo-image-light {
+		display: none;
+	}
+
+	:global([data-theme="dark"]) .client-logo-image-dark {
+		display: block;
+	}
+
+	.project-heading {
+		margin-top: 40px;
+	}
+
+	.personal-project-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 40px;
+	}
+
+	.personal-project-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		gap: 16px;
+	}
+
+	.project-header {
+		display: flex;
+		gap: 16px;
+		align-items: flex-start;
+	}
+
+	.project-logo {
+		width: 48px;
+		height: 48px;
+		object-fit: contain;
+		flex-shrink: 0;
+	}
+
+	.project-title-area {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.project-title-area strong {
+		font-size: 1.25rem;
+		color: var(--heading-color);
+		font-weight: 700;
+	}
+
+	.project-title-area span {
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: var(--text-color);
+		opacity: 0.9;
+	}
+
+	.view-project-btn {
+		display: inline-flex;
+		align-items: center;
+		color: var(--accent-color);
+		font-weight: 600;
+		font-size: 0.95rem;
+		width: fit-content;
+		text-decoration: none;
 	}
 
 	/* About Section Styles */
 	.about-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 30px;
+		gap: 40px;
 		margin-top: 30px;
 	}
 
 	.about-card {
-		background-color: var(--secondary-bg);
-		padding: 25px;
-		border-radius: 12px;
-		border: 1px solid var(--border-color);
+		padding: 0;
 	}
 
 	.about-card h3 {
 		color: var(--accent-color);
-		margin-bottom: 15px;
-		font-size: 1.2em;
-		font-weight: 600;
+		margin-bottom: 16px;
+		font-size: 1.1rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
 	.about-bullets {
@@ -261,70 +590,92 @@ import Layout from "../layouts/Layout.astro";
 	}
 
 	.about-bullets li {
-		padding: 8px 0 8px 25px;
+		padding: 8px 0 8px 24px;
 		position: relative;
-		margin-bottom: 8px;
 		line-height: 1.4;
+		font-size: 0.95rem;
+		color: var(--text-color);
 	}
 
 	.about-bullets li::before {
-		content: '';
-		display: inline-block;
-		background-image: url('../assets/bullet.png');
-		background-size: contain;
-		background-repeat: no-repeat;
-		width: 20px;
-		height: 20px;
+		content: '→';
 		position: absolute;
 		left: 0;
-		top: 50%;
-		transform: translateY(-50%);
+		color: var(--accent-color);
+		font-weight: 700;
+		opacity: 0.7;
 	}
 
 	.centered-heading {
 		text-align: center;
+		margin-bottom: 20px;
 	}
 
-	@media (max-width: 900px) {
-		.hero-text {
-			padding-right: 20px;
+	.home-contact-links {
+		display: flex;
+		justify-content: center;
+		gap: 30px;
+		margin-top: 30px;
+		flex-wrap: wrap;
+	}
+
+	.home-contact-links a {
+		font-size: 1.1em;
+		font-weight: 600;
+		color: var(--heading-color);
+		text-decoration: none;
+	}
+
+	@media (max-width: 1000px) {
+		.client-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
 	}
 
 	@media (max-width: 768px) {
-		.hero-text .name { font-size: 2.2em; }
-		.hero-text .tagline { font-size: 1.1em; }
+		.hero {
+			padding: 60px 0 40px;
+		}
+
+		.hero-text .name { font-size: 2.8rem; }
+		.hero-text .tagline { font-size: 1.25rem; }
 
 		.hero-content {
 			flex-direction: column;
-			text-align: center;
+			text-align: left;
+			gap: 40px;
 		}
 
 		.hero-text {
-			order: 2;
-			padding-right: 0;
-			margin-top: 30px;
+			width: 100%;
 		}
 		
-		.hero-bullets {
-			text-align: left;
-			display: inline-block;
+		.feature-item {
+			max-width: 100%;
 		}
 
 		.hero-avatar {
-			order: 1;
-			width: 60%;
-			max-width: 250px;
-			margin: 0 auto;
+			width: 100%;
+			max-width: 400px;
 		}
 
-		.hero-avatar img {
-			max-width: 250px;
-		}
-
-		.about-grid {
+		.personal-project-grid {
 			grid-template-columns: 1fr;
-			gap: 20px;
+		}
+	}
+
+	@media (max-width: 620px) {
+		.client-grid {
+			grid-template-columns: 1fr;
+			gap: 30px;
+		}
+
+		.client-card {
+			height: 40px;
+		}
+
+		.personal-project-card {
+			padding: 0;
 		}
 	}
 </style>
