@@ -172,6 +172,33 @@ const { Content } = await render(entry);
 		margin: 1.5rem 0;
 	}
 
+	.blog-content :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.5rem 0;
+		font-size: 0.95em;
+		display: block;
+		overflow-x: auto;
+	}
+
+	.blog-content :global(th),
+	.blog-content :global(td) {
+		padding: 0.6rem 0.9rem;
+		border: 1px solid var(--border-color);
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.blog-content :global(th) {
+		background-color: var(--primary-bg);
+		color: var(--heading-color);
+		font-weight: 600;
+	}
+
+	.blog-content :global(tbody tr:nth-child(even)) {
+		background-color: var(--primary-bg);
+	}
+
 	.blog-footer {
 		padding-top: 2rem;
 		border-top: 1px solid var(--border-color);
