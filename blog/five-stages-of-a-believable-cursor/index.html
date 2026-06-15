@@ -1,0 +1,1126 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v6.4.7"><title>The Five Stages of a Believable Cursor - Mark Wylde</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"><script>
+			(function() {
+				const savedTheme = localStorage.getItem('theme');
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+				document.documentElement.setAttribute('data-theme', theme);
+			})();
+		</script><link rel="stylesheet" href="/assets/_slug_.8RtPAWTh.css"><link rel="stylesheet" href="/assets/Layout.Cly-476O.css"></head> <body> <div class="site-header"> <div class="container site-header-content"> <div class="header-left"> <a href="/" class="header-avatar-link"> <video autoplay muted class="header-avatar" playsinline poster="/assets/avatar-portrait.C9S5t3ZG.png" width="75" height="75"> <source src="/assets/avatar-portrait-140.BjSyJAHW.mp4" type="video/mp4"> <img src="/assets/avatar-portrait.C9S5t3ZG.png" alt="Mark Wylde - Avatar"> </video> </a> <a href="/" class="header-site-title">Mark Wylde</a> </div> <div class="header-right"> <nav class="main-nav"> <a href="/" class="nav-link ">Home</a> <a href="/about" class="nav-link ">About</a> <a href="/blog" class="nav-link nav-link-active">Blog</a> </nav> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(c,s,d)=>s in c?g(c,s,{enumerable:!0,configurable:!0,writable:!0,value:d}):c[s]=d;var l=(c,s,d)=>w(c,typeof s!="symbol"?s+"":s,d);var E=new Set(["__proto__","constructor","prototype"]);{let c={0:t=>y(t),1:t=>d(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(d(t)),5:t=>new Set(d(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in c?c[p](e):void 0},d=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let n=this.querySelectorAll("astro-slot"),r={},i=this.querySelectorAll("template[data-astro-template]");for(let o of i){let a=o.closest(this.tagName);a!=null&&a.isSameNode(this)&&(r[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of n){let a=o.closest(this.tagName);a!=null&&a.isSameNode(this)&&(r[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let a=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(a+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${a}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,r,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),n.disconnect(),this.childrenConnectedCallback()},n=new MutationObserver(()=>{var r;((r=this.lastChild)==null?void 0:r.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});n.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let n=new URL(e,document.baseURI),r=`astro-retry=${Date.now()}`,i=n.hash.replace(/^#/,"");return n.hash=i?`${i}&${r}`:r,n.toString()}async importWithRetry(e){try{return await import(e)}catch(n){return await new Promise(r=>setTimeout(r,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let n=this.getAttribute("component-url"),r=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:n}});this.dispatchEvent(r)&&console.error(`[astro-island] Error hydrating ${n}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),n=this.getAttribute("client");if(Astro[n]===void 0){window.addEventListener(`astro:${n}`,()=>this.start(),{once:!0});return}try{await Astro[n](async()=>{let r=this.getAttribute("renderer-url");try{let[i,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),r?this.importWithRetry(r):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=i;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=i[h]}return this.hydrator=u,this.hydrate}catch(i){return this.handleHydrationError(i),()=>{}}},e,this)}catch(r){this.handleHydrationError(r)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="1AancO" prefix="r1" component-url="/assets/ThemeToggle._ea9_YDc.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;ThemeToggle&quot;,&quot;value&quot;:true}" await-children><button type="button" class="theme-toggle" aria-label="Toggle dark mode" style="opacity:0"><span class="theme-toggle-icon"></span></button><!--astro:end--></astro-island> </div> </div> </div> <main>  <section class="section" data-astro-cid-4sn4zg3r> <div class="container" data-astro-cid-4sn4zg3r> <div class="blog-content-wrapper" data-astro-cid-4sn4zg3r> <article class="blog-post" data-astro-cid-4sn4zg3r> <header class="blog-header" data-astro-cid-4sn4zg3r> <h1 data-astro-cid-4sn4zg3r>The Five Stages of a Believable Cursor</h1> <div class="blog-meta" data-astro-cid-4sn4zg3r> <time datetime="Mon Jun 15 2026 00:00:00 GMT+0000 (Coordinated Universal Time)" data-astro-cid-4sn4zg3r> June 15, 2026 </time> <div class="blog-tags" data-astro-cid-4sn4zg3r> <span class="tag" data-astro-cid-4sn4zg3r>Animation</span><span class="tag" data-astro-cid-4sn4zg3r>JavaScript</span><span class="tag" data-astro-cid-4sn4zg3r>UX</span><span class="tag" data-astro-cid-4sn4zg3r>Bezier Curves</span><span class="tag" data-astro-cid-4sn4zg3r>Maths</span> </div> </div> </header> <div class="blog-content" data-astro-cid-4sn4zg3r> <p>I’ve been building a tool that records product demos, and it needs a fake cursor: a little arrow that drives the interface so you don’t have to film your real mouse. Getting it to <em>click the right things</em> is trivial. Getting it to <strong>look like a human is moving it</strong> turned out to be a genuinely interesting problem, and it’s almost entirely about maths.</p>
+<p>This article is the breakdown. There are five “big” demos, each running the <strong>exact same scripted routine</strong> on a fake GNOME desktop — open Files, maximise the window, delete a folder through a dialog, drag the dialog, minimise, quit. The only thing that changes between them is <em>how the pointer travels between clicks</em>. In between, there are small interactive widgets that isolate each technique on its own so you can poke at the maths directly.</p>
+<p>Start here, with the naive version: the cursor just teleports to wherever the next click is.</p>
+<astro-island uid="Z1xwH21" prefix="r18" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,1]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> moveTo</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">end</span><span style="color:#E1E4E8">){ pos.x </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> end.x; pos.y </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> end.y; }  </span><span style="color:#6A737D">// teleport</span></span></code></pre>
+<p>It works perfectly and it’s completely unconvincing. The reason is in your eyes, not the code: human vision uses <em>smooth pursuit</em> to lock onto and track a moving target, and <em>saccades</em> to jump between stationary ones. A real cursor gives your eye something to pursue. A teleporting one forces a saccade every time, which is exactly what reading text feels like — useful, but obviously not “someone using a mouse”. So the first job is to put motion between the clicks.</p>
+<h2 id="straight-lines-interpolation-and-speed">Straight lines: interpolation and speed</h2>
+<p>The simplest motion is a straight line at a constant speed. You walk a number <code>p</code> from 0 to 1 and read off the position with <strong>linear interpolation</strong> (a “lerp”):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>position(p) = start + (end − start) · p</span></span></code></pre>
+<p>At <code>p = 0</code> you’re at the start, at <code>p = 1</code> you’re at the end, and halfway through you’re exactly halfway there. If you want a constant <em>speed</em> (pixels per second) rather than a constant <em>duration</em>, the trip time just falls out of the distance:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>duration = distance ÷ speed</span></span></code></pre>
+<p>That’s the whole model. Here it is on its own — drag the speed slider and notice the motion never changes character, it only gets faster or slower:</p>
+<div class="demo-band"><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><astro-island uid="Zf9jdJ" prefix="r19" component-url="/assets/MiniSpeed.DyKp0Wk5.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniSpeed&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-speed"><style>
+.demo-speed{display:flex;flex-direction:column;gap:14px;padding:18px}
+.demo-speed .caption{font-size:1rem;color:var(--muted);line-height:1.6;margin:0}
+.demo-speed .caption b{color:var(--fg-strong);font-weight:600}
+.demo-speed code{font-family:ui-monospace,Menlo,monospace;font-size:0.9em;color:var(--code-fg);background:var(--code-bg);padding:2px 6px;border-radius:5px}
+.demo-speed .stage{display:flex;align-items:center;min-height:72px}
+.demo-speed .track{position:relative;width:100%;height:3px;border-radius:3px;background:var(--track)}
+.demo-speed .cur{position:absolute;top:50%;left:0;width:22px;height:22px;margin-top:-11px;will-change:transform;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.demo-speed .tick{position:absolute;top:50%;width:2px;height:16px;margin-top:-8px;background:var(--tick)}
+.demo-speed .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.demo-speed label{display:flex;align-items:center;gap:9px;font-size:0.92rem;color:var(--muted)}
+.demo-speed input[type=range]{accent-color:#6f7bff;width:200px}
+.demo-speed .read{font-size:1rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.demo-speed .read b{color:var(--fg-strong);font-weight:600}
+</style><p class="caption">Linear motion: the cursor covers equal distance every frame. Speed only changes <b>how long the trip takes</b> — <code>duration = distance ÷ speed</code> — never the shape of it. Drag the slider and watch it lurch off and stop dead at each end.</p><div class="stage"><div class="track"><span class="tick" style="left:0"></span><span class="tick" style="right:0"></span><svg class="cur" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><div class="row"><label>Speed <input class="speed" type="range" min="150" max="1600" value="600"/></label><span class="read"></span></div></div><!--astro:end--></astro-island></div>
+<p>In CSS this is one line — <code>transition: transform 0.4s linear</code> does precisely this lerp. Dropped into the routine, it already reads better than teleporting:</p>
+<astro-island uid="Z1xwGLg" prefix="r20" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,2]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<p>But it’s still clearly a machine. Two things give it away. It’s <em>perfectly</em> straight, and hands don’t draw straight lines. And the speed snaps from zero to full pelt instantly, holds it dead level, then stops like it hit a wall. Real movement ramps up, coasts, and slows as it homes in on the target.</p>
+<h2 id="easing-speed-should-rise-and-fall">Easing: speed should rise and fall</h2>
+<p>When a person reaches for something, their hand’s speed isn’t constant — it traces a roughly bell-shaped curve: accelerate, peak around the middle, decelerate onto the target. This is one of the most robust findings in motor control, and there’s a clean model for it. Flash and Hogan’s <strong>minimum-jerk</strong> model (1985) says the trajectory that minimises jerk (the rate of change of acceleration) is a fixed quintic:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>p(τ) = 10τ³ − 15τ⁴ + 6τ⁵        where τ = elapsed ÷ duration</span></span></code></pre>
+<p>You feed real progress <code>τ</code> (0→1) through that polynomial and use the result as your interpolation factor. The ends are flat (zero velocity) and the middle is steep (peak velocity), which is exactly the bell shape.</p>
+<p>CSS gives you the same idea through timing functions. <code>linear</code>, <code>ease</code>, <code>ease-in-out</code> and friends are all just <strong><code>cubic-bezier(x1, y1, x2, y2)</code></strong> under the hood — a curve that remaps input time to output progress. The key thing to internalise: easing changes <em>when</em> you are <em>where</em>, not the route you take. The path is still a straight line.</p>
+<p>This widget <em>is</em> a <code>cubic-bezier()</code> editor. Drag the teal handles and watch the curve, the moving marker, and the speed meter underneath the cursor swell and fade:</p>
+<div class="demo-band"><astro-island uid="ZNvK5y" prefix="r21" component-url="/assets/MiniEasing.C8uL3OZx.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniEasing&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-easing"><style>
+.demo-easing .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-easing .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-easing .caption b{color:var(--fg-strong);font-weight:600}
+.demo-easing .play{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.demo-easing .graph{width:248px;max-width:46%;aspect-ratio:260/220;touch-action:none;flex:0 0 auto}
+.demo-easing .right{flex:1;min-width:200px;display:flex;flex-direction:column;gap:16px}
+.demo-easing .track{position:relative;width:100%;height:3px;border-radius:3px;background:var(--track)}
+.demo-easing .track .cur{position:absolute;top:50%;left:0;width:20px;height:20px;margin-top:-10px;will-change:transform;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.demo-easing .track .tick{position:absolute;top:50%;width:2px;height:14px;margin-top:-7px;background:var(--tick)}
+.demo-easing .meter-wrap{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:var(--muted)}
+.demo-easing .meter{flex:1;height:8px;border-radius:8px;background:var(--track);overflow:hidden}
+.demo-easing .meter-fill{height:100%;width:0;background:linear-gradient(90deg,#37e0c8,#6f7bff);border-radius:8px}
+.demo-easing .row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.demo-easing .btn{appearance:none;border:1px solid var(--line);background:var(--btn-bg);color:var(--fg-strong);font:inherit;font-size:0.86rem;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer}
+.demo-easing .btn.active{background:#3584e4;border-color:#3584e4;color:#fff}
+.demo-easing code{font-family:ui-monospace,Menlo,monospace;font-size:0.92rem;color:var(--code-fg);background:var(--code-bg);padding:4px 8px;border-radius:6px}
+.demo-easing .gridline{stroke:var(--grid);stroke-width:1}
+.demo-easing .axis{stroke:var(--axis);stroke-width:1.4}
+.demo-easing .ctrlline{stroke:var(--axis2);stroke-width:1.4;stroke-dasharray:3 4}
+.demo-easing .curve{stroke:#6f7bff;stroke-width:2.6;fill:none}
+.demo-easing .handle{fill:#37e0c8;stroke:#0f1118;stroke-width:2;cursor:grab}
+.demo-easing .handle:active{cursor:grabbing}
+.demo-easing .marker{fill:#fff}
+</style><div class="mini"><div class="caption">An <b>easing function</b> remaps progress: real time goes in along the bottom, the eased value comes out up the side. The motion stays a straight A→B line — easing only changes <b>when</b> you&#x27;re where. Drag the teal handles (that&#x27;s literally CSS <code>cubic-bezier()</code>) and watch the dot&#x27;s speed meter swell and fade.</div><div class="play"><svg class="graph" id="graph" viewBox="0 0 260 220"><line class="gridline" x1="30" y1="110" x2="230" y2="110"></line><line class="gridline" x1="130" y1="30" x2="130" y2="190"></line><rect x="30" y="30" width="200" height="160" fill="none" class="axis"></rect><line class="ctrlline" id="cl1"></line><line class="ctrlline" id="cl2"></line><path class="curve" id="curve"></path><circle class="marker" id="marker" r="4"></circle><circle class="handle" id="h1" r="7"></circle><circle class="handle" id="h2" r="7"></circle></svg><div class="right"><div class="track"><span class="tick" style="left:0"></span><span class="tick" style="right:0"></span><svg class="cur" id="cur" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div><div class="meter-wrap">speed<div class="meter"><div class="meter-fill" id="meter"></div></div></div><div class="row" id="presets"></div><div><code id="css">cubic-bezier(0.42, 0, 0.58, 1)</code></div></div></div></div></div><!--astro:end--></astro-island></div>
+<p>One nuance: a <code>cubic-bezier</code> can’t reproduce the minimum-jerk quintic exactly (different polynomial degree), but a symmetric ease-in-out gets close enough that the eye doesn’t care. In the actual cursor I drive position with JavaScript and use the minimum-jerk polynomial directly. Either way, the result is night and day:</p>
+<astro-island uid="Z1xwGvv" prefix="r22" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,3]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<p>The cursor now launches, glides and settles. It finally has weight. (Worth noting: there’s solid evidence here too that duration shouldn’t be fixed — <strong>Fitts’s law</strong> says the time to hit a target grows with distance and shrinks with target size, so longer hops take a bit longer. In the demo, duration scales gently with distance for the same reason.)</p>
+<p>What’s left is the path itself. It’s still a geometrically exact line, and after a few moves that perfection is the tell.</p>
+<h2 id="curving-the-path-bézier-curves">Curving the path: Bézier curves</h2>
+<p>To bend a straight A→B into an arc, you need control points, and that means <strong>Bézier curves</strong>. A quadratic Bézier has one control point <code>C</code>; a cubic has two, <code>C1</code> and <code>C2</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>quadratic:  B(t) = (1−t)²·P₀ + 2(1−t)t·C + t²·P₁</span></span>
+<span class="line"><span>cubic:      B(t) = (1−t)³·P₀ + 3(1−t)²t·C₁ + 3(1−t)t²·C₂ + t³·P₃</span></span></code></pre>
+<p>The control points are magnets: the curve is pulled toward them but never actually passes through them. To turn a straight line into a gentle bow, you put a control point at the midpoint and shove it sideways — perpendicular to the line — by some fraction of the distance.</p>
+<p>This is the same Bézier maths as the easing curve above, but doing a completely different job: there it mapped <em>time → progress</em>, here it maps <em>progress → a point in space</em>. Drag the control points and watch the route change:</p>
+<div class="demo-band"><astro-island uid="1PT6U9" prefix="r23" component-url="/assets/MiniBezier.G__W7Tw1.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniBezier&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-bezier"><style>
+.demo-bezier .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-bezier .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-bezier .caption b{color:var(--fg-strong);font-weight:600}
+.demo-bezier code{font-family:ui-monospace,Menlo,monospace;font-size:0.92rem;color:var(--code-fg);background:var(--code-bg);padding:3px 7px;border-radius:6px}
+.demo-bezier .stage{display:flex;align-items:center;justify-content:center}
+.demo-bezier svg{width:100%;max-width:560px;aspect-ratio:480/240;height:auto;display:block;margin:0 auto;touch-action:none}
+.demo-bezier .straight{stroke:var(--axis);stroke-width:1.5;stroke-dasharray:4 5;fill:none}
+.demo-bezier .polygon{stroke:var(--axis2);stroke-width:1.4;stroke-dasharray:3 4;fill:none}
+.demo-bezier .curve{stroke:#6f7bff;stroke-width:3;fill:none}
+.demo-bezier .anchor{fill:var(--fg-strong)}
+.demo-bezier .ctrl{fill:#37e0c8;stroke:#0f1118;stroke-width:2.5;cursor:grab}
+.demo-bezier .ctrl-label{fill:var(--muted);font-size:0.92rem;font-family:ui-monospace,monospace}
+.demo-bezier .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+</style><div class="mini"><div class="caption">A path is a <b>Bézier curve</b>. Two anchors (start and end, the pale dots) are fixed; two <b>control points</b> (teal) pull the line toward them without ever being touched. Drag the teal points — that&#x27;s the entire trick behind a natural arc. <code>B(t) = (1−t)³P₀ + 3(1−t)²t·C₁ + 3(1−t)t²·C₂ + t³P₃</code></div><div class="stage"><svg id="svg" viewBox="0 0 480 240" preserveAspectRatio="xMidYMid meet"><line class="straight" id="straight"></line><path class="polygon" id="poly"></path><path class="curve" id="curve"></path><circle class="anchor" id="p0" r="5"></circle><circle class="anchor" id="p3" r="5"></circle><text class="ctrl-label" id="l1">C₁</text><text class="ctrl-label" id="l2">C₂</text><circle class="ctrl" id="c1" r="8"></circle><circle class="ctrl" id="c2" r="8"></circle><circle class="dot" id="dot" r="6"></circle></svg></div></div></div><!--astro:end--></astro-island></div>
+<p>Here’s where it gets interesting in the routine. I added a single fixed bow — the control point at the midpoint, pushed out 22% of the distance, always the same side:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> nx</span><span style="color:#F97583"> =</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8">dy </span><span style="color:#F97583">/</span><span style="color:#E1E4E8"> dist, </span><span style="color:#79B8FF">ny</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> dx </span><span style="color:#F97583">/</span><span style="color:#E1E4E8"> dist;     </span><span style="color:#6A737D">// unit vector perpendicular to the line</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> bow</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> dist </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 0.22</span><span style="color:#E1E4E8">;                     </span><span style="color:#6A737D">// same fraction, same side, every move</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> c</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> { x: start.x </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dx</span><span style="color:#F97583">*</span><span style="color:#79B8FF">0.5</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> nx</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">bow, y: start.y </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dy</span><span style="color:#F97583">*</span><span style="color:#79B8FF">0.5</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> ny</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">bow };</span></span></code></pre>
+<astro-island uid="Z1xwGfK" prefix="r24" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,4]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<p>It arcs nicely on the long diagonal reaches — but two problems show up. First, <em>every move is the same curve</em>: the control point is always at the midpoint, always offset the same amount, always the same side, so you’re watching one shape mirrored over and over. Second, look at a move that’s nearly straight up or down — reaching for the title bar, or down to the dock. It swings out sideways in a big lazy arc. That’s wrong: when you move your hand straight up, you don’t loop out to the side.</p>
+<h2 id="direction-matters-inertial-anisotropy">Direction matters: inertial anisotropy</h2>
+<p>That last problem isn’t just aesthetic — it has a biomechanical cause. Your arm is a linked system of segments with mass, and its resistance to acceleration (its inertia) depends on the <em>direction</em> you push it, because different directions recruit different combinations of joints. This is <strong>inertial anisotropy</strong>, and it measurably bends real reaching trajectories by different amounts in different directions (Gordon, Ghez and colleagues, 1994; Osu et al., 1997, on curvature in multi-joint arm movements). Straight lines are the exception, not the rule, and <em>how</em> curved a path is depends on which way it’s going.</p>
+<p>I’ll be honest about the gap between that and what I shipped: the research supports <em>direction-dependent curvature</em>; it does <strong>not</strong> say “cardinals straight, diagonals curvy.” That specific mapping is my own heuristic — it looks right and has a plausible basis, but I wouldn’t dress it up as a finding. The function I reached for is <code>|sin(2θ)|</code>, where <code>θ</code> is the angle of the move:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>weight = |sin(2θ)|        0 at 0°/90°/180°/270°,  1 at every 45° diagonal</span></span></code></pre>
+<p>It’s zero for pure horizontal/vertical moves and ramps smoothly to 1 at the diagonals — a neat four-petal shape. Drag the target around the centre and watch the bow trace those petals:</p>
+<div class="demo-band"><astro-island uid="Z2re8MN" prefix="r25" component-url="/assets/MiniDirection.RciT8mPJ.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniDirection&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-direction"><style>
+.demo-direction .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-direction .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-direction .caption b{color:var(--fg-strong);font-weight:600}
+.demo-direction code{font-family:ui-monospace,Menlo,monospace;font-size:0.92rem;color:var(--code-fg);background:var(--code-bg);padding:3px 7px;border-radius:6px}
+.demo-direction .play{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.demo-direction svg{width:320px;max-width:60%;aspect-ratio:360/300;touch-action:none;flex:0 0 auto}
+.demo-direction .rose{stroke:var(--axis);stroke-width:1.4;fill:rgba(111,123,255,.06)}
+.demo-direction .straight{stroke:var(--axis);stroke-width:1.5;stroke-dasharray:4 5;fill:none}
+.demo-direction .curve{stroke:#6f7bff;stroke-width:3;fill:none}
+.demo-direction .origin{fill:var(--fg-strong)}
+.demo-direction .target{fill:#37e0c8;stroke:#0f1118;stroke-width:2.5;cursor:grab}
+.demo-direction .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+.demo-direction .axis{stroke:var(--grid);stroke-width:1}
+.demo-direction .readout{flex:1;min-width:170px;display:flex;flex-direction:column;gap:10px;font-size:1rem;color:var(--muted)}
+.demo-direction .readout .big{font-size:1rem}
+.demo-direction .readout b{color:var(--fg-strong);font-variant-numeric:tabular-nums}
+.demo-direction .bar{height:8px;border-radius:8px;background:var(--track);overflow:hidden;margin-top:3px}
+.demo-direction .bar > div{height:100%;width:0;background:linear-gradient(90deg,#37e0c8,#6f7bff)}
+</style><div class="mini"><div class="caption">Real arm movements curve <b>more on the diagonals than on the cardinals</b>. The weight <code>|sin(2θ)|</code> captures exactly that: it&#x27;s 0 straight up / down / left / right, and 1 at the 45° diagonals. Drag the teal target around the centre — the bow follows the four-petal shape of that function.</div><div class="play"><svg id="svg" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid meet"><line class="axis" x1="30" y1="150" x2="330" y2="150"></line><line class="axis" x1="180" y1="20" x2="180" y2="280"></line><path class="rose" id="rose"></path><line class="straight" id="straight"></line><path class="curve" id="curve"></path><circle class="origin" cx="180" cy="150" r="5"></circle><circle class="dot" id="dot" r="6"></circle><circle class="target" id="target" r="9"></circle></svg><div class="readout"><div>angle θ = <b id="rTheta">—</b></div><div>|sin(2θ)| = <b id="rDiag">—</b><div class="bar"><div id="barDiag"></div></div></div><div>bow = <b id="rBow">—</b> px</div></div></div></div></div><!--astro:end--></astro-island></div>
+<p>Multiply the bow by that weight (with a small floor so even straight moves keep a whisper of a curve, because real paths are never perfect rulers either) and the vertical moves straighten out while the diagonals keep their swoop.</p>
+<p>The other fix is killing the repetition. Instead of one fixed control point I use a <strong>cubic</strong> Bézier with <em>two</em> control points, each at a randomised position along the line with its own randomised perpendicular offset (scaled by that direction weight). About a quarter of the time one flips to the opposite side, which produces the occasional gentle S-curve. And the easing is regenerated for every single move, so peak speed lands at a slightly different moment each time:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> theta</span><span style="color:#F97583">    =</span><span style="color:#E1E4E8"> Math.</span><span style="color:#B392F0">atan2</span><span style="color:#E1E4E8">(dy, dx);</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> diagness</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Math.</span><span style="color:#B392F0">abs</span><span style="color:#E1E4E8">(Math.</span><span style="color:#B392F0">sin</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#F97583"> *</span><span style="color:#E1E4E8"> theta));   </span><span style="color:#6A737D">// 0 = cardinal, 1 = diagonal</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> dirWeight</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 0.14</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> 0.86</span><span style="color:#F97583"> *</span><span style="color:#E1E4E8"> diagness;         </span><span style="color:#6A737D">// floor so it&#39;s never dead straight</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#B392F0"> ctrlAt</span><span style="color:#F97583"> =</span><span style="color:#FFAB70"> frac</span><span style="color:#F97583"> =&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> sign</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Math.</span><span style="color:#B392F0">random</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">&lt;</span><span style="color:#79B8FF"> 0.25</span><span style="color:#F97583"> ?</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8">primary </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> primary;   </span><span style="color:#6A737D">// ~25% flip → soft S</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> mag</span><span style="color:#F97583">  =</span><span style="color:#E1E4E8"> dist </span><span style="color:#F97583">*</span><span style="color:#B392F0"> rand</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0.04</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.26</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> sign </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> dirWeight;</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> { x: start.x </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dx</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">frac </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> nx</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">mag, y: start.y </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dy</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">frac </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> ny</span><span style="color:#F97583">*</span><span style="color:#E1E4E8">mag };</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> c1</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> ctrlAt</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">rand</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0.15</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.40</span><span style="color:#E1E4E8">));</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> c2</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> ctrlAt</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">rand</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0.60</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.85</span><span style="color:#E1E4E8">));</span></span></code></pre>
+<p>Turn on <strong>Loop</strong> here and let it run — no two passes are identical, but it never wanders into nonsense, and the near-vertical moves stay tight:</p>
+<astro-island uid="Z1xwG00" prefix="r26" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,5]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<h2 id="handedness-where-the-curve-actually-comes-from">Handedness: where the curve actually comes from</h2>
+<p>There’s a question lurking under all of this: <em>why</em> should a path curve at all? Stage 5 leans on <code>|sin(2θ)|</code>, but that’s a rule about screen axes, and a cursor has no idea which way is “up”. The real answer is the hand — and I got the details wrong on my first attempt, so I went and checked the literature.</p>
+<p>Most people are right-handed, and on a laptop trackpad the wrist sits off the <strong>bottom-right corner</strong>; the fingertip pivots from there. A patent on biomechanical input puts it cleanly: move a fingertip <strong>laterally</strong> (sideways) and the tip “moves along a circular arc with a radius centred at the wrist”; move it <strong>longitudinally</strong> (toward or away from the wrist) and it “moves along a straight line toward the centre of the circular arc”. Reaching studies back this up — wrist paths are measurably more curved and more variable than whole-arm paths — and handedness flips the bias: left-handers produce mirror-image strokes (clockwise circles appear in ~39% of left-handers versus ~1% of right-handers).</p>
+<p>So the rule isn’t “near the palm is straighter”, which was my first guess. It’s sharper than that:</p>
+<ul>
+<li>A <strong>longitudinal</strong> move — straight toward or away from the wrist — is straight, <em>wherever</em> it happens. (That’s the “more exact” feel of small adjustments near the palm; those tend to be longitudinal.)</li>
+<li>A <strong>lateral</strong> move sweeps an arc around the wrist, concave toward it.</li>
+<li>Because curvature is <code>1 ÷ radius</code>, those arcs are <strong>tighter near the wrist and gentler far out</strong> — the opposite of what I first assumed.</li>
+</ul>
+<p>The maths is just that arc’s geometry. Put a pivot <code>Pv</code> off the bottom-right. For a move <code>S → E</code>, measure the angle each end subtends around the pivot, take the sweep between them, and the bow is the arc’s sagitta:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Δφ   = angle(E − Pv) − angle(S − Pv)     // the lateral sweep; ≈ 0 for a longitudinal move</span></span>
+<span class="line"><span>R    = |midpoint − Pv|                    // smaller near the wrist</span></span>
+<span class="line"><span>bow  = R · (1 − cos(Δφ / 2))             // sagitta of the arc  ≈  length² / (8R)</span></span></code></pre>
+<p>That <code>length² / (8R)</code> is the giveaway: curvature scales with <code>1/R</code>, exactly as the biomechanics predicts. The control point sits perpendicular to the move, offset by the bow, on the side <strong>away</strong> from the pivot — so the arc is concave toward the wrist, the shape a finger actually sweeps. Here it is as a fan of lateral strokes; watch them tighten toward the palm:</p>
+<div class="demo-band"><astro-island uid="2v1YKL" prefix="r27" component-url="/assets/MiniHandedField.DT4zywGn.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniHandedField&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-handed-field"><style>
+.demo-handed-field .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-handed-field .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-handed-field .caption b{color:var(--fg-strong);font-weight:600}
+.demo-handed-field .stage{display:flex;align-items:center;justify-content:center}
+.demo-handed-field svg{width:100%;height:100%;touch-action:none}
+.demo-handed-field .pad{fill:var(--pad-fill);stroke:var(--line);stroke-width:1.5}
+.demo-handed-field .arc{stroke:#6f7bff;stroke-width:2.4;fill:none}
+.demo-handed-field .end{fill:#37e0c8}
+.demo-handed-field .palm{font-size:22px}
+.demo-handed-field .palm-ring{fill:rgba(55,224,200,.10);stroke:rgba(55,224,200,.4);stroke-width:1.4;stroke-dasharray:3 4}
+.demo-handed-field .row{display:flex;align-items:center;gap:10px}
+.demo-handed-field .btn{appearance:none;border:1px solid var(--line);background:var(--btn-bg);color:var(--fg-strong);font:inherit;font-size:0.86rem;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer}
+.demo-handed-field .btn.active{background:#3584e4;border-color:#3584e4;color:#fff}
+</style><div class="mini"><div class="caption">Each stroke here is a <b>lateral (sideways) swipe</b>, the kind that traces a circular arc centred on the wrist. They fan out as concentric arcs around the palm — and they&#x27;re <b>tighter near the palm, gentler far away</b>, because curvature is 1 ÷ radius. Flip the handedness and the whole fan mirrors.</div><div class="stage"><svg id="svg" viewBox="0 0 360 250" preserveAspectRatio="xMidYMid meet"><rect class="pad" x="16" y="14" width="328" height="208" rx="12"></rect><circle class="palm-ring" id="ring" r="16"></circle><text class="palm" id="palm">🤚</text><g id="field"></g></svg></div><div class="row" id="hands"></div></div></div><!--astro:end--></astro-island></div>
+<p>And interactively — line the stroke up <em>along</em> the dotted radius (longitudinal) and it stays straight; swing it <em>across</em> (lateral) and <code>Δφ</code> climbs and it bows around the wrist:</p>
+<div class="demo-band"><astro-island uid="ZdHWer" prefix="r28" component-url="/assets/MiniHandedAim.7kp8yt4K.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniHandedAim&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-handed-aim"><style>
+.demo-handed-aim .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-handed-aim .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-handed-aim .caption b{color:var(--fg-strong);font-weight:600}
+.demo-handed-aim .play{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.demo-handed-aim svg{width:320px;max-width:58%;aspect-ratio:360/280;touch-action:none;flex:0 0 auto}
+.demo-handed-aim .pad{fill:var(--pad-fill);stroke:var(--line);stroke-width:1.5}
+.demo-handed-aim .straight{stroke:var(--axis);stroke-width:1.4;stroke-dasharray:4 5;fill:none}
+.demo-handed-aim .radial{stroke:var(--axis);stroke-width:1.2;stroke-dasharray:2 4;fill:none}
+.demo-handed-aim .arc{stroke:#6f7bff;stroke-width:3;fill:none}
+.demo-handed-aim .origin{fill:var(--fg-strong)}
+.demo-handed-aim .target{fill:#37e0c8;stroke:#0f1118;stroke-width:2.5;cursor:grab}
+.demo-handed-aim .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+.demo-handed-aim .palm{font-size:20px}
+.demo-handed-aim .palm-ring{fill:rgba(55,224,200,.10);stroke:rgba(55,224,200,.4);stroke-width:1.4;stroke-dasharray:3 4}
+.demo-handed-aim .readout{flex:1;min-width:160px;display:flex;flex-direction:column;gap:9px;font-size:1rem;color:var(--muted)}
+.demo-handed-aim .readout b{color:var(--fg-strong);font-variant-numeric:tabular-nums}
+.demo-handed-aim .bar{height:7px;border-radius:7px;background:var(--track);overflow:hidden;margin-top:2px}
+.demo-handed-aim .bar > div{height:100%;width:0;background:linear-gradient(90deg,#37e0c8,#6f7bff)}
+.demo-handed-aim .btn{appearance:none;border:1px solid var(--line);background:var(--btn-bg);color:var(--fg-strong);font:inherit;font-size:0.86rem;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer;margin-right:8px}
+.demo-handed-aim .btn.active{background:#3584e4;border-color:#3584e4;color:#fff}
+</style><div class="mini"><div class="caption">The faint dotted line runs from the centre to the wrist. Drag the target <b>along</b> that line (longitudinal) and the stroke stays straight; drag it <b>across</b> (lateral) and it bows around the wrist — leaving the start almost straight and bending into the target. Δφ is the angular sweep that drives it.</div><div class="play"><svg id="svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet"><rect class="pad" x="16" y="14" width="328" height="238" rx="12"></rect><circle class="palm-ring" id="ring" r="15"></circle><text class="palm" id="palm">🤚</text><line class="radial" id="radial"></line><line class="straight" id="straight"></line><path class="arc" id="arc"></path><circle class="origin" cx="180" cy="140" r="5"></circle><circle class="dot" id="dot" r="6"></circle><circle class="target" id="target" r="9"></circle></svg><div class="readout"><div><button class="btn active" id="bRight">Right</button><button class="btn" id="bLeft">Left</button></div><div>sweep Δφ = <b id="rPhi">—</b><div class="bar"><div id="barPhi"></div></div></div><div>radius R = <b id="rR">—</b> px</div><div>arch = <b id="rBow">—</b> px</div></div></div></div></div><!--astro:end--></astro-island></div>
+<h3 id="leave-straight-then-bend">Leave straight, then bend</h3>
+<p>There’s a subtlety even a perfect arc gets wrong. A circle has <em>constant</em> curvature, so it bends from the very first pixel — push the cursor and it’s already arcing sideways. Real strokes don’t do that: people leave the start almost straight and let the curve build toward the target. That shape has a name — a <strong>clothoid</strong> (Euler spiral), the curve whose curvature increases steadily along its length, and literally the piece engineers use to connect a straight line to a circular arc. Curve-fitting work finds hand-drawn strokes are well described by clothoids, with curvature varying gradually over arc length rather than snapping to a fixed radius.</p>
+<p>You don’t need the full clothoid integral for a believable cursor. You can fake the same front-straight, back-curved shape by making the two Bézier control points asymmetric: put the first one essentially <em>on</em> the straight line, so the stroke leaves tangent to it, and let the second one carry the arch, late.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> arch</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 2.2</span><span style="color:#F97583"> *</span><span style="color:#E1E4E8"> sagitta;                  </span><span style="color:#6A737D">// the bow, from the wrist-arc geometry</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> c1</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> along</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0.33</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> n </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (arch </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 0.1</span><span style="color:#E1E4E8">);   </span><span style="color:#6A737D">// control 1 ~ on the line  → straight entry</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> c2</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> along</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0.70</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> n </span><span style="color:#F97583">*</span><span style="color:#E1E4E8">  arch;          </span><span style="color:#6A737D">// control 2 carries the bend, placed late</span></span></code></pre>
+<p>Slide between a plain circular arc and the clothoid entry — same two endpoints, very different feel:</p>
+<div class="demo-band"><astro-island uid="Z2a2j0Y" prefix="r29" component-url="/assets/MiniEntry.HUd7aAfk.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniEntry&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-entry"><style>
+.demo-entry .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-entry .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-entry .caption b{color:var(--fg-strong);font-weight:600}
+.demo-entry .play{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.demo-entry svg{width:320px;max-width:56%;aspect-ratio:360/280;flex:0 0 auto}
+.demo-entry .pad{fill:var(--pad-fill);stroke:var(--line);stroke-width:1.5}
+.demo-entry .straight{stroke:var(--axis);stroke-width:1.3;stroke-dasharray:4 5;fill:none}
+.demo-entry .circle{stroke:#5a4a7a;stroke-width:2;stroke-dasharray:5 5;fill:none}
+.demo-entry .arc{stroke:#6f7bff;stroke-width:3.2;fill:none}
+.demo-entry .seg{stroke:#37e0c8;stroke-width:3.6;fill:none}
+.demo-entry .ends{fill:var(--fg-strong)}
+.demo-entry .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+.demo-entry .right{flex:1;min-width:180px;display:flex;flex-direction:column;gap:14px;font-size:1rem;color:var(--muted)}
+.demo-entry .right b{color:var(--fg-strong);font-variant-numeric:tabular-nums}
+.demo-entry label{display:flex;align-items:center;gap:9px}
+.demo-entry input[type=range]{accent-color:#6f7bff;width:100%}
+.demo-entry .key{display:flex;flex-direction:column;gap:6px;font-size:0.86rem}
+.demo-entry .key span{display:flex;align-items:center;gap:8px}
+.demo-entry .sw{width:18px;height:0;border-top:3px solid;border-radius:2px}
+</style><div class="mini"><div class="caption">Same start and end, top-right to bottom-left. A <b>circular arc</b> (dashed) bows from the very first pixel — constant curvature. A real stroke leaves <b>nearly straight</b> (the teal stretch), then the curvature ramps up and it bends into the target: a <b>clothoid</b>. Slide to control how long the straight entry lasts.</div><div class="play"><svg id="svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet"><rect class="pad" x="16" y="14" width="328" height="238" rx="12"></rect><path class="straight" id="straight"></path><path class="circle" id="circle"></path><path class="arc" id="arc"></path><path class="seg" id="seg"></path><circle class="ends" cx="300" cy="58" r="5"></circle><circle class="ends" cx="74" cy="236" r="5"></circle><circle class="dot" id="dot" r="6"></circle></svg><div class="right"><label>straight entry <input type="range" id="entry" min="0" max="100" value="70"/></label><div>stays straight for the first <b id="pct">—</b> of the move</div><div class="key"><span><span class="sw" style="border-color:#5a4a7a;border-style:dashed"></span> circular arc (constant curvature)</span><span><span class="sw" style="border-color:#6f7bff"></span> clothoid (curvature ramps up)</span><span><span class="sw" style="border-color:#37e0c8"></span> the near-straight entry</span></div></div></div></div></div><!--astro:end--></astro-island></div>
+<p>Wired into the routine — with the same two-control-point randomisation from Stage 5 so it never goes mechanical — this is the most physically honest version. Toggle <strong>Left-handed</strong> to move the pivot to the opposite corner and watch every arc flip sides:</p>
+<astro-island uid="BjgVL" prefix="r30" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,6]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label><label class="toggle"><input type="checkbox" id="leftHand"/> Left-handed</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<p>This is still a model — I haven’t fit curves to real trackpad strokes — but now it has a documented cause rather than being a screen-axis fudge, which is why it generalises: it curves moves I never tuned by hand, and the handedness toggle is the tell that the geometry is doing the work, not a lookup table.</p>
+<h2 id="a-different-paradigm-entirely-windmouse">A different paradigm entirely: WindMouse</h2>
+<p>Everything so far has been <em>geometric</em>: draw a nice curve, move along it. There’s a whole other way to get human-looking motion, and it’s the one the automation community actually converged on, so it’s worth seeing. The folk wisdom — you’ll find it in any “natural mouse movement” thread — is three-fold: ease in and out so the cursor has weight, smooth the path with a spline, and add random variation to dodge bot detectors. We’ve effectively done the first two (minimum-jerk easing, Bézier curves) and a tidy version of the third. The rigorous version of <em>random variation</em> is <strong>WindMouse</strong>, an algorithm <a href="https://ben.land/post/2021/04/25/windmouse-human-mouse-movement/">Benjamin J. Land published in 2021</a> (and which turns up, often unattributed, all over the place).</p>
+<p>WindMouse throws out geometry and does physics instead. The cursor is a mass with inertia, and two forces act on it every step:</p>
+<ul>
+<li><strong>Gravity</strong> — constant magnitude, always pointing at the destination. This is what gets you there.</li>
+<li><strong>Wind</strong> — a random force that drifts smoothly in magnitude and direction. This is what makes the path human.</li>
+</ul>
+<p>Sum the forces, integrate once for velocity and again for position (crude fixed-step Euler is plenty), and clip the velocity to a “terminal” speed that shrinks near the target so it settles instead of sailing past. The wiggle isn’t drawn anywhere — it <em>emerges</em> from the wind. Near the target the wind is damped so gravity can zero it in, which naturally produces the occasional overshoot-and-correct that real hands do.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// the heart of WindMouse (Benjamin J. Land, GPLv3), each step:</span></span>
+<span class="line"><span style="color:#E1E4E8">W_x </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> W_x</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">√</span><span style="color:#79B8FF">3</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (random −</span><span style="color:#79B8FF">1..1</span><span style="color:#E1E4E8">) · W_mag</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">√</span><span style="color:#79B8FF">5</span><span style="color:#E1E4E8">;     </span><span style="color:#6A737D">// wind drifts smoothly</span></span>
+<span class="line"><span style="color:#E1E4E8">W_y </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> W_y</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">√</span><span style="color:#79B8FF">3</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (random −</span><span style="color:#79B8FF">1..1</span><span style="color:#E1E4E8">) · W_mag</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">√</span><span style="color:#79B8FF">5</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">v_x </span><span style="color:#F97583">+=</span><span style="color:#E1E4E8"> W_x </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> G</span><span style="color:#E1E4E8">·(dest_x − x)</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">dist;             </span><span style="color:#6A737D">// wind + gravity → velocity</span></span>
+<span class="line"><span style="color:#E1E4E8">v_y </span><span style="color:#F97583">+=</span><span style="color:#E1E4E8"> W_y </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> G</span><span style="color:#E1E4E8">·(dest_y − y)</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">dist;</span></span>
+<span class="line"><span style="color:#6A737D">// clip |v| to a shrinking maximum, then:  x += v_x;  y += v_y;</span></span></code></pre>
+<div class="demo-band"><astro-island uid="PiVg6" prefix="r31" component-url="/assets/MiniWindmouse.DBapaPKm.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniWindmouse&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-windmouse"><style>
+.demo-windmouse .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-windmouse .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-windmouse .caption b{color:var(--fg-strong);font-weight:600}
+.demo-windmouse .caption a{color:var(--code-fg)}
+.demo-windmouse .stage{display:flex;align-items:center;justify-content:center}
+.demo-windmouse svg{width:100%;max-width:640px;aspect-ratio:520/240;height:auto;display:block;margin:0 auto}
+.demo-windmouse .pathline{stroke:rgba(111,123,255,.5);stroke-width:1.4;fill:none}
+.demo-windmouse .target{fill:#37e0c8}
+.demo-windmouse .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+.demo-windmouse .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 18px}
+.demo-windmouse label{display:flex;align-items:center;gap:8px;font-size:0.86rem;color:var(--muted)}
+.demo-windmouse label input{accent-color:#6f7bff;flex:1;min-width:60px}
+.demo-windmouse label b{color:var(--fg-strong);font-variant-numeric:tabular-nums;min-width:22px;text-align:right}
+</style><div class="mini"><div class="caption"><b>WindMouse</b> (Benjamin J. Land) takes a different route: model the cursor as a mass pulled by <b>gravity</b> toward the target and shoved by random <b>wind</b> that drifts smoothly, then integrate the physics step by step. No curve is drawn — the wiggle <i>emerges</i>. Tweak the forces:</div><div class="stage"><svg id="svg" viewBox="0 0 520 240" preserveAspectRatio="xMidYMid meet"><g id="fan"></g><circle class="target" cx="482" cy="120" r="5"></circle><circle class="dot" id="dot" r="6"></circle></svg></div><div class="grid"><label>Gravity <input type="range" id="G" min="3" max="20" value="9"/><b id="Gv">9</b></label><label>Wind <input type="range" id="W" min="0" max="15" value="3"/><b id="Wv">3</b></label><label>Max step <input type="range" id="M" min="5" max="30" value="15"/><b id="Mv">15</b></label><label>Damp dist <input type="range" id="D" min="3" max="40" value="12"/><b id="Dv">12</b></label></div></div></div><!--astro:end--></astro-island></div>
+<p>You can feel the difference from our clean arcs immediately: it’s twitchier, more alive, less <em>designed</em>. (One practical note: WindMouse is GPLv3, so if you lift the code your project inherits that licence — worth knowing before you paste it in.)</p>
+<h2 id="best-of-both-intent-plus-tremor">Best of both: intent plus tremor</h2>
+<p>Our geometric model and WindMouse pull in opposite directions, which is exactly why they combine well. Our model knows the <em>right shape</em> — the handed, clothoid arc with a reason behind every bend. WindMouse knows how to make motion <em>twitch</em> like a real hand. So use our arc as the macro path, and let WindMouse’s wind add the micro-tremor on top.</p>
+<p>The trick is small: instead of WindMouse’s gravity pointing straight at the final destination, point it at a guide that walks along our Bézier arc. The cursor chases the arc — getting the biomechanically-correct route — while the wind knocks it slightly off and gravity hauls it back, frame by frame.</p>
+<div class="demo-band"><astro-island uid="j9imH" prefix="r32" component-url="/assets/MiniCombined.BUySZonQ.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;MiniCombined&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-combined"><style>
+.demo-combined .mini{display:flex;flex-direction:column;gap:12px;padding:18px}
+.demo-combined .caption{font-size:1rem;color:var(--muted);line-height:1.6}
+.demo-combined .caption b{color:var(--fg-strong);font-weight:600}
+.demo-combined .play{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.demo-combined svg{width:320px;max-width:60%;aspect-ratio:360/280;flex:0 0 auto}
+.demo-combined .pad{fill:var(--pad-fill);stroke:var(--line);stroke-width:1.5}
+.demo-combined .guide{stroke:#5a4a7a;stroke-width:2;stroke-dasharray:5 5;fill:none}
+.demo-combined .real{stroke:#37e0c8;stroke-width:2.4;fill:none}
+.demo-combined .ends{fill:var(--fg-strong)}
+.demo-combined .dot{fill:#fff;stroke:#1a1a1a;stroke-width:1}
+.demo-combined .palm{font-size:20px}
+.demo-combined .right{flex:1;min-width:170px;display:flex;flex-direction:column;gap:14px;font-size:1rem;color:var(--muted)}
+.demo-combined label{display:flex;align-items:center;gap:9px}
+.demo-combined input[type=range]{accent-color:#6f7bff;width:100%}
+.demo-combined .key{display:flex;flex-direction:column;gap:6px;font-size:0.86rem}
+.demo-combined .key span{display:flex;align-items:center;gap:8px}
+.demo-combined .sw{width:18px;height:0;border-top:3px solid;border-radius:2px}
+.demo-combined b{color:var(--fg-strong)}
+</style><div class="mini"><div class="caption">The dashed line is the <b>biomechanical clothoid arc</b> — the macro shape, from the wrist geometry. The teal path is a cursor that <b>chases that arc</b> under gravity while WindMouse-style <b>wind</b> jitters it off course and it corrects: clean intent, human tremor. Turn the wind up and down.</div><div class="play"><svg id="svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet"><rect class="pad" x="16" y="14" width="328" height="238" rx="12"></rect><path class="guide" id="guide"></path><path class="real" id="real"></path><circle class="ends" cx="300" cy="60" r="5"></circle><circle class="ends" cx="70" cy="240" r="5"></circle><text class="palm" id="palm">🤚</text><circle class="dot" id="dot" r="6"></circle></svg><div class="right"><label>wind <input type="range" id="wind" min="0" max="80" value="35"/></label><div>wind force: <b id="wv">—</b></div><div class="key"><span><span class="sw" style="border-color:#5a4a7a;border-style:dashed"></span> intended arc (guide)</span><span><span class="sw" style="border-color:#37e0c8"></span> actual path (with tremor)</span></div></div></div></div></div><!--astro:end--></astro-island></div>
+<p>Turn the wind to zero and you get the pristine arc back; turn it up and the same arc grows a believable shake. That dial — how much physics on top of how much geometry — is, in the end, the one knob really worth tuning.</p>
+<h2 id="one-implementation-detail-why-not-css-transitions">One implementation detail: why not CSS transitions?</h2>
+<p>You might wonder why all of this runs through <code>requestAnimationFrame</code> and a hand-rolled animation loop instead of CSS transitions, given how good CSS easing is. The reason is geometric: a CSS transition interpolates a <strong>straight line</strong> between two values. It can ease the timing along that line beautifully, but it cannot make the element follow a curve — there’s nowhere to put the control points. To ride a Bézier path you have to sample <code>B(t)</code> yourself every frame and set the transform. Driving it from <code>requestAnimationFrame</code> also pins the motion to the display’s refresh rate, which matters when the whole point is to screen-record the result cleanly.</p>
+<p>So the recipe, in order of how much each step buys you:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Technique</th><th>Maths</th><th>What it fixes</th></tr></thead><tbody><tr><td>Linear interpolation</td><td><code>start + (end−start)·p</code></td><td>Motion exists at all</td></tr><tr><td>Easing</td><td>minimum-jerk / <code>cubic-bezier</code></td><td>Speed ramps and settles</td></tr><tr><td>Bézier path</td><td>quadratic / cubic control points</td><td>The route curves</td></tr><tr><td>Direction weight</td><td><code>|sin(2θ)|</code></td><td>Cardinals straighten, diagonals bow</td></tr><tr><td>Palm pivot</td><td>lateral arc around the wrist, <code>R·(1−cos Δφ/2)</code></td><td>Curvature with a real, handed cause</td></tr><tr><td>Clothoid entry</td><td>asymmetric control points</td><td>Leaves straight, bends into the target</td></tr><tr><td>Randomisation</td><td>jittered control points + easing</td><td>No two moves repeat</td></tr><tr><td>Wind (physics)</td><td>gravity + random wind, integrated</td><td>Emergent tremor and overshoot</td></tr></tbody></table>
+<p>None of these is much code. Linear interpolation is one line; easing is a polynomial; the path is a Bézier; the direction weight is a single trig call. Put together, they’re the difference between a cursor that’s obviously scripted and one you don’t think about at all.</p>
+<h2 id="every-layer-as-a-switch">Every layer as a switch</h2>
+<p>Here’s the whole thing in one place: the full routine, with a checkbox for each technique above. They’re read <strong>live</strong>, every move, so you can flip them on and off mid-run and watch the cursor change. Turn everything off for a robot; turn it all on for something you’d never look at twice. A few combinations worth trying:</p>
+<ul>
+<li><strong>Everything off</strong> — straight lines at a flat speed. The Stage 1/2 robot.</li>
+<li><strong>Easing only</strong> — straight, but with weight.</li>
+<li><strong>Curve on, Handedness off</strong> — the same arc every move, even on vertical hops (the Stage 4 problem).</li>
+<li><strong>Handedness on, Clothoid off</strong> — correct direction, but it bows from the first pixel like a rigid circle.</li>
+<li><strong>Wind tremor on</strong> — WindMouse jitter layered over whatever path the other switches produce.</li>
+</ul>
+<astro-island uid="Z1aU7Yr" prefix="r33" component-url="/assets/CursorDemo.sqS0QtgR.js" component-export="default" renderer-url="/assets/client.DTojXMD-.js" props="{&quot;variant&quot;:[0,7]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CursorDemo&quot;,&quot;value&quot;:true}" await-children><div class="demo demo-cursor"><style>
+.demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  --accent:#3584e4;       /* Adwaita blue   */
+  --accent-2:#33d17a;     /* Adwaita green  */
+  --danger:#e01b24;       /* Adwaita red    */
+  --win-bg:#fafafb;
+  --win-head:#ebebed;
+  --win-text:#2e3436;
+  --win-dim:#5e5c64;}
+
+/* ---------- desktop / wallpaper ---------- */
+.demo-cursor .screen{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;user-select:none;cursor:default;aspect-ratio:16/10;
+  background:
+    radial-gradient(60% 60% at 24% 24%, rgba(96,156,255,.55), transparent 60%),
+    radial-gradient(55% 55% at 82% 28%, rgba(150,96,224,.45), transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, rgba(54,200,200,.30), transparent 60%),
+    linear-gradient(135deg,#2c3a8c,#3a2f7a 60%,#241f54);}
+
+/* ---------- GNOME top bar ---------- */
+.demo-cursor .topbar{position:absolute;top:0;left:0;right:0;height:34px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#e9e9ec;font-size:12.5px;font-weight:600;}
+.demo-cursor .topbar .tb-activities{padding:3px 10px;border-radius:7px;}
+.demo-cursor .topbar .tb-clock{position:absolute;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;}
+.demo-cursor .topbar .tb-status{display:flex;align-items:center;gap:11px;}
+.demo-cursor .topbar .tb-status svg{width:15px;height:15px;display:block;color:#e9e9ec;}
+
+/* ---------- in-desktop demo controls ---------- */
+.demo-cursor .controls{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:9px 14px;background:#0d0f17;border-bottom:1px solid #242a3d;}
+.demo-cursor .ctl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.demo-cursor .ctl-label{font-size:10.5px;color:#9aa0b6;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.demo-cursor .toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#d4d8ec;cursor:pointer;user-select:none;}
+.demo-cursor .toggle input{accent-color:#7d87ff;width:14px;height:14px;cursor:pointer;margin:0;}
+.demo-cursor .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:13px;color:#fff;background:var(--accent);padding:8px 15px;border-radius:9px;display:flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);transition:transform .12s ease, opacity .2s ease, filter .15s;}
+.demo-cursor .btn-animate:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.demo-cursor .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+.demo-cursor .btn-animate svg{width:13px;height:13px;}
+.demo-cursor .status{display:none;}
+
+/* ---------- generic window (Adwaita) ---------- */
+.demo-cursor .win{position:absolute;display:none;flex-direction:column;background:var(--win-bg);border-radius:13px;overflow:hidden;color:var(--win-text);box-shadow:0 24px 60px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.18);}
+.demo-cursor .win.lifted{box-shadow:0 46px 110px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.22);}
+.demo-cursor .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+.demo-cursor .titlebar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 10px;background:var(--win-head);border-bottom:1px solid #dcdce0;cursor:grab;touch-action:none;flex:0 0 auto;}
+.demo-cursor .win.lifted .titlebar,.demo-cursor .win.dragging .titlebar{cursor:grabbing;}
+.demo-cursor .win.maximized .titlebar{cursor:default;}
+.demo-cursor .win-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--win-text);}
+.demo-cursor .win-title svg{width:15px;height:15px;}
+.demo-cursor .win-controls{display:flex;gap:8px;z-index:1;}
+.demo-cursor .win-ctl{appearance:none;border:0;background:#d7d7db;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#3a393f;transition:background .12s, color .12s, transform .1s;}
+.demo-cursor .win-ctl:hover{background:#cbcbd0;}
+.demo-cursor .win-ctl.close:hover{background:var(--danger);color:#fff;}
+.demo-cursor .win-ctl.pressed{transform:scale(.84);}
+.demo-cursor .win-ctl svg{width:12px;height:12px;}
+
+/* explorer body */
+.demo-cursor .explorer-body{display:flex;flex:1;min-height:0;}
+.demo-cursor .sidebar{width:150px;flex:0 0 auto;background:#f3f3f4;border-right:1px solid #e3e3e6;padding:12px 9px;font-size:12px;color:var(--win-dim);display:flex;flex-direction:column;gap:3px;}
+.demo-cursor .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9a989f;margin:6px 6px 4px;}
+.demo-cursor .sidebar .sb-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;}
+.demo-cursor .sidebar .sb-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.demo-cursor .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;background:var(--win-bg);}
+.demo-cursor .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:10px;font-size:12px;color:var(--win-text);cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+.demo-cursor .folder:hover{background:#eef0f3;}
+.demo-cursor .folder.pressed,.demo-cursor .folder.selected{background:rgba(53,132,228,.16);border-color:rgba(53,132,228,.5);}
+.demo-cursor .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+.demo-cursor .folder .fi svg{width:42px;height:34px;}
+.demo-cursor .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+/* confirm dialog (Adwaita AlertDialog) */
+.demo-cursor .modal{width:380px;}
+.demo-cursor .modal .titlebar{background:var(--win-bg);border-bottom:0;justify-content:flex-end;padding:8px 8px 0;}
+.demo-cursor .modal-body{padding:4px 26px 22px;text-align:center;}
+.demo-cursor .modal-body .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(224,27,36,.12);color:var(--danger);}
+.demo-cursor .modal-body .ic svg{width:24px;height:24px;}
+.demo-cursor .modal-body h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--win-text);}
+.demo-cursor .modal-body p{margin:0;font-size:13px;color:var(--win-dim);line-height:1.5;}
+.demo-cursor .modal-body p b{color:var(--win-text);}
+.demo-cursor .modal-actions{display:flex;gap:10px;margin-top:20px;}
+.demo-cursor .ui-btn{flex:1;appearance:none;border:1px solid #d0d0d4;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--win-text);padding:10px 16px;border-radius:9px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+.demo-cursor .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 6px 14px -6px rgba(224,27,36,.7);}
+.demo-cursor .ui-btn.pressed{transform:translateY(1px) scale(.98);}
+.demo-cursor .ui-btn.danger.pressed{filter:brightness(.92);}
+.demo-cursor .ui-btn:not(.danger).pressed{background:#eef0f3;border-color:#bcbcc2;}
+
+/* context menus (Adwaita popover) */
+.demo-cursor .ctx-menu{position:absolute;z-index:55;display:none;min-width:184px;background:#fff;border:1px solid #dcdce0;border-radius:12px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.04);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+.demo-cursor .ctx-menu.in{opacity:1;transform:scale(1);}
+.demo-cursor .ctx-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--win-text);cursor:default;}
+.demo-cursor .ctx-item .ck{width:15px;height:15px;color:#7a7980;}
+.demo-cursor .ctx-item .ck svg{width:15px;height:15px;}
+.demo-cursor .ctx-item:hover{background:#eef0f3;}
+.demo-cursor .ctx-item.danger{color:var(--danger);}
+.demo-cursor .ctx-item.danger .ck{color:var(--danger);}
+.demo-cursor .ctx-item.pressed{background:var(--accent);color:#fff;}
+.demo-cursor .ctx-item.pressed .ck{color:#fff;}
+.demo-cursor .ctx-sep{height:1px;background:#e8e8eb;margin:5px 6px;}
+
+/* ---------- GNOME dock ---------- */
+.demo-cursor .dock{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:60px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;background:rgba(20,20,28,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px -14px rgba(0,0,0,.7);}
+.demo-cursor .dock-app{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:0;cursor:pointer;transition:transform .12s, background .15s;}
+.demo-cursor .dock-app:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+.demo-cursor .dock-app svg{width:26px;height:26px;display:block;}
+.demo-cursor .dock-app.pressed{transform:scale(.88);background:rgba(255,255,255,.22);}
+.demo-cursor .dock-app .run-dot{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+.demo-cursor .dock-app.active .run-dot,.demo-cursor .dock-app.minimized .run-dot{opacity:1;}
+.demo-cursor .dock-sep{width:1px;height:30px;background:rgba(255,255,255,.18);margin:0 3px;}
+
+.demo-cursor .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+.demo-cursor .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+.demo-cursor .ripple.right{border-color:rgba(120,205,255,.95);}
+@keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+.demo-cursor .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+</style><div class="controls"><div class="ctl-row"><button class="btn-animate" id="animateBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg> <!-- -->Run</button><label class="toggle"><input type="checkbox" id="showPath" checked=""/> Show path</label><label class="toggle"><input type="checkbox" id="loop"/> Loop</label></div><div class="ctl-row"><span class="ctl-label">Layers</span><label class="toggle"><input type="checkbox" id="fxEase" checked=""/> Easing</label><label class="toggle"><input type="checkbox" id="fxCurve" checked=""/> Curve</label><label class="toggle"><input type="checkbox" id="fxHanded" checked=""/> <!-- -->Handedness</label><label class="toggle"><input type="checkbox" id="fxClothoid" checked=""/> <!-- -->Clothoid entry</label><label class="toggle"><input type="checkbox" id="fxWind"/> Wind tremor</label><label class="toggle"><input type="checkbox" id="fxRandom" checked=""/> Randomise</label><label class="toggle"><input type="checkbox" id="leftHand"/> Left-handed</label></div><span class="status" id="status">Idle</span></div><div class="screen" id="screen"><div class="topbar"><div class="tb-activities">Activities</div><div class="tb-clock" id="clk">14:55</div><div class="tb-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="17" height="8" rx="2"></rect><path d="M22 11v2"></path></svg></div></div><section class="win" id="explorer"><div class="titlebar" id="explorerBar"><span class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg>Home</span><div class="win-controls"><button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"></path></svg></button><button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg></button><button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="explorer-body"><aside class="sidebar"><div class="sb-head">Places</div><div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"></path></svg>Desktop</div><div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"></path></svg>Downloads</div></aside><div class="folder-grid"><div class="folder" id="folderDocs"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Documents</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Pictures</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Projects</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>notes.txt</div><div class="folder"><span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg></span>budget.xlsx</div></div></div></section><section class="win modal" id="confirmModal"><div class="titlebar" id="confirmBar"><div class="win-controls"><button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div></div><div class="modal-body"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"></path></svg></div><h3>Permanently delete “Documents”?</h3><p>This folder and its contents will be deleted forever. This action cannot be undone.</p><div class="modal-actions"><button class="ui-btn" id="confirmNo">Cancel</button><button class="ui-btn danger" id="confirmYes">Delete</button></div></div></section><div class="ctx-menu" id="folderMenu"><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg></span>Open</div><div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"></path></svg></span>Rename…</div><div class="ctx-sep"></div><div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"></path></svg></span>Move to Trash</div></div><div class="ctx-menu" id="taskMenu"><div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></span>Show window</div><div class="ctx-sep"></div><div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>Quit</div></div><div class="dock"><button class="dock-app" id="filesIcon" aria-label="Files"><svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"></path></svg><span class="run-dot"></span></button><button class="dock-app" aria-label="Text Editor"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd07a" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 16h6"></path></svg></button><button class="dock-app" aria-label="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="#9be59b" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M13 15h4"></path></svg></button><button class="dock-app" aria-label="Web"><svg viewBox="0 0 24 24" fill="none" stroke="#9fd0ff" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></button><span class="dock-sep"></span><button class="dock-app" aria-label="Show Apps"><svg viewBox="0 0 24 24" fill="#cfd6ff"><circle cx="6" cy="6" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="18" cy="6" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="12" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button></div><svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg><svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"></path></svg></div></div><!--astro:end--></astro-island>
+<p>That’s the real lesson hiding in all the maths: none of these layers is doing much on its own, but stacked up they cross the line from <em>obviously a script</em> to <em>probably a person</em>.</p> </div> <footer class="blog-footer" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r>← Back to Blog</a> </footer> </article> </div> </div> </section>  </main> <footer class="footer"> <div class="container"> <p>&copy; <span id="currentYear"></span> Mark Wylde. All Rights Reserved.</p> </div> </footer> <script type="module">const r=document.getElementById("currentYear");r&&(r.textContent=new Date().getFullYear().toString());const n=document.querySelector(".site-header"),e=document.querySelector(".header-avatar");if(n&&e){let i=function(){t&&e.removeEventListener("timeupdate",t),e.currentTime=0,e.play(),t=()=>{e.currentTime>=e.duration*.5&&(e.pause(),e.removeEventListener("timeupdate",t),t=null)},e.addEventListener("timeupdate",t)},a=function(){t&&(e.removeEventListener("timeupdate",t),t=null),e.currentTime=e.duration*.5,e.play()},t=null;n.addEventListener("mouseenter",i),n.addEventListener("mouseleave",a)}</script> </body> </html>
