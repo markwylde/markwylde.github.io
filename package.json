@@ -13,6 +13,7 @@
     "format:fix": "biome format --write"
   },
   "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
     "@astrojs/react": "^5.0.5",
     "@biomejs/biome": "^2.4.15",
     "@types/react": "^19.2.14",
