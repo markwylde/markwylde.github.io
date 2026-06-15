@@ -1,0 +1,35 @@
+/* Shared palette for the in-article demo components.
+   The vars live on .demo and flip with the site's [data-theme] on <html>. */
+.demo {
+  --fg: #1f2733;
+  --fg-strong: #0f172a;
+  --muted: #5b6475;
+  --line: #e2e8f0;
+  --track: #e7eaee;
+  --code-fg: #2563eb;
+  --code-bg: #eef2f8;
+  --btn-bg: #ffffff;
+  --grid: #e8ecf3;
+  --axis: #c4ccda;
+  --axis2: #aab4c6;
+  --pad-fill: rgba(0, 0, 0, 0.035);
+  --tick: rgba(0, 0, 0, 0.22);
+  font-family: 'Montserrat', ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--fg);
+}
+
+[data-theme="dark"] .demo {
+  --fg: #e7eaf5;
+  --fg-strong: #cdd2ff;
+  --muted: #9aa0b6;
+  --line: #2a3047;
+  --track: #262c40;
+  --code-fg: #8fd0ff;
+  --code-bg: #161a26;
+  --btn-bg: #1a1e2c;
+  --grid: #222838;
+  --axis: #39405a;
+  --axis2: #5b6480;
+  --pad-fill: rgba(255, 255, 255, 0.03);
+  --tick: rgba(255, 255, 255, 0.18);
+}

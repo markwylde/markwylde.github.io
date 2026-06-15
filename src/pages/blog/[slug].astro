@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import "../../styles/demos.css";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
@@ -115,7 +116,7 @@ const { Content } = await render(entry);
 	}
 
 	.blog-content :global(code) {
-		background-color: var(--secondary-bg);
+		background-color: var(--surface-2);
 		padding: 2px 4px;
 		border-radius: 3px;
 		font-family: 'Courier New', monospace;
@@ -124,7 +125,7 @@ const { Content } = await render(entry);
 	}
 
 	.blog-content :global(pre) {
-		background-color: var(--secondary-bg);
+		background-color: var(--surface-2);
 		padding: 1rem;
 		border-radius: 8px;
 		overflow-x: auto;
@@ -190,13 +191,13 @@ const { Content } = await render(entry);
 	}
 
 	.blog-content :global(th) {
-		background-color: var(--primary-bg);
+		background-color: var(--surface-2);
 		color: var(--heading-color);
 		font-weight: 600;
 	}
 
 	.blog-content :global(tbody tr:nth-child(even)) {
-		background-color: var(--primary-bg);
+		background-color: var(--surface-2);
 	}
 
 	.blog-footer {
@@ -213,6 +214,25 @@ const { Content } = await render(entry);
 
 	.back-link:hover {
 		color: var(--heading-color);
+	}
+
+	/* full-bleed band for the small inline demos: background spans the
+	   content card, inner content stays aligned with the text column */
+	.blog-content :global(.demo-band) {
+		margin: 1.75rem -3rem;
+		padding: 1.5rem 3rem;
+		background-color: var(--surface-2);
+		border-top: 1px solid var(--border-color);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	@media (max-width: 768px) {
+		.blog-content :global(.demo-band) {
+			margin-left: -1rem;
+			margin-right: -1rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
 	}
 
 	@media (max-width: 768px) {

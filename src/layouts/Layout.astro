@@ -46,7 +46,7 @@ const {
 							<img src={avatarHeaderFallback.src} alt="Mark Wylde - Avatar" />
 						</video>
 					</a>
-					<span class="header-site-title">Mark Wylde</span>
+					<a href="/" class="header-site-title">Mark Wylde</a>
 				</div>
 				<div class="header-right">
 					<nav class="main-nav">
@@ -118,28 +118,40 @@ const {
 
 <style is:global>
 	:root {
-		--primary-bg: #ffffff;
-		--secondary-bg: #f8fafc;
-		--text-color: #334155;
-		--heading-color: #0f172a;
-		--accent-color: #2563eb;
-		--border-color: #e2e8f0;
-		--shadow-color: rgba(0, 0, 0, 0.05);
-		--hero-bg: #f1f5f9;
-		--avatar-bg: #f8fafc;
+		--primary-bg: #e8ebf2;      /* page */
+		--secondary-bg: #ffffff;    /* content cards, header */
+		--surface-2: #f1f4fa;       /* bands, code, chips — subtle, distinct from card */
+		--text-color: #475067;
+		--heading-color: #111827;
+		--muted-color: #6b7488;
+		--accent-color: #4f46e5;
+		--accent-fill: #4f46e5;
+		--accent-fill-hover: #4338ca;
+		--on-accent: #ffffff;
+		--header-bg: #ffffff;
+		--border-color: #e4e7ef;
+		--shadow-color: rgba(17, 24, 39, 0.07);
+		--hero-bg: #eef1f8;
+		--avatar-bg: #f1f4fa;
 		--container-padding: 20px;
 	}
 
 	[data-theme="dark"] {
-		--primary-bg: #0f172a;
-		--secondary-bg: #1e293b;
-		--text-color: #e2e8f0;
-		--heading-color: #f8fafc;
-		--accent-color: #38bdf8;
-		--border-color: #334155;
-		--shadow-color: rgba(0, 0, 0, 0.3);
-		--hero-bg: #111827;
-		--avatar-bg: #1e293b;
+		--primary-bg: #0b1120;      /* page */
+		--secondary-bg: #141d31;    /* content cards, header */
+		--surface-2: #0e1626;       /* bands, code, chips — recessed, distinct from card */
+		--text-color: #c3cee0;
+		--heading-color: #f3f6fb;
+		--muted-color: #8d9ab2;
+		--accent-color: #818cf8;
+		--accent-fill: #4f46e5;
+		--accent-fill-hover: #5b52ec;
+		--on-accent: #ffffff;
+		--header-bg: #101a2e;
+		--border-color: #243049;
+		--shadow-color: rgba(0, 0, 0, 0.45);
+		--hero-bg: #0e1626;
+		--avatar-bg: #18233a;
 	}
 
 	* {
@@ -189,7 +201,7 @@ const {
 	}
 
 	.site-header {
-		background-color: var(--secondary-bg);
+		background-color: var(--header-bg);
 		padding: 15px 0;
 		border-bottom: 1px solid var(--border-color);
 		box-shadow: 0 2px 4px var(--shadow-color);
@@ -251,14 +263,14 @@ const {
 	}
 
 	.nav-link-active {
-		background-color: var(--accent-color);
-		color: var(--secondary-bg);
+		background-color: var(--accent-fill);
+		color: var(--on-accent);
 		font-weight: 500;
 	}
 
 	.nav-link-active:hover {
-		background-color: var(--heading-color);
-		color: var(--secondary-bg);
+		background-color: var(--accent-fill-hover);
+		color: var(--on-accent);
 	}
 
 	.section {
@@ -358,8 +370,8 @@ const {
 	}
 
 	.contact-methods a:hover {
-		background-color: var(--accent-color);
-		color: var(--secondary-bg);
+		background-color: var(--accent-fill);
+		color: var(--on-accent);
 		text-decoration: none;
 	}
 
@@ -369,7 +381,7 @@ const {
 	}
 
 	.blog-meta time {
-		color: var(--accent-color);
+		color: var(--heading-color);
 		font-size: 0.9em;
 	}
 
@@ -380,7 +392,7 @@ const {
 	}
 
 	.tag {
-		background-color: var(--secondary-bg);
+		background-color: var(--surface-2);
 		color: var(--text-color);
 		padding: 4px 8px;
 		border-radius: 4px;
