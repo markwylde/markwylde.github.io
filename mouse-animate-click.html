@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cursor Motion Studio</title>
+<style>
+  :root{
+    --tool-bg:#0c0e16;
+    --tool-panel:#141826;
+    --tool-line:#242a3d;
+    --tool-text:#e7eaf5;
+    --tool-dim:#8a90a8;
+    --accent:#6f7bff;
+    --accent-2:#37e0c8;
+    --danger:#ff5f6d;
+    --wall-1:#5b6ee8;
+    --wall-2:#7d52d6;
+    --wall-3:#36c8d8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #1a2036 0%, var(--tool-bg) 60%);
+    color:var(--tool-text);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Inter,system-ui,sans-serif;
+    min-height:100%;display:flex;flex-direction:column;align-items:center;
+    padding:28px 18px 48px;gap:18px;
+  }
+
+  /* ---------- tool chrome ---------- */
+  .tool-header{width:min(980px,100%);display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .tool-header h1{font-size:18px;font-weight:650;letter-spacing:-0.01em;margin:0;display:flex;align-items:center;gap:9px;}
+  .tool-header h1 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 12px var(--accent-2);}
+  .tool-header p{margin:0;color:var(--tool-dim);font-size:13px;max-width:46ch;line-height:1.45;}
+
+  .panel{width:min(980px,100%);background:linear-gradient(180deg,var(--tool-panel),#10131e);border:1px solid var(--tool-line);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:650;font-size:14px;color:#0a0c14;background:linear-gradient(180deg,#8b95ff,var(--accent));padding:11px 20px;border-radius:10px;display:flex;align-items:center;gap:9px;box-shadow:0 6px 18px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.4);transition:transform .12s ease, box-shadow .2s ease, opacity .2s ease;}
+  .btn-animate:hover{transform:translateY(-1px);}
+  .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
+  .btn-animate svg{width:15px;height:15px;}
+  .toggles{display:flex;gap:18px;align-items:center;margin-left:auto;flex-wrap:wrap;}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tool-dim);cursor:pointer;user-select:none;}
+  .toggle input{position:absolute;opacity:0;width:0;height:0;}
+  .switch{width:34px;height:20px;border-radius:20px;background:#2a3047;position:relative;transition:background .2s;}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#8a90a8;transition:transform .2s, background .2s;}
+  .toggle input:checked + .switch{background:rgba(111,123,255,.45);}
+  .toggle input:checked + .switch::after{transform:translateX(14px);background:#cdd2ff;}
+  .status{font-size:12.5px;color:var(--tool-dim);font-variant-numeric:tabular-nums;min-width:190px;}
+  .status b{color:var(--tool-text);font-weight:600;}
+
+  /* ---------- the "screen" / faux desktop ---------- */
+  .screen{
+    position:relative;width:min(980px,100%);aspect-ratio:16/10;border-radius:16px;overflow:hidden;
+    border:1px solid #2b3147;
+    background:
+      radial-gradient(120% 120% at 18% 12%, var(--wall-3) 0%, transparent 45%),
+      radial-gradient(120% 120% at 85% 20%, var(--wall-2) 0%, transparent 50%),
+      linear-gradient(135deg, var(--wall-1), #3a3f86 70%, #241f54);
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.8), 0 0 0 6px #0a0c14;
+    cursor:default;user-select:none;
+  }
+  .screen::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 0%, rgba(255,255,255,.10), transparent 60%);pointer-events:none;}
+
+  /* desktop icons */
+  .icons{position:absolute;top:18px;left:18px;display:flex;flex-direction:column;gap:14px;}
+  .icon{display:flex;flex-direction:column;align-items:center;gap:6px;width:78px;text-align:center;color:#fff;font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.5);cursor:pointer;}
+  .icon .glyph{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);transition:transform .1s, background .15s, box-shadow .15s;}
+  .icon .glyph svg{width:24px;height:24px;}
+  .icon.pressed .glyph{transform:scale(.9);background:rgba(255,255,255,.4);box-shadow:0 0 0 3px rgba(255,255,255,.25);}
+
+  /* generic window */
+  .win{position:absolute;display:none;flex-direction:column;background:#fbfbfd;border-radius:12px;overflow:hidden;color:#1d2330;box-shadow:0 26px 60px -20px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.06);}
+  .win.lifted{box-shadow:0 46px 110px -24px rgba(0,0,0,.72), 0 0 0 1px rgba(0,0,0,.10);}
+  .win.tween{transition:left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1), width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1);}
+
+  .titlebar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 8px 12px;background:#f1f2f6;border-bottom:1px solid #e4e6ee;font-size:12.5px;font-weight:600;color:#3a4153;cursor:grab;touch-action:none;flex:0 0 auto;}
+  .win.lifted .titlebar,.win.dragging .titlebar{cursor:grabbing;}
+  .win.maximized .titlebar{cursor:default;}
+  .win-title{display:flex;align-items:center;gap:7px;white-space:nowrap;}
+  .win-title svg{width:15px;height:15px;}
+  .win-controls{display:flex;gap:2px;}
+  .win-ctl{appearance:none;border:0;background:transparent;width:30px;height:24px;border-radius:6px;display:grid;place-items:center;cursor:pointer;color:#5a6072;transition:background .12s, color .12s, transform .1s;}
+  .win-ctl:hover{background:#e2e4ee;}
+  .win-ctl.close:hover{background:var(--danger);color:#fff;}
+  .win-ctl.pressed{transform:scale(.86);}
+  .win-ctl svg{width:13px;height:13px;}
+
+  /* explorer body */
+  .explorer-body{display:flex;flex:1;min-height:0;}
+  .sidebar{width:148px;flex:0 0 auto;background:#f6f7fb;border-right:1px solid #e9ebf2;padding:12px 10px;font-size:12px;color:#5a6276;display:flex;flex-direction:column;gap:4px;}
+  .sidebar .sb-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#9aa1b5;margin:6px 4px 2px;}
+  .sidebar .sb-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;}
+  .sidebar .sb-item.active{background:#e7eaff;color:#3a45c4;font-weight:600;}
+  .folder-grid{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;}
+  .folder{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 9px;border-radius:9px;font-size:12px;color:#3a4153;cursor:default;border:1px solid transparent;transition:background .12s, border-color .12s, opacity .25s, transform .25s;text-align:center;}
+  .folder:hover{background:#eef1fb;}
+  .folder.pressed,.folder.selected{background:#e2e7ff;border-color:#c3ccff;}
+  .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
+  .folder .fi svg{width:42px;height:34px;}
+  .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
+
+  /* confirm modal */
+  .modal{width:340px;}
+  .modal-body{padding:16px 18px 18px;}
+  .modal-body .warn{display:flex;gap:12px;align-items:flex-start;}
+  .modal-body .warn .ic{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ffe7e9;color:var(--danger);}
+  .modal-body .warn .ic svg{width:18px;height:18px;}
+  .modal-body p{margin:0;font-size:13px;color:#444b5c;line-height:1.5;}
+  .modal-body p b{color:#1d2330;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .ui-btn{appearance:none;border:1px solid #d3d7e2;background:#fff;font:inherit;font-size:13px;font-weight:600;color:#2a3142;padding:9px 16px;border-radius:8px;cursor:pointer;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+  .ui-btn.danger{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:0 4px 12px -4px rgba(255,95,109,.7);}
+  .ui-btn.pressed{transform:translateY(1px) scale(.97);}
+  .ui-btn.danger.pressed{background:#e8505f;}
+  .ui-btn:not(.danger).pressed{background:#eef0f6;border-color:#b9bfce;}
+
+  /* context menus */
+  .ctx-menu{position:absolute;z-index:55;display:none;min-width:172px;background:#ffffff;border:1px solid #e4e6ef;border-radius:10px;padding:6px;box-shadow:0 18px 44px -12px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,.03);transform-origin:top left;opacity:0;transform:scale(.96);transition:opacity .12s ease, transform .12s ease;}
+  .ctx-menu.in{opacity:1;transform:scale(1);}
+  .ctx-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;font-size:12.5px;color:#2c3344;cursor:default;}
+  .ctx-item .ck{width:15px;height:15px;color:#8089a0;}
+  .ctx-item .ck svg{width:15px;height:15px;}
+  .ctx-item:hover{background:#eef1fb;}
+  .ctx-item.danger{color:var(--danger);}
+  .ctx-item.danger .ck{color:var(--danger);}
+  .ctx-item.pressed{background:var(--accent);color:#fff;}
+  .ctx-item.pressed .ck{color:#fff;}
+  .ctx-sep{height:1px;background:#edeef4;margin:5px 6px;}
+
+  /* taskbar */
+  .taskbar{position:absolute;bottom:0;left:0;right:0;height:46px;background:rgba(18,20,32,.55);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;gap:10px;z-index:30;}
+  .start{cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:9px;color:#fff;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid transparent;transition:transform .1s, background .15s, box-shadow .15s, border-color .15s;}
+  .start .logo{width:16px;height:16px;display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .start .logo span{background:#6ad1ff;border-radius:1px;}
+  .start.pressed{transform:scale(.93);background:rgba(255,255,255,.2);}
+  .tray-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.07);}
+  .tray-icon svg{width:17px;height:17px;color:#dfe5ff;}
+  .task-item{display:none;align-items:center;gap:8px;padding:7px 14px;border-radius:9px;color:#eaf0ff;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid transparent;cursor:pointer;touch-action:none;transition:transform .1s, background .15s, border-color .15s;}
+  .task-item svg{width:15px;height:15px;}
+  .task-item.active{background:rgba(255,255,255,.16);border-bottom:2px solid var(--accent-2);}
+  .task-item.minimized{background:rgba(255,255,255,.10);}
+  .task-item.pressed{transform:scale(.95);background:rgba(255,255,255,.24);}
+  .clock{position:absolute;right:14px;color:#dfe5ff;font-size:11.5px;text-align:right;line-height:1.25;font-variant-numeric:tabular-nums;}
+
+  .path-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+  .ripple{position:absolute;z-index:52;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;animation:ripple .55s ease-out forwards;}
+  .ripple.right{border-color:rgba(120,205,255,.95);}
+  @keyframes ripple{from{transform:scale(.4);opacity:.9;}to{transform:scale(3.4);opacity:0;}}
+
+  .cursor{position:absolute;top:0;left:0;z-index:60;width:24px;height:24px;pointer-events:none;transform-origin:3px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));will-change:transform;}
+
+  .hint{width:min(980px,100%);color:var(--tool-dim);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+  <div class="tool-header">
+    <div><h1><span class="dot"></span>Cursor Motion Studio</h1></div>
+    <p>A scripted desktop showcase. The pointer opens a window, maximizes it, deletes a folder through a dialog, then minimizes and closes — all on natural, curved, eased paths.</p>
+  </div>
+
+  <div class="panel">
+    <button class="btn-animate" id="animateBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Run sequence
+    </button>
+    <div class="status" id="status">Idle — ready to run.</div>
+    <div class="toggles">
+      <label class="toggle"><input type="checkbox" id="showPath" checked><span class="switch"></span>Show path</label>
+      <label class="toggle"><input type="checkbox" id="loop"><span class="switch"></span>Loop</label>
+    </div>
+  </div>
+
+  <div class="screen" id="screen">
+
+    <!-- desktop icons -->
+    <div class="icons">
+      <div class="icon">
+        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M6 7h12l-1 13H7z"/><path d="M9 7V5h6v2"/></svg></span>
+        Recycle Bin
+      </div>
+      <div class="icon" id="filesIcon">
+        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+        Files
+      </div>
+      <div class="icon">
+        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m6 17 4-4 3 3 2-2 3 3"/></svg></span>
+        Photos
+      </div>
+    </div>
+
+    <!-- explorer window -->
+    <section class="win" id="explorer">
+      <div class="titlebar" id="explorerBar">
+        <span class="win-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
+          File Explorer
+        </span>
+        <div class="win-controls">
+          <button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+          <button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>
+          <button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+      </div>
+      <div class="explorer-body">
+        <aside class="sidebar">
+          <div class="sb-head">Quick access</div>
+          <div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</div>
+          <div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"/></svg>Desktop</div>
+          <div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>Downloads</div>
+        </aside>
+        <div class="folder-grid">
+          <div class="folder" id="folderDocs">
+            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            Documents
+          </div>
+          <div class="folder">
+            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            Pictures
+          </div>
+          <div class="folder">
+            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            Projects
+          </div>
+          <div class="folder">
+            <span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+            notes.txt
+          </div>
+          <div class="folder">
+            <span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+            budget.xlsx
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- confirm modal -->
+    <section class="win modal" id="confirmModal">
+      <div class="titlebar" id="confirmBar">
+        <span class="win-title">Delete folder</span>
+        <div class="win-controls">
+          <button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="warn">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"/></svg></span>
+          <p>Are you sure you want to permanently delete <b>Documents</b>? This action can't be undone.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="ui-btn" id="confirmNo">Cancel</button>
+          <button class="ui-btn danger" id="confirmYes">Delete</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- context menus -->
+    <div class="ctx-menu" id="folderMenu">
+      <div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>Open</div>
+      <div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"/></svg></span>Rename</div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"/></svg></span>Delete</div>
+    </div>
+
+    <div class="ctx-menu" id="taskMenu">
+      <div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></span>Restore</div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"/></svg></span>Close window</div>
+    </div>
+
+    <!-- taskbar -->
+    <div class="taskbar">
+      <div class="start" id="start">
+        <span class="logo"><span></span><span></span><span></span><span></span></span>
+        Start
+      </div>
+      <div class="task-item" id="taskItem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
+        File Explorer
+      </div>
+      <div class="tray-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg></div>
+      <div class="clock"><div id="clk">10:24</div><div>Jun 15</div></div>
+    </div>
+
+    <svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg>
+
+    <svg class="cursor" id="cursor" viewBox="0 0 24 24">
+      <path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="hint">Everything is interactive: open Files, drag title bars, right-click folders or the taskbar item. <b>Show path</b> reveals the curve.</div>
+
+<script>
+(() => {
+  const screen   = document.getElementById('screen');
+  const cursor   = document.getElementById('cursor');
+  const pathLayer= document.getElementById('pathLayer');
+  const statusEl = document.getElementById('status');
+  const animateBtn = document.getElementById('animateBtn');
+  const showPathEl = document.getElementById('showPath');
+  const loopEl   = document.getElementById('loop');
+
+  const filesIcon   = document.getElementById('filesIcon');
+  const explorer    = document.getElementById('explorer');
+  const explorerBar = document.getElementById('explorerBar');
+  const explorerMin = document.getElementById('explorerMin');
+  const explorerMax = document.getElementById('explorerMax');
+  const explorerClose = document.getElementById('explorerClose');
+  const folderDocs  = document.getElementById('folderDocs');
+  const folderMenu  = document.getElementById('folderMenu');
+  const menuDelete  = document.getElementById('menuDelete');
+  const confirmModal= document.getElementById('confirmModal');
+  const confirmBar  = document.getElementById('confirmBar');
+  const confirmYes  = document.getElementById('confirmYes');
+  const confirmNo   = document.getElementById('confirmNo');
+  const taskItem    = document.getElementById('taskItem');
+  const taskMenu    = document.getElementById('taskMenu');
+  const taskClose   = document.getElementById('taskClose');
+  const taskRestore = document.getElementById('taskRestore');
+
+  let pos = { x: 80, y: 90 };
+  let running = false;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- small helpers ---------------------------------------------------
+  const sleep  = ms => new Promise(r => setTimeout(r, ms));
+  const jitter = (base, spread) => base + (Math.random()*2 - 1) * spread;
+  const rand   = (min, max) => min + Math.random() * (max - min);
+  const clamp  = (lo, hi, v) => Math.max(lo, Math.min(hi, v));
+  const raf2   = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const status = html => { statusEl.innerHTML = html; };
+
+  let cursorScale = 1, cursorDip = 0;
+  function applyCursor(){ cursor.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${cursorScale}) translate(0, ${cursorDip}px)`; }
+  function place(x, y){ pos.x = x; pos.y = y; applyCursor(); }
+
+  // geometry, all screen-relative pixels
+  function rectOf(el){ const r = el.getBoundingClientRect(), s = screen.getBoundingClientRect(); return { x:r.left-s.left, y:r.top-s.top, w:r.width, h:r.height }; }
+  function pointOf(el, fx=0.5, fy=0.5){ const r = rectOf(el); return { x:r.x + r.w*fx, y:r.y + r.h*fy }; }
+  const centerOf = el => pointOf(el, 0.5, 0.5);
+  function posOf(el){ return { x: parseFloat(el.style.left)||0, y: parseFloat(el.style.top)||0 }; }
+  function setPos(el, x, y){ el.style.left = x + 'px'; el.style.top = y + 'px'; }
+  function clampPos(el, x, y){
+    const r = rectOf(el);
+    const maxX = screen.clientWidth - r.w - 6;
+    const maxY = screen.clientHeight - 46 - r.h - 6;
+    return { x: clamp(6, Math.max(6, maxX), x), y: clamp(6, Math.max(6, maxY), y) };
+  }
+  function randomDestFor(el){
+    const r = rectOf(el);
+    const maxX = Math.max(6, screen.clientWidth - r.w - 6);
+    const maxY = Math.max(6, screen.clientHeight - 46 - r.h - 6);
+    return { x: rand(6, maxX), y: rand(6, maxY) };
+  }
+
+  // ---- motion core (unchanged engine) ---------------------------------
+  function cubicBezier(p0, p1, p2, p3, t){
+    const u = 1 - t, uu = u*u, tt = t*t;
+    const a = uu*u, b = 3*uu*t, c = 3*u*tt, d = tt*t;
+    return { x: a*p0.x + b*p1.x + c*p2.x + d*p3.x, y: a*p0.y + b*p1.y + c*p2.y + d*p3.y };
+  }
+  function makeEaser(x1, y1, x2, y2){
+    const cx = 3*x1, bx = 3*(x2-x1)-cx, ax = 1-cx-bx;
+    const cy = 3*y1, by = 3*(y2-y1)-cy, ay = 1-cy-by;
+    const sampleX = t => ((ax*t + bx)*t + cx)*t;
+    const sampleY = t => ((ay*t + by)*t + cy)*t;
+    const slopeX  = t => (3*ax*t + 2*bx)*t + cx;
+    return p => {
+      if (p <= 0) return 0; if (p >= 1) return 1;
+      let t = p;
+      for (let i = 0; i < 8; i++){
+        const x = sampleX(t) - p;
+        if (Math.abs(x) < 1e-5) break;
+        const dx = slopeX(t);
+        if (Math.abs(dx) < 1e-6) break;
+        t -= x / dx;
+      }
+      return sampleY(clamp(0, 1, t));
+    };
+  }
+  const randomEaser = () => makeEaser(rand(0.20,0.50), rand(0,0.12), rand(0.50,0.80), rand(0.88,1));
+
+  function moveTo(end, onFrame = null, curveMul = 1){
+    return new Promise(resolve => {
+      const start = { x: pos.x, y: pos.y };
+      const dx = end.x - start.x, dy = end.y - start.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const nx = -dy/dist, ny = dx/dist;
+
+      // direction-dependent curvature (inertial anisotropy): straight on
+      // horizontal/vertical, free to bow on diagonals, with a small floor.
+      const theta = Math.atan2(dy, dx);
+      const diagness = Math.abs(Math.sin(2*theta));
+      const dirWeight = (0.14 + 0.86*diagness) * curveMul;
+
+      const primary = Math.random() < 0.5 ? -1 : 1;
+      const ctrlAt = frac => {
+        const sign = Math.random() < 0.25 ? -primary : primary;
+        const mag  = dist * rand(0.04, 0.26) * sign * dirWeight;
+        return { x: start.x + dx*frac + nx*mag, y: start.y + dy*frac + ny*mag };
+      };
+      const c1 = ctrlAt(rand(0.15, 0.40));
+      const c2 = ctrlAt(rand(0.60, 0.85));
+
+      const ease = reduceMotion ? (t=>t) : randomEaser();
+      const duration = reduceMotion ? 160 : Math.min(1250, (340 + dist*0.8) * rand(0.8, 1.25));
+
+      if (showPathEl.checked && !reduceMotion) drawPath(start, c1, c2, end);
+
+      const t0 = performance.now();
+      (function frame(now){
+        let p = (now - t0)/duration; if (p > 1) p = 1;
+        const pt = cubicBezier(start, c1, c2, end, ease(p));
+        pos.x = pt.x; pos.y = pt.y; applyCursor();
+        if (onFrame) onFrame(pos);
+        if (p < 1) requestAnimationFrame(frame); else resolve();
+      })(performance.now());
+    });
+  }
+
+  function tween(fn, ms){
+    return new Promise(res => {
+      const t0 = performance.now();
+      (function step(now){ let p=(now-t0)/ms; if(p>1)p=1; fn(p); p<1?requestAnimationFrame(step):res(); })(performance.now());
+    });
+  }
+  const pressCursor   = () => tween(d => { cursorScale = 1 - 0.12*d; cursorDip = 2*d; applyCursor(); }, 90);
+  const releaseCursor = () => tween(d => { cursorScale = 0.88 + 0.12*d; cursorDip = 2*(1-d); applyCursor(); }, 130)
+                          .then(() => { cursorScale = 1; cursorDip = 0; applyCursor(); });
+
+  function spawnRipple(x, y, right=false){
+    const r = document.createElement('div');
+    r.className = 'ripple' + (right ? ' right' : '');
+    r.style.left = x + 'px'; r.style.top = y + 'px';
+    screen.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+  }
+
+  // ---- gesture primitives ---------------------------------------------
+  async function tapGesture(el, { right=false } = {}){
+    await sleep(jitter(120, 40));
+    await pressCursor();
+    if (el) el.classList.add('pressed');
+    spawnRipple(pos.x, pos.y, right);
+    await sleep(jitter(80, 25));
+    if (el) el.classList.remove('pressed');
+    await releaseCursor();
+  }
+  async function clickAt(point, el){ await moveTo(point); await tapGesture(el); }
+  async function click(el){ await clickAt(centerOf(el), el); }
+  async function doubleClickAt(point, el){
+    await moveTo(point);
+    await tapGesture(el);
+    await sleep(jitter(110, 25));
+    await tapGesture(el);
+  }
+  async function rightClickAt(point, el){ await moveTo(point); await tapGesture(el, { right:true }); }
+
+  async function grabAndDrag(win, handle, dest){
+    const hb = rectOf(handle);
+    const grab = { x: hb.x + hb.w*rand(0.30, 0.60), y: hb.y + hb.h*0.5 };
+    await moveTo(grab);
+    await sleep(jitter(130, 40));
+    await pressCursor();
+    win.classList.add('lifted');
+    const wp = posOf(win);
+    const offX = pos.x - wp.x, offY = pos.y - wp.y;
+    const destCursor = { x: dest.x + offX, y: dest.y + offY };
+    await moveTo(destCursor, p => { const c = clampPos(win, p.x - offX, p.y - offY); setPos(win, c.x, c.y); }, 0.6);
+    await sleep(jitter(90, 30));
+    win.classList.remove('lifted');
+    await releaseCursor();
+  }
+
+  // ---- path visualization ---------------------------------------------
+  function drawPath(p0, c1, c2, p3){
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M ${p0.x} ${p0.y} C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${p3.x} ${p3.y}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke','rgba(255,255,255,.75)');
+    path.setAttribute('stroke-width','1.6');
+    path.setAttribute('stroke-dasharray','4 5');
+    path.setAttribute('stroke-linecap','round');
+    pathLayer.appendChild(path);
+    path.animate([{opacity:.85},{opacity:0}], {duration:1600, delay:300, easing:'ease-out', fill:'forwards'})
+        .onfinish = () => path.remove();
+  }
+  const syncLayer = () => pathLayer.setAttribute('viewBox', `0 0 ${screen.clientWidth} ${screen.clientHeight}`);
+
+  // ---- scene state ----------------------------------------------------
+  function defaultExplorerGeom(){
+    const W = screen.clientWidth, H = screen.clientHeight;
+    return { left: W*0.20, top: H*0.15, width: W*0.54, height: H*0.62 };
+  }
+  function applyGeom(g){ explorer.style.left=g.left+'px'; explorer.style.top=g.top+'px'; explorer.style.width=g.width+'px'; explorer.style.height=g.height+'px'; }
+
+  async function openExplorer(){
+    applyGeom(defaultExplorerGeom());
+    explorer.classList.remove('maximized','minimized');
+    explorer.style.display = 'flex';
+    explorer.style.transform = 'scale(.96)';
+    explorer.style.opacity = '0';
+    taskItem.style.display = 'flex';
+    taskItem.classList.add('active');
+    explorer.classList.add('tween');
+    await raf2();
+    explorer.style.transform = 'scale(1)';
+    explorer.style.opacity = '1';
+    await sleep(240);
+    explorer.classList.remove('tween');
+    explorer.style.transform = '';
+  }
+
+  async function maximizeExplorer(){
+    if (explorer.classList.contains('maximized')) return restoreExplorer();
+    explorer._restore = { left:explorer.style.left, top:explorer.style.top, width:explorer.style.width, height:explorer.style.height };
+    explorer.classList.add('tween','maximized');
+    explorer.style.left = '8px'; explorer.style.top = '8px';
+    explorer.style.width  = (screen.clientWidth - 16) + 'px';
+    explorer.style.height = (screen.clientHeight - 46 - 16) + 'px';
+    await sleep(300);
+    explorer.classList.remove('tween');
+  }
+  async function restoreExplorer(){
+    if (!explorer._restore) return;
+    explorer.classList.add('tween');
+    explorer.classList.remove('maximized');
+    applyGeom({ left:parseFloat(explorer._restore.left), top:parseFloat(explorer._restore.top), width:parseFloat(explorer._restore.width), height:parseFloat(explorer._restore.height) });
+    await sleep(300);
+    explorer.classList.remove('tween');
+  }
+
+  async function minimizeExplorer(){
+    const ti = rectOf(taskItem), ex = rectOf(explorer);
+    const dx = (ti.x + ti.w/2) - (ex.x + ex.w/2);
+    const dy = (ti.y + ti.h/2) - (ex.y + ex.h/2);
+    explorer.classList.add('tween','minimized');
+    explorer.style.transformOrigin = 'center';
+    explorer.style.transform = `translate(${dx}px, ${dy}px) scale(.12)`;
+    explorer.style.opacity = '0';
+    taskItem.classList.remove('active'); taskItem.classList.add('minimized');
+    await sleep(280);
+    explorer.style.display = 'none';
+    explorer.classList.remove('tween');
+    explorer.style.transform = '';
+  }
+  async function restoreFromTaskbar(){
+    explorer.style.display = 'flex';
+    explorer.style.transform = 'scale(.9)';
+    explorer.style.opacity = '0';
+    explorer.classList.add('tween');
+    taskItem.classList.remove('minimized'); taskItem.classList.add('active');
+    await raf2();
+    explorer.classList.remove('minimized');
+    explorer.style.transform = '';
+    explorer.style.opacity = '1';
+    await sleep(240);
+    explorer.classList.remove('tween');
+  }
+
+  async function closeExplorer(){
+    if (explorer.style.display !== 'none'){
+      explorer.classList.add('tween');
+      explorer.style.opacity = '0';
+      explorer.style.transform = 'scale(.96)';
+      await sleep(180);
+    }
+    explorer.style.display = 'none';
+    explorer.classList.remove('tween','maximized','minimized','lifted');
+    explorer.style.transform = ''; explorer.style.opacity = '';
+    taskItem.style.display = 'none';
+    taskItem.classList.remove('active','minimized');
+  }
+
+  async function showConfirm(){
+    confirmModal.style.display = 'flex';
+    const r = rectOf(confirmModal);
+    setPos(confirmModal, (screen.clientWidth - r.w)/2, (screen.clientHeight - r.h)/2 - 24);
+    confirmModal.style.transform = 'scale(.94)';
+    confirmModal.style.opacity = '0';
+    confirmModal.classList.add('tween');
+    await raf2();
+    confirmModal.style.transform = 'scale(1)';
+    confirmModal.style.opacity = '1';
+    await sleep(200);
+    confirmModal.classList.remove('tween');
+    confirmModal.style.transform = '';
+  }
+  async function hideConfirm(){
+    confirmModal.classList.add('tween');
+    confirmModal.style.opacity = '0';
+    confirmModal.style.transform = 'scale(.96)';
+    await sleep(160);
+    confirmModal.style.display = 'none';
+    confirmModal.classList.remove('tween');
+    confirmModal.style.transform = ''; confirmModal.style.opacity = '';
+  }
+
+  function showMenu(menu, x, y){
+    menu.style.display = 'block';
+    const r = menu.getBoundingClientRect();
+    const cx = Math.min(x, screen.clientWidth - r.width - 6);
+    const cy = Math.min(y, screen.clientHeight - 46 - r.height - 6);
+    menu.style.left = Math.max(6, cx) + 'px';
+    menu.style.top  = Math.max(6, cy) + 'px';
+    requestAnimationFrame(() => menu.classList.add('in'));
+  }
+  function hideMenu(menu){ menu.classList.remove('in'); menu.style.display = 'none'; }
+
+  function markDeleted(el){ el.classList.add('deleted'); }
+  function resetScene(){
+    hideMenu(folderMenu); hideMenu(taskMenu);
+    confirmModal.style.display = 'none'; confirmModal.style.transform=''; confirmModal.style.opacity='';
+    explorer.style.display = 'none';
+    explorer.classList.remove('maximized','minimized','tween','lifted');
+    explorer.style.transform = ''; explorer.style.opacity = '';
+    explorer._restore = null;
+    taskItem.style.display = 'none'; taskItem.classList.remove('active','minimized');
+    folderDocs.classList.remove('deleted','selected');
+  }
+
+  // ---- the scripted showcase ------------------------------------------
+  async function runOnce(){
+    resetScene();                                  // 1. just the desktop
+    await sleep(450);
+
+    status('Open the <b>Files</b> icon · 1');      // 2.
+    await click(filesIcon);
+
+    status('Launching <b>File Explorer</b> · 2');  // 3.
+    await openExplorer();
+    await sleep(300);
+
+    status('Double-click to <b>maximize</b> · 3'); // 4.
+    await doubleClickAt(pointOf(explorerBar, rand(0.35, 0.6), 0.5), null);
+    await maximizeExplorer();
+    await sleep(280);
+
+    status('Right-click <b>Documents</b> · 4');    // 5.
+    folderDocs.classList.add('selected');
+    await rightClickAt(centerOf(folderDocs), folderDocs);
+    showMenu(folderMenu, pos.x, pos.y);
+    await sleep(380);
+
+    status('Choose <b>Delete</b> · 5');            // 6.
+    await click(menuDelete);
+    hideMenu(folderMenu);
+    folderDocs.classList.remove('selected');
+    await sleep(150);
+
+    status('Confirmation appears · 6');            // 7.
+    await showConfirm();
+    await sleep(380);
+
+    status('Drag the dialog away · 7');            // 8.
+    await grabAndDrag(confirmModal, confirmBar, randomDestFor(confirmModal));
+    await sleep(250);
+
+    const confirmDelete = Math.random() < 0.5;     // 9. randomized choice
+    status(confirmDelete ? 'Confirm <b>Delete</b> · 8' : 'Press <b>Cancel</b> · 8');
+    await click(confirmDelete ? confirmYes : confirmNo);
+    await hideConfirm();
+    if (confirmDelete) markDeleted(folderDocs);
+    await sleep(320);
+
+    status('<b>Minimize</b> the window · 9');       // 10.
+    await click(explorerMin);
+    await minimizeExplorer();
+    await sleep(320);
+
+    status('Right-click taskbar item · 10');        // 11.
+    await rightClickAt(centerOf(taskItem), taskItem);
+    showMenu(taskMenu, pos.x, pos.y);
+    await sleep(400);
+
+    status('Select <b>Close window</b> · 11');
+    await click(taskClose);
+    hideMenu(taskMenu);
+    await closeExplorer();
+
+    status('Done — sequence complete.');
+  }
+
+  async function run(){
+    if (running) return;
+    running = true;
+    animateBtn.disabled = true;
+    syncLayer();
+    do {
+      await runOnce();
+      if (loopEl.checked) await sleep(700);
+    } while (loopEl.checked && running);
+    running = false;
+    animateBtn.disabled = false;
+  }
+  animateBtn.addEventListener('click', run);
+
+  // ---- manual interaction (when not running) --------------------------
+  screen.addEventListener('contextmenu', e => e.preventDefault());
+
+  filesIcon.addEventListener('click', () => { if (!running && explorer.style.display === 'none') openExplorer(); });
+  explorerMax.addEventListener('click', () => { if (!running) maximizeExplorer(); });
+  explorerMin.addEventListener('click', () => { if (!running && explorer.style.display !== 'none') minimizeExplorer(); });
+  explorerClose.addEventListener('click', () => { if (!running) closeExplorer(); });
+  explorerBar.addEventListener('dblclick', () => { if (!running) maximizeExplorer(); });
+
+  taskItem.addEventListener('click', () => {
+    if (running) return;
+    if (explorer.classList.contains('minimized') || explorer.style.display === 'none') restoreFromTaskbar();
+  });
+  taskItem.addEventListener('contextmenu', e => { if (running) return; const p = pointOf(taskItem, 0.5, 0.4); showMenu(taskMenu, p.x, p.y); });
+  taskClose.addEventListener('click', () => { if (running) return; hideMenu(taskMenu); closeExplorer(); });
+  taskRestore.addEventListener('click', () => { if (running) return; hideMenu(taskMenu); restoreFromTaskbar(); });
+
+  folderDocs.addEventListener('contextmenu', e => {
+    if (running || explorer.style.display === 'none') return;
+    const s = screen.getBoundingClientRect();
+    showMenu(folderMenu, e.clientX - s.left, e.clientY - s.top);
+  });
+  menuDelete.addEventListener('click', () => { if (running) return; hideMenu(folderMenu); showConfirm(); });
+  confirmYes.addEventListener('click', () => { if (running) return; markDeleted(folderDocs); hideConfirm(); });
+  confirmNo.addEventListener('click', () => { if (running) return; hideConfirm(); });
+  document.getElementById('confirmX').addEventListener('click', () => { if (!running) hideConfirm(); });
+
+  // dismiss menus on any outside click
+  screen.addEventListener('pointerdown', e => {
+    if (!e.target.closest('#folderMenu')) hideMenu(folderMenu);
+    if (!e.target.closest('#taskMenu') && e.target !== taskItem && !taskItem.contains(e.target)) hideMenu(taskMenu);
+  });
+
+  // ---- manual window dragging (delegated to any .titlebar) ------------
+  let manual = null;
+  screen.addEventListener('pointerdown', e => {
+    if (running) return;
+    const bar = e.target.closest('.titlebar');
+    if (!bar || e.target.closest('.win-controls')) return;
+    const win = bar.closest('.win');
+    if (!win || win.classList.contains('maximized') || win.style.display === 'none') return;
+    const s = screen.getBoundingClientRect();
+    const wp = posOf(win);
+    manual = { win, offX: (e.clientX - s.left) - wp.x, offY: (e.clientY - s.top) - wp.y };
+    win.classList.add('dragging');
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove', e => {
+    if (!manual) return;
+    const s = screen.getBoundingClientRect();
+    const c = clampPos(manual.win, (e.clientX - s.left) - manual.offX, (e.clientY - s.top) - manual.offY);
+    setPos(manual.win, c.x, c.y);
+  });
+  window.addEventListener('pointerup', () => { if (manual){ manual.win.classList.remove('dragging'); manual = null; } });
+
+  window.addEventListener('resize', () => {
+    syncLayer();
+    [explorer, confirmModal].forEach(w => { if (w.style.display !== 'none' && !w.classList.contains('maximized')){ const c = clampPos(w, posOf(w).x, posOf(w).y); setPos(w, c.x, c.y); } });
+  });
+
+  // ---- init -----------------------------------------------------------
+  function init(){
+    syncLayer();
+    resetScene();
+    place(screen.clientWidth*0.12, screen.clientHeight*0.6);
+    const now = new Date();
+    document.getElementById('clk').textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  requestAnimationFrame(init);
+})();
+</script>
+</body>
+</html>

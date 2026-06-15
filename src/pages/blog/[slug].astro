@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import "../../styles/demos.css";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
@@ -213,6 +214,25 @@ const { Content } = await render(entry);
 
 	.back-link:hover {
 		color: var(--heading-color);
+	}
+
+	/* full-bleed band for the small inline demos: background spans the
+	   content card, inner content stays aligned with the text column */
+	.blog-content :global(.demo-band) {
+		margin: 1.75rem -3rem;
+		padding: 1.5rem 3rem;
+		background-color: var(--surface-2);
+		border-top: 1px solid var(--border-color);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	@media (max-width: 768px) {
+		.blog-content :global(.demo-band) {
+			margin-left: -1rem;
+			margin-right: -1rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
 	}
 
 	@media (max-width: 768px) {

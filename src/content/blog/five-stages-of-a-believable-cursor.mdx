@@ -1,0 +1,260 @@
+---
+title: "The Five Stages of a Believable Cursor"
+date: "2026-06-15"
+tags: ["Animation", "JavaScript", "UX", "Bezier Curves", "Maths"]
+excerpt: "What does it actually take to make a fake mouse cursor move like a real one? A hands-on tour through linear interpolation, easing, Bézier curves and the biomechanics of why arms curve — with interactive demos for each piece."
+---
+
+import MiniSpeed from "../../components/demos/MiniSpeed.tsx";
+import MiniEasing from "../../components/demos/MiniEasing.tsx";
+import MiniBezier from "../../components/demos/MiniBezier.tsx";
+import MiniDirection from "../../components/demos/MiniDirection.tsx";
+import MiniHandedField from "../../components/demos/MiniHandedField.tsx";
+import MiniHandedAim from "../../components/demos/MiniHandedAim.tsx";
+import MiniEntry from "../../components/demos/MiniEntry.tsx";
+import MiniWindmouse from "../../components/demos/MiniWindmouse.tsx";
+import MiniCombined from "../../components/demos/MiniCombined.tsx";
+import CursorDemo from "../../components/demos/CursorDemo.tsx";
+
+
+I've been building a tool that records product demos, and it needs a fake cursor: a little arrow that drives the interface so you don't have to film your real mouse. Getting it to *click the right things* is trivial. Getting it to **look like a human is moving it** turned out to be a genuinely interesting problem, and it's almost entirely about maths.
+
+This article is the breakdown. There are five "big" demos, each running the **exact same scripted routine** on a fake GNOME desktop — open Files, maximise the window, delete a folder through a dialog, drag the dialog, minimise, quit. The only thing that changes between them is *how the pointer travels between clicks*. In between, there are small interactive widgets that isolate each technique on its own so you can poke at the maths directly.
+
+Start here, with the naive version: the cursor just teleports to wherever the next click is.
+
+<CursorDemo variant={1} client:visible />
+
+```javascript
+function moveTo(end){ pos.x = end.x; pos.y = end.y; }  // teleport
+```
+
+It works perfectly and it's completely unconvincing. The reason is in your eyes, not the code: human vision uses *smooth pursuit* to lock onto and track a moving target, and *saccades* to jump between stationary ones. A real cursor gives your eye something to pursue. A teleporting one forces a saccade every time, which is exactly what reading text feels like — useful, but obviously not "someone using a mouse". So the first job is to put motion between the clicks.
+
+## Straight lines: interpolation and speed
+
+The simplest motion is a straight line at a constant speed. You walk a number `p` from 0 to 1 and read off the position with **linear interpolation** (a "lerp"):
+
+```
+position(p) = start + (end − start) · p
+```
+
+At `p = 0` you're at the start, at `p = 1` you're at the end, and halfway through you're exactly halfway there. If you want a constant *speed* (pixels per second) rather than a constant *duration*, the trip time just falls out of the distance:
+
+```
+duration = distance ÷ speed
+```
+
+That's the whole model. Here it is on its own — drag the speed slider and notice the motion never changes character, it only gets faster or slower:
+
+<div className="demo-band"><MiniSpeed client:visible /></div>
+
+In CSS this is one line — `transition: transform 0.4s linear` does precisely this lerp. Dropped into the routine, it already reads better than teleporting:
+
+<CursorDemo variant={2} client:visible />
+
+But it's still clearly a machine. Two things give it away. It's *perfectly* straight, and hands don't draw straight lines. And the speed snaps from zero to full pelt instantly, holds it dead level, then stops like it hit a wall. Real movement ramps up, coasts, and slows as it homes in on the target.
+
+## Easing: speed should rise and fall
+
+When a person reaches for something, their hand's speed isn't constant — it traces a roughly bell-shaped curve: accelerate, peak around the middle, decelerate onto the target. This is one of the most robust findings in motor control, and there's a clean model for it. Flash and Hogan's **minimum-jerk** model (1985) says the trajectory that minimises jerk (the rate of change of acceleration) is a fixed quintic:
+
+```
+p(τ) = 10τ³ − 15τ⁴ + 6τ⁵        where τ = elapsed ÷ duration
+```
+
+You feed real progress `τ` (0→1) through that polynomial and use the result as your interpolation factor. The ends are flat (zero velocity) and the middle is steep (peak velocity), which is exactly the bell shape.
+
+CSS gives you the same idea through timing functions. `linear`, `ease`, `ease-in-out` and friends are all just **`cubic-bezier(x1, y1, x2, y2)`** under the hood — a curve that remaps input time to output progress. The key thing to internalise: easing changes *when* you are *where*, not the route you take. The path is still a straight line.
+
+This widget *is* a `cubic-bezier()` editor. Drag the teal handles and watch the curve, the moving marker, and the speed meter underneath the cursor swell and fade:
+
+<div className="demo-band"><MiniEasing client:visible /></div>
+
+One nuance: a `cubic-bezier` can't reproduce the minimum-jerk quintic exactly (different polynomial degree), but a symmetric ease-in-out gets close enough that the eye doesn't care. In the actual cursor I drive position with JavaScript and use the minimum-jerk polynomial directly. Either way, the result is night and day:
+
+<CursorDemo variant={3} client:visible />
+
+The cursor now launches, glides and settles. It finally has weight. (Worth noting: there's solid evidence here too that duration shouldn't be fixed — **Fitts's law** says the time to hit a target grows with distance and shrinks with target size, so longer hops take a bit longer. In the demo, duration scales gently with distance for the same reason.)
+
+What's left is the path itself. It's still a geometrically exact line, and after a few moves that perfection is the tell.
+
+## Curving the path: Bézier curves
+
+To bend a straight A→B into an arc, you need control points, and that means **Bézier curves**. A quadratic Bézier has one control point `C`; a cubic has two, `C1` and `C2`:
+
+```
+quadratic:  B(t) = (1−t)²·P₀ + 2(1−t)t·C + t²·P₁
+cubic:      B(t) = (1−t)³·P₀ + 3(1−t)²t·C₁ + 3(1−t)t²·C₂ + t³·P₃
+```
+
+The control points are magnets: the curve is pulled toward them but never actually passes through them. To turn a straight line into a gentle bow, you put a control point at the midpoint and shove it sideways — perpendicular to the line — by some fraction of the distance.
+
+This is the same Bézier maths as the easing curve above, but doing a completely different job: there it mapped *time → progress*, here it maps *progress → a point in space*. Drag the control points and watch the route change:
+
+<div className="demo-band"><MiniBezier client:visible /></div>
+
+Here's where it gets interesting in the routine. I added a single fixed bow — the control point at the midpoint, pushed out 22% of the distance, always the same side:
+
+```javascript
+const nx = -dy / dist, ny = dx / dist;     // unit vector perpendicular to the line
+const bow = dist * 0.22;                     // same fraction, same side, every move
+const c = { x: start.x + dx*0.5 + nx*bow, y: start.y + dy*0.5 + ny*bow };
+```
+
+<CursorDemo variant={4} client:visible />
+
+It arcs nicely on the long diagonal reaches — but two problems show up. First, *every move is the same curve*: the control point is always at the midpoint, always offset the same amount, always the same side, so you're watching one shape mirrored over and over. Second, look at a move that's nearly straight up or down — reaching for the title bar, or down to the dock. It swings out sideways in a big lazy arc. That's wrong: when you move your hand straight up, you don't loop out to the side.
+
+## Direction matters: inertial anisotropy
+
+That last problem isn't just aesthetic — it has a biomechanical cause. Your arm is a linked system of segments with mass, and its resistance to acceleration (its inertia) depends on the *direction* you push it, because different directions recruit different combinations of joints. This is **inertial anisotropy**, and it measurably bends real reaching trajectories by different amounts in different directions (Gordon, Ghez and colleagues, 1994; Osu et al., 1997, on curvature in multi-joint arm movements). Straight lines are the exception, not the rule, and *how* curved a path is depends on which way it's going.
+
+I'll be honest about the gap between that and what I shipped: the research supports *direction-dependent curvature*; it does **not** say "cardinals straight, diagonals curvy." That specific mapping is my own heuristic — it looks right and has a plausible basis, but I wouldn't dress it up as a finding. The function I reached for is `|sin(2θ)|`, where `θ` is the angle of the move:
+
+```
+weight = |sin(2θ)|        0 at 0°/90°/180°/270°,  1 at every 45° diagonal
+```
+
+It's zero for pure horizontal/vertical moves and ramps smoothly to 1 at the diagonals — a neat four-petal shape. Drag the target around the centre and watch the bow trace those petals:
+
+<div className="demo-band"><MiniDirection client:visible /></div>
+
+Multiply the bow by that weight (with a small floor so even straight moves keep a whisper of a curve, because real paths are never perfect rulers either) and the vertical moves straighten out while the diagonals keep their swoop.
+
+The other fix is killing the repetition. Instead of one fixed control point I use a **cubic** Bézier with *two* control points, each at a randomised position along the line with its own randomised perpendicular offset (scaled by that direction weight). About a quarter of the time one flips to the opposite side, which produces the occasional gentle S-curve. And the easing is regenerated for every single move, so peak speed lands at a slightly different moment each time:
+
+```javascript
+const theta    = Math.atan2(dy, dx);
+const diagness = Math.abs(Math.sin(2 * theta));   // 0 = cardinal, 1 = diagonal
+const dirWeight = 0.14 + 0.86 * diagness;         // floor so it's never dead straight
+
+const ctrlAt = frac => {
+  const sign = Math.random() < 0.25 ? -primary : primary;   // ~25% flip → soft S
+  const mag  = dist * rand(0.04, 0.26) * sign * dirWeight;
+  return { x: start.x + dx*frac + nx*mag, y: start.y + dy*frac + ny*mag };
+};
+const c1 = ctrlAt(rand(0.15, 0.40));
+const c2 = ctrlAt(rand(0.60, 0.85));
+```
+
+Turn on **Loop** here and let it run — no two passes are identical, but it never wanders into nonsense, and the near-vertical moves stay tight:
+
+<CursorDemo variant={5} client:visible />
+
+## Handedness: where the curve actually comes from
+
+There's a question lurking under all of this: *why* should a path curve at all? Stage 5 leans on `|sin(2θ)|`, but that's a rule about screen axes, and a cursor has no idea which way is "up". The real answer is the hand — and I got the details wrong on my first attempt, so I went and checked the literature.
+
+Most people are right-handed, and on a laptop trackpad the wrist sits off the **bottom-right corner**; the fingertip pivots from there. A patent on biomechanical input puts it cleanly: move a fingertip **laterally** (sideways) and the tip "moves along a circular arc with a radius centred at the wrist"; move it **longitudinally** (toward or away from the wrist) and it "moves along a straight line toward the centre of the circular arc". Reaching studies back this up — wrist paths are measurably more curved and more variable than whole-arm paths — and handedness flips the bias: left-handers produce mirror-image strokes (clockwise circles appear in ~39% of left-handers versus ~1% of right-handers).
+
+So the rule isn't "near the palm is straighter", which was my first guess. It's sharper than that:
+
+- A **longitudinal** move — straight toward or away from the wrist — is straight, *wherever* it happens. (That's the "more exact" feel of small adjustments near the palm; those tend to be longitudinal.)
+- A **lateral** move sweeps an arc around the wrist, concave toward it.
+- Because curvature is `1 ÷ radius`, those arcs are **tighter near the wrist and gentler far out** — the opposite of what I first assumed.
+
+The maths is just that arc's geometry. Put a pivot `Pv` off the bottom-right. For a move `S → E`, measure the angle each end subtends around the pivot, take the sweep between them, and the bow is the arc's sagitta:
+
+```
+Δφ   = angle(E − Pv) − angle(S − Pv)     // the lateral sweep; ≈ 0 for a longitudinal move
+R    = |midpoint − Pv|                    // smaller near the wrist
+bow  = R · (1 − cos(Δφ / 2))             // sagitta of the arc  ≈  length² / (8R)
+```
+
+That `length² / (8R)` is the giveaway: curvature scales with `1/R`, exactly as the biomechanics predicts. The control point sits perpendicular to the move, offset by the bow, on the side **away** from the pivot — so the arc is concave toward the wrist, the shape a finger actually sweeps. Here it is as a fan of lateral strokes; watch them tighten toward the palm:
+
+<div className="demo-band"><MiniHandedField client:visible /></div>
+
+And interactively — line the stroke up *along* the dotted radius (longitudinal) and it stays straight; swing it *across* (lateral) and `Δφ` climbs and it bows around the wrist:
+
+<div className="demo-band"><MiniHandedAim client:visible /></div>
+
+### Leave straight, then bend
+
+There's a subtlety even a perfect arc gets wrong. A circle has *constant* curvature, so it bends from the very first pixel — push the cursor and it's already arcing sideways. Real strokes don't do that: people leave the start almost straight and let the curve build toward the target. That shape has a name — a **clothoid** (Euler spiral), the curve whose curvature increases steadily along its length, and literally the piece engineers use to connect a straight line to a circular arc. Curve-fitting work finds hand-drawn strokes are well described by clothoids, with curvature varying gradually over arc length rather than snapping to a fixed radius.
+
+You don't need the full clothoid integral for a believable cursor. You can fake the same front-straight, back-curved shape by making the two Bézier control points asymmetric: put the first one essentially *on* the straight line, so the stroke leaves tangent to it, and let the second one carry the arch, late.
+
+```javascript
+const arch = 2.2 * sagitta;                  // the bow, from the wrist-arc geometry
+const c1 = along(0.33) + n * (arch * 0.1);   // control 1 ~ on the line  → straight entry
+const c2 = along(0.70) + n *  arch;          // control 2 carries the bend, placed late
+```
+
+Slide between a plain circular arc and the clothoid entry — same two endpoints, very different feel:
+
+<div className="demo-band"><MiniEntry client:visible /></div>
+
+Wired into the routine — with the same two-control-point randomisation from Stage 5 so it never goes mechanical — this is the most physically honest version. Toggle **Left-handed** to move the pivot to the opposite corner and watch every arc flip sides:
+
+<CursorDemo variant={6} client:visible />
+
+This is still a model — I haven't fit curves to real trackpad strokes — but now it has a documented cause rather than being a screen-axis fudge, which is why it generalises: it curves moves I never tuned by hand, and the handedness toggle is the tell that the geometry is doing the work, not a lookup table.
+
+## A different paradigm entirely: WindMouse
+
+Everything so far has been *geometric*: draw a nice curve, move along it. There's a whole other way to get human-looking motion, and it's the one the automation community actually converged on, so it's worth seeing. The folk wisdom — you'll find it in any "natural mouse movement" thread — is three-fold: ease in and out so the cursor has weight, smooth the path with a spline, and add random variation to dodge bot detectors. We've effectively done the first two (minimum-jerk easing, Bézier curves) and a tidy version of the third. The rigorous version of *random variation* is **WindMouse**, an algorithm [Benjamin J. Land published in 2021](https://ben.land/post/2021/04/25/windmouse-human-mouse-movement/) (and which turns up, often unattributed, all over the place).
+
+WindMouse throws out geometry and does physics instead. The cursor is a mass with inertia, and two forces act on it every step:
+
+- **Gravity** — constant magnitude, always pointing at the destination. This is what gets you there.
+- **Wind** — a random force that drifts smoothly in magnitude and direction. This is what makes the path human.
+
+Sum the forces, integrate once for velocity and again for position (crude fixed-step Euler is plenty), and clip the velocity to a "terminal" speed that shrinks near the target so it settles instead of sailing past. The wiggle isn't drawn anywhere — it *emerges* from the wind. Near the target the wind is damped so gravity can zero it in, which naturally produces the occasional overshoot-and-correct that real hands do.
+
+```javascript
+// the heart of WindMouse (Benjamin J. Land, GPLv3), each step:
+W_x = W_x/√3 + (random −1..1) · W_mag/√5;     // wind drifts smoothly
+W_y = W_y/√3 + (random −1..1) · W_mag/√5;
+v_x += W_x + G·(dest_x − x)/dist;             // wind + gravity → velocity
+v_y += W_y + G·(dest_y − y)/dist;
+// clip |v| to a shrinking maximum, then:  x += v_x;  y += v_y;
+```
+
+<div className="demo-band"><MiniWindmouse client:visible /></div>
+
+You can feel the difference from our clean arcs immediately: it's twitchier, more alive, less *designed*. (One practical note: WindMouse is GPLv3, so if you lift the code your project inherits that licence — worth knowing before you paste it in.)
+
+## Best of both: intent plus tremor
+
+Our geometric model and WindMouse pull in opposite directions, which is exactly why they combine well. Our model knows the *right shape* — the handed, clothoid arc with a reason behind every bend. WindMouse knows how to make motion *twitch* like a real hand. So use our arc as the macro path, and let WindMouse's wind add the micro-tremor on top.
+
+The trick is small: instead of WindMouse's gravity pointing straight at the final destination, point it at a guide that walks along our Bézier arc. The cursor chases the arc — getting the biomechanically-correct route — while the wind knocks it slightly off and gravity hauls it back, frame by frame.
+
+<div className="demo-band"><MiniCombined client:visible /></div>
+
+Turn the wind to zero and you get the pristine arc back; turn it up and the same arc grows a believable shake. That dial — how much physics on top of how much geometry — is, in the end, the one knob really worth tuning.
+
+## One implementation detail: why not CSS transitions?
+
+You might wonder why all of this runs through `requestAnimationFrame` and a hand-rolled animation loop instead of CSS transitions, given how good CSS easing is. The reason is geometric: a CSS transition interpolates a **straight line** between two values. It can ease the timing along that line beautifully, but it cannot make the element follow a curve — there's nowhere to put the control points. To ride a Bézier path you have to sample `B(t)` yourself every frame and set the transform. Driving it from `requestAnimationFrame` also pins the motion to the display's refresh rate, which matters when the whole point is to screen-record the result cleanly.
+
+So the recipe, in order of how much each step buys you:
+
+| Technique | Maths | What it fixes |
+| --- | --- | --- |
+| Linear interpolation | `start + (end−start)·p` | Motion exists at all |
+| Easing | minimum-jerk / `cubic-bezier` | Speed ramps and settles |
+| Bézier path | quadratic / cubic control points | The route curves |
+| Direction weight | `\|sin(2θ)\|` | Cardinals straighten, diagonals bow |
+| Palm pivot | lateral arc around the wrist, `R·(1−cos Δφ/2)` | Curvature with a real, handed cause |
+| Clothoid entry | asymmetric control points | Leaves straight, bends into the target |
+| Randomisation | jittered control points + easing | No two moves repeat |
+| Wind (physics) | gravity + random wind, integrated | Emergent tremor and overshoot |
+
+None of these is much code. Linear interpolation is one line; easing is a polynomial; the path is a Bézier; the direction weight is a single trig call. Put together, they're the difference between a cursor that's obviously scripted and one you don't think about at all.
+
+## Every layer as a switch
+
+Here's the whole thing in one place: the full routine, with a checkbox for each technique above. They're read **live**, every move, so you can flip them on and off mid-run and watch the cursor change. Turn everything off for a robot; turn it all on for something you'd never look at twice. A few combinations worth trying:
+
+- **Everything off** — straight lines at a flat speed. The Stage 1/2 robot.
+- **Easing only** — straight, but with weight.
+- **Curve on, Handedness off** — the same arc every move, even on vertical hops (the Stage 4 problem).
+- **Handedness on, Clothoid off** — correct direction, but it bows from the first pixel like a rigid circle.
+- **Wind tremor on** — WindMouse jitter layered over whatever path the other switches produce.
+
+<CursorDemo variant={7} client:visible />
+
+That's the real lesson hiding in all the maths: none of these layers is doing much on its own, but stacked up they cross the line from *obviously a script* to *probably a person*.
