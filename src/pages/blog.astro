@@ -32,12 +32,13 @@ const formatWeekday = (date) =>
 <Layout title="Blog - Mark Wylde" currentPage="blog">
   <section class="section">
     <div class="container">
-      <div class="blog-header">
-        <h1>Blog</h1>
-        <p>Thoughts on web development, simplicity, and building things that work</p>
-      </div>
+      <div class="content-panel">
+        <div class="blog-header">
+          <h1>Blog</h1>
+          <p>Thoughts on web development, simplicity, and building things that work</p>
+        </div>
 
-      <div class="blog-list">
+        <div class="blog-list">
         {
           Object.entries(postsByMonth).map(([monthYear, posts]) => (
             <section class="month-section">
@@ -74,6 +75,7 @@ const formatWeekday = (date) =>
           ))
         }
       </div>
+      </div>
     </div>
   </section>
 </Layout>
@@ -85,19 +87,16 @@ const formatWeekday = (date) =>
   }
 
   .blog-header h1 {
-    font-size: 2.5rem;
     margin-bottom: 0.75rem;
     color: var(--heading-color);
   }
 
   .blog-header p {
-    font-size: 1.1rem;
     color: var(--muted-color);
     margin-bottom: 0;
   }
 
   .blog-list {
-    max-width: 880px;
     margin: 0 auto;
   }
 
@@ -106,7 +105,6 @@ const formatWeekday = (date) =>
   }
 
   .month-heading {
-    font-size: 1.25rem;
     font-weight: 700;
     color: var(--heading-color);
     margin-bottom: 0;
@@ -136,7 +134,7 @@ const formatWeekday = (date) =>
   }
 
   .post-link:hover {
-    background-color: var(--secondary-bg);
+    background-color: var(--surface-2);
   }
 
   .post-link:hover .post-title {
@@ -155,14 +153,14 @@ const formatWeekday = (date) =>
   }
 
   .post-day {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     line-height: 1;
     color: var(--heading-color);
   }
 
   .post-weekday {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -178,7 +176,6 @@ const formatWeekday = (date) =>
   }
 
   .post-title {
-    font-size: 1.2rem;
     font-weight: 600;
     line-height: 1.35;
     color: var(--heading-color);
@@ -186,7 +183,6 @@ const formatWeekday = (date) =>
   }
 
   .post-excerpt {
-    font-size: 0.95rem;
     line-height: 1.6;
     color: var(--text-color);
     opacity: 0.9;
@@ -226,12 +222,7 @@ const formatWeekday = (date) =>
       font-size: 0.65rem;
     }
 
-    .post-title {
-      font-size: 1.05rem;
-    }
-
     .post-excerpt {
-      font-size: 0.9rem;
       line-height: 1.5;
     }
   }

@@ -18,9 +18,9 @@ const { Content } = await render(entry);
 <Layout title={`${entry.data.title} - Mark Wylde`} currentPage="blog">
 	<section class="section">
 		<div class="container">
-			<div class="blog-content-wrapper">
+			<div class="content-panel blog-article-panel">
 				<article class="blog-post">
-				<header class="blog-header">
+					<header class="blog-header">
 					<h1>{entry.data.title}</h1>
 					<div class="blog-meta">
 						<time datetime={entry.data.date}>
@@ -43,24 +43,19 @@ const { Content } = await render(entry);
 				<footer class="blog-footer">
 					<a href="/blog" class="back-link">← Back to Blog</a>
 				</footer>
-			</article>
-		</div>
+				</article>
+			</div>
 		</div>
 	</section>
 </Layout>
 
 <style>
-	.blog-content-wrapper {
-		background-color: var(--secondary-bg);
-		border-radius: 12px;
-		padding: 3rem;
-		box-shadow: 0 5px 15px var(--shadow-color);
-		margin: 2rem auto;
+	.blog-article-panel {
 		max-width: 1400px;
+		margin: 0 auto;
 	}
 
 	.blog-post {
-		max-width: 1400px;
 		margin: 0 auto;
 	}
 
@@ -73,7 +68,6 @@ const { Content } = await render(entry);
 	.blog-header h1 {
 		margin-bottom: 1rem;
 		color: var(--heading-color);
-		font-size: 2.5em;
 	}
 
 	.blog-meta {
@@ -120,7 +114,7 @@ const { Content } = await render(entry);
 		padding: 2px 4px;
 		border-radius: 3px;
 		font-family: 'Courier New', monospace;
-		font-size: 0.9em;
+		font-size: 0.9rem;
 		border: 1px solid var(--border-color);
 	}
 
@@ -177,7 +171,6 @@ const { Content } = await render(entry);
 		width: 100%;
 		border-collapse: collapse;
 		margin: 1.5rem 0;
-		font-size: 0.95em;
 		display: block;
 		overflow-x: auto;
 	}
@@ -233,22 +226,12 @@ const { Content } = await render(entry);
 			padding-left: 1rem;
 			padding-right: 1rem;
 		}
-	}
-
-	@media (max-width: 768px) {
-		.blog-content-wrapper {
-			margin: 0;
-			padding: 1rem;
-			border-radius: 0;
-			box-shadow: none;
-		}
 
 		.blog-header {
 			margin-bottom: 1rem;
 		}
 
 		.blog-header h1 {
-			font-size: 1.4em;
 			line-height: 1.2;
 			margin-bottom: 0.5rem;
 		}
