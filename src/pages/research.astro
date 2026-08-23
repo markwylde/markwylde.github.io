@@ -1,0 +1,100 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const items = (await getCollection("research")).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+---
+
+<Layout title="Research - Mark Wylde" currentPage="research">
+  <section class="section">
+    <div class="container">
+      <div class="content-panel">
+        <div class="research-header">
+          <h1>Research</h1>
+          <p>Long-form notes and deep dives. Less polished than the blog.</p>
+        </div>
+
+        <ul class="research-list">
+          {
+            items.map((item) => (
+              <li>
+                <a href={`/research/${item.id}`}>
+                  <span class="title">{item.data.title}</span>
+                  <time datetime={item.data.date.toISOString()}>
+                    {item.data.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .research-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .research-header h1 {
+    margin-bottom: 0.75rem;
+    color: var(--heading-color);
+  }
+
+  .research-header p {
+    color: var(--muted-color);
+    margin-bottom: 0;
+  }
+
+  .research-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .research-list li {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .research-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.1rem 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .research-list a:hover .title {
+    color: var(--accent-color);
+  }
+
+  .research-list .title {
+    font-weight: 600;
+    color: var(--heading-color);
+    transition: color 0.2s ease;
+  }
+
+  .research-list time {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    color: var(--muted-color);
+  }
+
+  @media (max-width: 640px) {
+    .research-list a {
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+  }
+</style>

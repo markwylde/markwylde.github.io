@@ -1,0 +1,197 @@
+---
+import { getCollection, render } from "astro:content";
+import Mermaid from "../../components/Mermaid.tsx";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("research");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout title={`${entry.data.title} - Research - Mark Wylde`} currentPage="research">
+  <section class="section">
+    <div class="container">
+      <div class="content-panel research-article-panel">
+        <article class="research-article">
+          <header class="research-meta">
+            <time datetime={entry.data.date.toISOString()}>
+              {entry.data.date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+          </header>
+          <div class="research-content">
+            <Content />
+          </div>
+          <footer class="research-footer">
+            <a href="/research" class="back-link">← Back to Research</a>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </section>
+  <Mermaid client:load />
+</Layout>
+
+<style>
+  .research-article-panel {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .research-meta {
+    margin-bottom: 1.25rem;
+    color: var(--muted-color);
+    font-size: 0.95rem;
+  }
+
+  .research-content {
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .research-content :global(h1),
+  .research-content :global(h2),
+  .research-content :global(h3),
+  .research-content :global(h4) {
+    color: var(--heading-color);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .research-content :global(h1) {
+    font-size: 2rem;
+    margin-top: 0;
+  }
+
+  .research-content :global(h2) {
+    font-size: 1.5rem;
+  }
+
+  .research-content :global(h3) {
+    font-size: 1.2rem;
+  }
+
+  .research-content :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .research-content :global(ul),
+  .research-content :global(ol) {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .research-content :global(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  .research-content :global(a) {
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+
+  .research-content :global(a:hover) {
+    text-decoration: underline;
+  }
+
+  .research-content :global(code) {
+    background-color: var(--surface-2);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: "Courier New", monospace;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+  }
+
+  .research-content :global(pre) {
+    background-color: var(--surface-2);
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+  }
+
+  .research-content :global(pre code) {
+    background: none;
+    padding: 0;
+    border: none;
+  }
+
+  .research-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    display: block;
+    overflow-x: auto;
+    font-size: 0.92rem;
+  }
+
+  .research-content :global(th),
+  .research-content :global(td) {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .research-content :global(th) {
+    background-color: var(--surface-2);
+    color: var(--heading-color);
+    font-weight: 600;
+  }
+
+  .research-content :global(tbody tr:nth-child(even)) {
+    background-color: var(--surface-2);
+  }
+
+  .research-content :global(blockquote) {
+    border-left: 3px solid var(--border-color);
+    margin: 0 0 1rem;
+    padding-left: 1rem;
+    color: var(--muted-color);
+  }
+
+  .research-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+  }
+
+  .research-content :global(.mermaid) {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .research-content :global(.mermaid svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .research-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .back-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
