@@ -2,11 +2,11 @@ import { VERSION_COLOR } from "./data";
 
 const CSS = `
 .ng-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:6px 0 18px}
-.ng-cards a{display:block;border:1px solid var(--line);border-radius:12px;padding:16px;text-decoration:none;color:inherit;background:var(--btn-bg);transition:transform .15s ease,box-shadow .15s ease;border-top-width:4px}
-.ng-cards a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.12);text-decoration:none}
-.ng-cards .name{font-size:1.05rem;font-weight:700;color:var(--fg-strong);margin-bottom:2px}
-.ng-cards .status{font-size:0.74rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);margin-bottom:10px}
-.ng-cards .desc{font-size:0.88rem;color:var(--fg);line-height:1.5}
+.ng-cards a{display:block;border:1px solid var(--border-color);border-radius:12px;padding:16px;text-decoration:none;color:inherit;background:var(--surface-2);transition:border-color .15s ease;border-top-width:4px}
+.ng-cards a:hover{border-color:var(--accent-color);text-decoration:none}
+.ng-cards .name{font-size:1.05rem;font-weight:700;color:var(--heading-color);margin-bottom:2px}
+.ng-cards .status{font-size:0.74rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted-color);margin-bottom:10px}
+.ng-cards .desc{font-size:0.88rem;color:var(--text-color);line-height:1.5}
 @media (max-width:700px){.ng-cards{grid-template-columns:1fr}}
 `;
 
