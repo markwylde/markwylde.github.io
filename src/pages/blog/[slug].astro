@@ -15,7 +15,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<Layout title={`${entry.data.title} - Mark Wylde`} currentPage="blog">
+<Layout title={`${entry.data.title} - Mark Wylde`} description={entry.data.excerpt} currentPage="blog">
 	<section class="section">
 		<div class="container">
 			<div class="content-panel blog-article-panel">

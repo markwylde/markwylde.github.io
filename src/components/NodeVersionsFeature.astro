@@ -1,0 +1,260 @@
+---
+const versions = [
+  {
+    id: "22",
+    name: "Interoperability",
+    status: "LTS",
+    v8: "12.4",
+    abi: "127",
+    pitch: "Node closes much of the gap between CommonJS and ESM.",
+    best: "WebSocket, watch mode, globbing, package-script execution and the compile cache all move into Node itself.",
+    gains: [
+      "require(esm)",
+      "WebSocket",
+      "stable watch mode",
+      "node --run",
+      "fs.glob",
+      "compile cache",
+      "native TS stripping",
+    ],
+    watch: [
+      "Type stripping is not type checking",
+      "Top-level await still needs import()",
+      "First compile-cache run can be slower",
+    ],
+  },
+  {
+    id: "24",
+    name: "Consolidation",
+    status: "Latest LTS",
+    v8: "13.6",
+    abi: "137",
+    pitch:
+      "Node turns the work started in 22 into dependable production features.",
+    best: "Type stripping stabilises, URLPattern becomes global, npm reaches version 11 and node:test changes how it waits for subtests.",
+    gains: [
+      "stable TS stripping",
+      "URLPattern",
+      "npm 11",
+      "RegExp.escape",
+      "using",
+      "AsyncContextFrame",
+      "auto-waiting subtests",
+    ],
+    watch: [
+      "npm 11 can change install behaviour",
+      "node:test subtest semantics changed",
+      "url.parse() is runtime-deprecated",
+    ],
+  },
+  {
+    id: "26",
+    name: "Modernisation",
+    status: "Current",
+    v8: "14.6",
+    abi: "147",
+    pitch: "Node adds Temporal and removes several compatibility layers.",
+    best: "You gain runtime permission drops, Undici 8 and direct SEA builds. You lose bundled Corepack, transform-types and several old APIs.",
+    gains: [
+      "Temporal",
+      "Map upsert",
+      "Iterator.concat",
+      "permission.drop()",
+      "Undici 8",
+      "node --build-sea",
+      "richer diagnostics",
+    ],
+    watch: [
+      "Not LTS until October 2026",
+      "Corepack no longer bundled",
+      "transform-types flag and legacy APIs removed",
+    ],
+  },
+];
+
+const capabilities = [
+  ["Modules", "Sync require(esm)", "Mature interop", "Loader cleanup"],
+  [
+    "TypeScript",
+    "Stripping introduced",
+    "Stripping stable",
+    "Erasable syntax only",
+  ],
+  ["Web platform", "WebSocket", "URLPattern", "Temporal + Undici 8"],
+  [
+    "Tooling",
+    "Watch, --run, glob",
+    "npm 11, test semantics",
+    "SEA builder, Perfetto",
+  ],
+  [
+    "Security",
+    "Stable permissions",
+    "Mainstream permission CLI",
+    "Runtime permission drop",
+  ],
+  ["Compatibility", "ABI 127", "ABI 137", "ABI 147 + removals"],
+];
+
+const risks = [
+  [
+    "corepack",
+    "CI says corepack: command not found",
+    "24 → 26",
+    "Install Corepack or your package manager explicitly.",
+  ],
+  [
+    "typescript",
+    "Previously accepted .ts syntax fails",
+    "24 → 26",
+    "Use erasable TypeScript or restore a transpilation step.",
+  ],
+  [
+    "tests",
+    "Nested test wrappers behave differently",
+    "22 → 24",
+    "Remove promise assumptions around t.test() and retest wrappers.",
+  ],
+  [
+    "native",
+    "Module version or binary mismatch",
+    "Every major",
+    "Rebuild direct V8 bindings; prefer Node-API where possible.",
+  ],
+  [
+    "modules",
+    "require() fails for an ESM package",
+    "All three",
+    "If its graph has top-level await, switch the boundary to import().",
+  ],
+  [
+    "legacy",
+    "Old URL, TLS, stream or HTTP APIs warn/fail",
+    "22 → 24 → 26",
+    "Remove deprecated core APIs before changing runtime.",
+  ],
+  [
+    "coverage",
+    "Coverage shifts with compile cache enabled",
+    "22+",
+    "Disable the compile cache for precise coverage runs.",
+  ],
+  [
+    "permissions",
+    "A dropped grant leaves an open handle working",
+    "26",
+    "Close existing handles too; drop() affects future checks only.",
+  ],
+];
+---
+
+<div class="feature" data-feature>
+  <header class="hero">
+    <h2>What changed while you were building?</h2>
+    <p class="dek">Node 22 fixed the module divide. Node 24 made those changes dependable. Node 26 adds new runtime features and removes old compatibility layers.</p>
+    <div class="hero-actions">
+      <a href="#decision" class="primary">Check your upgrade <span>↓</span></a>
+      <a href="/blog/nodejs-22-24-26/map" class="quiet">Explore the map <span>→</span></a>
+    </div>
+    <div class="signal" aria-label="Upgrade advice">
+      <span>Upgrade advice</span>
+      <strong>Start new work on the latest LTS. For existing systems, find the concrete blockers, fix them and move forward.</strong>
+    </div>
+  </header>
+
+  <nav class="path-nav" aria-label="Explore this report">
+    <a href="#versions"><small>01</small><span>Compare<br/><b>the releases</b></span></a>
+    <a href="#capabilities"><small>02</small><span>Follow<br/><b>a capability</b></span></a>
+    <a href="#decision"><small>03</small><span>Assess<br/><b>your upgrade</b></span></a>
+    <a href="#migration"><small>04</small><span>Plan<br/><b>the migration</b></span></a>
+  </nav>
+
+  <section id="versions" class="feature-section">
+    <div class="section-heading"><span>01 / releases</span><h2>See what arrived while you were building</h2><p>Select a release to see what it added and what you need to test.</p></div>
+    <div class="version-tabs" role="tablist" aria-label="Node.js versions">
+      {versions.map((v, i) => <button type="button" role="tab" aria-selected={i === 1 ? "true" : "false"} data-version={v.id}><b>Node {v.id}</b><span>{v.name}</span></button>)}
+    </div>
+    <div class="version-stage">
+      {versions.map((v) => <article class:list={["version-panel", { active: v.id === "24" }]} data-panel={v.id}>
+        <div class="version-number">{v.id}</div>
+        <div class="version-copy">
+          <div class="status"><span>{v.status}</span> V8 {v.v8} · ABI {v.abi}</div>
+          <h3>{v.pitch}</h3><p>{v.best}</p>
+          <div class="two-col"><div><h4>What arrives</h4><ul class="chip-list">{v.gains.map(x => <li>{x}</li>)}</ul></div><div><h4>What to test</h4><ul class="watch-list">{v.watch.map(x => <li>{x}</li>)}</ul></div></div>
+        </div>
+      </article>)}
+    </div>
+    <details class="deep"><summary><span>Details</span> Release summary</summary><div><p><b>Node 22 focuses on interoperability.</b> It adds browser-style WebSocket, stable watch mode, first-party globbing and package-script execution. The bigger change is synchronous <code>require()</code> of eligible ESM. Later 22.x releases add native TypeScript stripping and persistent module compile caching.</p><p><b>Node 24 consolidates that work.</b> V8 13.6, npm 11, global <code>URLPattern</code>, a faster async-context implementation and changed test semantics make it a practical production baseline. Type stripping becomes stable in 24.12.</p><p><b>Node 26 removes more old behavior.</b> It adds Temporal, collection APIs, runtime permission drops, Undici 8 and direct SEA construction. It also removes Corepack and several legacy APIs.</p></div></details>
+  </section>
+
+  <section id="capabilities" class="feature-section shaded">
+    <div class="section-heading"><span>02 / capabilities</span><h2>Follow the changes you care about</h2><p>Track modules, TypeScript, tooling, security or compatibility across all three releases.</p></div>
+    <div class="cap-grid" role="table" aria-label="Capability comparison">
+      <div class="cap-row cap-head" role="row"><b>Concern</b><span>Node 22</span><span>Node 24</span><span>Node 26</span></div>
+      {capabilities.map(row => <div class="cap-row" role="row"><b>{row[0]}</b><span>{row[1]}</span><span>{row[2]}</span><span>{row[3]}</span></div>)}
+    </div>
+    <details class="deep"><summary><span>Details</span> What native TypeScript supports</summary><div><div class="progression"><i>22.6<br/><b>introduced</b></i><i>22.18<br/><b>default</b></i><i>24.12<br/><b>stable</b></i><i>26<br/><b>stripping only</b></i></div><p>Node removes erasable type syntax. It does not type-check, read <code>tsconfig.json</code>, honour path aliases, down-level code, or generate JavaScript for TypeScript-only constructs. Run code with <code>node src/app.ts</code> and validate it separately with <code>tsc --noEmit</code>.</p></div></details>
+    <details class="deep"><summary><span>Details</span> What to benchmark</summary><div><p>No single performance percentage applies to every application. Node 22 adds Maglev and a persistent compile cache. Node 24 moves <code>AsyncLocalStorage</code> to AsyncContextFrame. Node 26 changes V8, Undici, Buffer pooling and diagnostics. Measure startup time, steady-state latency, throughput, memory, garbage collection and production-level concurrency.</p></div></details>
+  </section>
+
+  <section id="decision" class="feature-section decision">
+    <div class="section-heading"><span>03 / readiness</span><h2>What could complicate your upgrade?</h2><p>Pick the description closest to your codebase. We will show you what to check before changing the runtime.</p></div>
+    <div class="choice-grid" role="group" aria-label="Upgrade risk profile">
+      <button type="button" data-choice="plain">Mostly JavaScript and public Node APIs</button><button type="button" data-choice="native">Native addons or binary dependencies</button><button type="button" data-choice="typescript">Native TypeScript or custom ESM loaders</button><button type="button" data-choice="tooling">Corepack, nested node:test, or older core APIs</button>
+    </div>
+    <div class="recommendation" aria-live="polite"><div class="rec-node">GO</div><div><span>Likely upgrade effort</span><h3>Start with a dual-runtime test</h3><p>Run the full suite on your current runtime and the target. Then test module boundaries, HTTP behavior and production-level workloads.</p></div></div>
+    <p class="caveat">An older version is a starting point for the assessment, not a recommendation to stay there.</p>
+  </section>
+
+  <section id="migration" class="feature-section">
+    <div class="section-heading"><span>04 / migration</span><h2>Find the traps before they find CI</h2><p>Search by symptom, version boundary, or topic.</p></div>
+    <label class="risk-search"><span>⌕</span><input type="search" placeholder="Try “Corepack”, “TypeScript”, or “native”…" aria-label="Filter migration risks" data-risk-search /></label>
+    <div class="risk-list">
+      {risks.map(r => <article data-risk={`${r[0]} ${r[1]} ${r[2]} ${r[3]}`.toLowerCase()}><div class="risk-route">{r[2]}</div><div><h3>{r[1]}</h3><p>{r[3]}</p></div></article>)}
+    </div>
+    <div class="migration-order"><span>Recommended order</span><ol><li>Update dependencies on the old runtime</li><li>Remove runtime deprecations</li><li>Audit native addons</li><li>Test both runtimes</li><li>Exercise module and CI edges</li><li>Benchmark the real workload</li></ol></div>
+  </section>
+
+  <section class="feature-section sources">
+    <div class="section-heading"><span>Evidence</span><h2>Go to the source</h2><p>Check the claims against the Node.js release notes and documentation.</p></div>
+    <div class="source-grid"><a href="https://nodejs.org/en/blog/release/v22.0.0">Node 22 release notes <span>↗</span></a><a href="https://nodejs.org/en/blog/release/v24.0.0">Node 24 release notes <span>↗</span></a><a href="https://nodejs.org/en/blog/release/v26.0.0">Node 26 release notes <span>↗</span></a><a href="https://nodejs.org/en/about/previous-releases">Release status <span>↗</span></a><a href="https://nodejs.org/api/typescript.html">TypeScript in Node <span>↗</span></a><a href="https://nodejs.org/api/permissions.html">Permission model <span>↗</span></a></div>
+    <details class="deep"><summary><span>Method</span> Introduction date vs current capability</summary><div><p>This feature compares even-numbered production generations: 22 against 20, 24 against 22, and 26 against 24. It distinguishes features in each <code>.0.0</code> release from capabilities later backported or stabilised within that line. That is why TypeScript appears across all three: introduced in 22.6, default in 22.18, stable in 24.12.</p></div></details>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector('[data-feature]');
+  if (root) {
+    const tabs = [...root.querySelectorAll('[data-version]')];
+    const panels = [...root.querySelectorAll('[data-panel]')];
+    tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab))); panels.forEach(p => p.classList.toggle('active', p.dataset.panel === tab.dataset.version)); }));
+    const recs = {
+      plain: ['GO','Start with the test suite','Run the complete suite on both runtimes, check ESM/CJS boundaries and benchmark the real workload. If those checks pass, upgrade.'],
+      native: ['ABI','Audit binaries first','The native module ABI changes 127 → 137 → 147. Identify Node-API dependencies, then verify that direct V8 or Node C++ addons have builds for your target.'],
+      typescript: ['TS','Review the execution model','Node strips erasable types; it does not type-check or honour tsconfig paths. For 26, remove transform-types assumptions and review custom module.register() loaders.'],
+      tooling: ['CI','Expect a tooling pass','For 22 → 24, inspect nested node:test wrappers and npm 11 behavior. For 24 → 26, provision Corepack explicitly and remove APIs Node 26 deleted.']
+    };
+    const rec = root.querySelector('.recommendation');
+    root.querySelectorAll('[data-choice]').forEach(btn => btn.addEventListener('click', () => { root.querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('selected', b === btn)); const [n,h,p] = recs[btn.dataset.choice]; rec.querySelector('.rec-node').textContent=n; rec.querySelector('h3').textContent=h; rec.querySelector('p').textContent=p; }));
+    const search = root.querySelector('[data-risk-search]');
+    search?.addEventListener('input', () => root.querySelectorAll('[data-risk]').forEach(item => item.toggleAttribute('hidden', !item.dataset.risk.includes(search.value.toLowerCase()))));
+  }
+</script>
+
+<style>
+  .feature{--ink:var(--heading-color);--line:var(--border-color);--soft:var(--surface-2);margin:-1rem 0 0;color:var(--text-color)}
+  :global(.blog-post:has(.feature) .blog-header h1){font-size:clamp(2rem,4vw,3.25rem);line-height:1.08;letter-spacing:-.035em;max-width:1050px;text-wrap:balance}
+  :global(.blog-post:has(.feature) .blog-header){margin-bottom:0;padding-bottom:1.5rem}
+  .hero{display:flex;flex-direction:column;justify-content:center;padding:3.25rem 0;position:relative}.section-heading>span{text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:700;color:var(--accent-color)}
+  .hero h2{font-size:clamp(2.6rem,5.5vw,5rem);line-height:1;letter-spacing:-.055em;margin:0 0 1.5rem;max-width:900px;text-wrap:balance}.hero h2 em{font-style:normal;color:var(--accent-color)}.dek{font-size:clamp(1rem,1.7vw,1.2rem);line-height:1.65;max-width:780px}.hero-actions{display:flex;gap:.75rem;align-items:center;margin:.75rem 0 2.25rem}.primary,.quiet{font:inherit;font-size:.9rem;font-weight:600;border-radius:999px;padding:.7rem 1.05rem;cursor:pointer}.primary{background:var(--accent-fill);color:white}.primary:hover{color:white;background:var(--accent-fill-hover)}.quiet{background:transparent;color:var(--ink);border:1px solid var(--line)}.signal{border-top:1px solid var(--line);padding-top:1.1rem;display:grid;grid-template-columns:140px minmax(0,760px);gap:1rem}.signal span{color:var(--muted-color);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.signal strong{color:var(--ink);font-size:.95rem;line-height:1.55}
+  .path-nav{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden}.path-nav a{display:flex;gap:1rem;padding:1.25rem;color:var(--text-color);background:var(--secondary-bg);border-right:1px solid var(--line)}.path-nav a:last-child{border:0}.path-nav a:hover{background:var(--soft);color:var(--ink)}.path-nav small{color:var(--accent-color);font-weight:700}.path-nav span{line-height:1.4}.path-nav b{color:var(--ink)}
+  .feature-section{padding:4.5rem 0;border-bottom:1px solid var(--line);scroll-margin-top:2rem}.section-heading{max-width:760px;margin-bottom:2rem}.section-heading h2{font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.1;letter-spacing:-.035em;margin:.5rem 0;text-wrap:balance}.section-heading p{color:var(--muted-color);font-size:1rem}
+  .version-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}.version-tabs button,.choice-grid button{font:inherit;text-align:left;background:var(--soft);color:var(--text-color);border:1px solid var(--line);border-radius:10px;padding:1rem;cursor:pointer}.version-tabs button b,.version-tabs button span{display:block}.version-tabs button span{font-size:.75rem;margin-top:.2rem}.version-tabs button[aria-selected="true"]{background:var(--accent-fill);color:white;border-color:var(--accent-fill)}.version-stage{margin-top:1rem}.version-panel{display:none;grid-template-columns:minmax(180px,300px) 1fr;background:var(--soft);border:1px solid var(--line);border-radius:14px;overflow:hidden}.version-panel.active{display:grid}.version-number{font-size:clamp(8rem,22vw,18rem);font-weight:700;line-height:.8;letter-spacing:-.1em;color:color-mix(in srgb,var(--accent-color) 28%,transparent);align-self:end}.version-copy{padding:2.5rem}.status{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.status span{background:var(--accent-fill);color:white;border-radius:999px;padding:.25rem .5rem;margin-right:.5rem}.version-copy h3{font-size:clamp(1.5rem,3vw,2.4rem);line-height:1.15;margin:1rem 0}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}.two-col h4{color:var(--ink);margin-bottom:.7rem}.chip-list,.watch-list{list-style:none!important;padding:0!important}.chip-list{display:flex;flex-wrap:wrap;gap:.45rem}.chip-list li{border:1px solid var(--line);background:var(--secondary-bg);border-radius:999px;padding:.35rem .65rem;font-size:.78rem}.watch-list li{padding-left:1.2rem;position:relative;font-size:.88rem}.watch-list li:before{content:'!';position:absolute;left:0;color:#e99b32;font-weight:700}
+  .deep{border-top:1px solid var(--line);margin-top:1.5rem}.deep summary{cursor:pointer;padding:1.2rem 0;color:var(--ink);font-weight:600;list-style:none}.deep summary::-webkit-details-marker{display:none}.deep summary:after{content:'+';float:right;font-size:1.4rem}.deep[open] summary:after{content:'−'}.deep summary span{font-size:.68rem;text-transform:uppercase;color:var(--accent-color);margin-right:.6rem}.deep>div{max-width:800px;padding:.5rem 0 1.5rem}.deep p{line-height:1.75}.shaded{position:relative}.cap-grid{border:1px solid var(--line);border-radius:12px;overflow:hidden}.cap-row{display:grid;grid-template-columns:1.1fr repeat(3,1fr);border-bottom:1px solid var(--line)}.cap-row:last-child{border:0}.cap-row>*{padding:1rem;border-right:1px solid var(--line)}.cap-row>*:last-child{border:0}.cap-row b{color:var(--ink)}.cap-head{background:var(--soft);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em}.progression{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:1.5rem}.progression i{font-style:normal;background:var(--soft);padding:1rem;font-size:.75rem;border-top:3px solid var(--accent-color)}
+  .choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}.choice-grid button:hover,.choice-grid button.selected{border-color:var(--accent-color);color:var(--ink);background:color-mix(in srgb,var(--accent-color) 9%,var(--soft))}.recommendation{display:grid;grid-template-columns:160px 1fr;gap:2rem;align-items:center;margin-top:1rem;padding:2rem;background:var(--accent-fill);color:white;border-radius:14px}.rec-node{font-size:8rem;font-weight:700;line-height:.8;letter-spacing:-.1em;opacity:.35}.recommendation span{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em}.recommendation h3{color:white;font-size:2rem;margin:.3rem 0}.recommendation p{margin:0;max-width:650px}.caveat{text-align:center;font-size:.72rem;color:var(--muted-color);margin-top:1rem}
+  .risk-search{display:flex;align-items:center;gap:.7rem;border:1px solid var(--line);border-radius:999px;padding:.8rem 1.1rem;background:var(--soft);margin-bottom:1rem}.risk-search input{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font:inherit}.risk-list article{display:grid;grid-template-columns:130px 1fr;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--line)}.risk-route{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-color);font-weight:700}.risk-list h3{font-size:1rem;margin:0 0 .25rem}.risk-list p{margin:0;color:var(--muted-color);font-size:.88rem}.migration-order{margin-top:2rem;padding:1.5rem;border:1px solid var(--line);border-radius:12px}.migration-order>span{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-color);font-weight:700}.migration-order ol{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;counter-reset:steps;list-style:none!important;padding:1rem 0 0!important}.migration-order li{counter-increment:steps;font-weight:600;color:var(--ink)}.migration-order li:before{content:counter(steps,decimal-leading-zero);display:block;color:var(--muted-color);font-size:.7rem;margin-bottom:.25rem}
+  .source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}.source-grid a{padding:1rem;border:1px solid var(--line);border-radius:8px;color:var(--ink);display:flex;justify-content:space-between}.source-grid a:hover{border-color:var(--accent-color)}[hidden]{display:none!important}
+  @media(max-width:760px){:global(.blog-post:has(.feature) .blog-header h1){font-size:2rem}.hero{padding:2.5rem 0}.hero h2{font-size:clamp(2.35rem,11vw,3.2rem)}.signal{grid-template-columns:1fr}.path-nav{grid-template-columns:1fr 1fr}.path-nav a:nth-child(2){border-right:0}.path-nav a:nth-child(-n+2){border-bottom:1px solid var(--line)}.version-panel{grid-template-columns:1fr}.version-number{font-size:8rem;height:5rem;overflow:hidden}.version-copy{padding:1.25rem}.two-col,.choice-grid{grid-template-columns:1fr}.cap-grid{overflow-x:auto}.cap-row{min-width:680px}.recommendation{grid-template-columns:90px 1fr;padding:1.25rem;gap:1rem}.rec-node{font-size:5rem}.migration-order ol,.source-grid{grid-template-columns:1fr 1fr}.feature-section{padding:3.5rem 0}}
+  @media(max-width:480px){.hero-actions{align-items:stretch;flex-direction:column}.path-nav,.source-grid{grid-template-columns:1fr}.path-nav a{border-right:0!important;border-bottom:1px solid var(--line)!important}.path-nav a:last-child{border-bottom:0!important}.version-tabs button span{display:none}.risk-list article{grid-template-columns:1fr;gap:.2rem}.migration-order ol{grid-template-columns:1fr 1fr}.recommendation{grid-template-columns:1fr}.rec-node{font-size:4rem}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>

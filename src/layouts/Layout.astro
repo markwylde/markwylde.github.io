@@ -4,12 +4,14 @@ import avatarVideoMp4 from "../assets/avatar-portrait-140.mp4";
 import ThemeToggle from "../components/ThemeToggle.tsx";
 export interface Props {
   title?: string;
+  description?: string;
   currentPage?: string;
   preloadImages?: Array<{ src: string }>;
 }
 
 const {
   title = "Mark Wylde - Personal Portfolio",
+  description = "Mark Wylde — software engineer, builder and writer.",
   currentPage = "home",
   preloadImages = [],
 } = Astro.props;
@@ -23,6 +25,10 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
 		{preloadImages.map((image) => <link rel="preload" as="image" href={image.src} />)}
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

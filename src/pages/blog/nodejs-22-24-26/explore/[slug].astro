@@ -1,0 +1,35 @@
+---
+import { featureBySlug, nodeFeatures } from "../../../../data/nodeFeatures";
+import Layout from "../../../../layouts/Layout.astro";
+
+export function getStaticPaths() {
+  return nodeFeatures.map((feature) => ({
+    params: { slug: feature.slug },
+    props: { feature },
+  }));
+}
+const { feature } = Astro.props;
+const related = feature.related
+  .map((slug) => featureBySlug.get(slug))
+  .filter(Boolean);
+---
+<Layout title={`${feature.title}: Node.js 22 to 26 - Mark Wylde`} description={feature.summary} currentPage="blog">
+  <section class="section"><div class="container"><article class="detail-panel">
+    <nav class="crumbs"><a href="/blog/nodejs-22-24-26">Briefing</a><span>→</span><a href={`/blog/nodejs-22-24-26/map#${feature.slug}`}>Change map</a><span>→</span><span>{feature.title}</span></nav>
+    <header class="detail-hero"><div><span class="kicker">Node {feature.release} · {feature.areaLabel} · {feature.milestone}</span><h1>{feature.title}</h1><p>{feature.summary}</p></div><a class="map-link" href={`/blog/nodejs-22-24-26/map#${feature.slug}`}>← Find it on the map</a></header>
+    <div class="impact"><span>Why it matters</span><p>{feature.impact}</p></div>
+    <div class="detail-grid"><main>
+      <section><h2>Release timeline</h2><ol class="timeline">{feature.timeline.map(item => <li><b>{item.version}</b><p>{item.text}</p></li>)}</ol></section>
+      {feature.example && <section><h2>Example</h2><pre><code>{feature.example.code}</code></pre></section>}
+      <section><h2>What it enables</h2><ul>{feature.enables.map(item => <li>{item}</li>)}</ul></section>
+      <section><h2>Limits and traps</h2><ul>{feature.limits.map(item => <li>{item}</li>)}</ul></section>
+      <section><h2>Upgrade checks</h2><ol class="checks">{feature.checks.map(item => <li>{item}</li>)}</ol></section>
+      <section><h2>Primary sources</h2><div class="sources">{feature.sources.map(source => <a href={source.url}>{source.label}<span>↗</span></a>)}</div></section>
+    </main><aside><span class="kicker">Related landmarks</span>{related.map(item => <a href={`/blog/nodejs-22-24-26/explore/${item.slug}`}><b>{item.title}</b><p>{item.summary}</p></a>)}</aside></div>
+    <footer><a href={`/blog/nodejs-22-24-26/map#${feature.slug}`}>← Continue exploring the map</a></footer>
+  </article></div></section>
+</Layout>
+<style>
+  .detail-panel{max-width:1100px;margin:0 auto;background:var(--secondary-bg);border:1px solid var(--border-color);border-radius:12px;padding:clamp(1.25rem,4vw,3.5rem)}.crumbs{display:flex;flex-wrap:wrap;gap:.5rem;font-size:.75rem;color:var(--muted-color);margin-bottom:3rem}.detail-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border-color)}.detail-hero>div{max-width:780px}.kicker{display:block;color:var(--accent-color);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem}.detail-hero h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1;letter-spacing:-.05em;margin:0 0 1rem;text-wrap:balance}.detail-hero p{font-size:1.1rem;margin:0}.map-link{white-space:nowrap;font-weight:600}.impact{display:grid;grid-template-columns:150px 1fr;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid var(--border-color)}.impact span{font-size:.68rem;color:var(--accent-color);text-transform:uppercase;font-weight:700}.impact p{font-size:1.05rem;color:var(--heading-color);font-weight:500;margin:0}.detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:3rem;padding-top:2rem}.detail-grid main section{padding:1.5rem 0;border-bottom:1px solid var(--border-color)}.detail-grid h2{font-size:1.55rem}.timeline{list-style:none;padding:0}.timeline li{display:grid;grid-template-columns:90px 1fr;gap:1rem;padding:.7rem 0;border-bottom:1px solid var(--border-color)}.timeline b{color:var(--accent-color)}.timeline p{margin:0}.detail-grid ul,.checks{padding-left:1.25rem}.detail-grid li{margin:.55rem 0}.checks li::marker{color:var(--accent-color);font-weight:700}pre{background:var(--surface-2);border:1px solid var(--border-color);border-radius:9px;padding:1.25rem;overflow:auto}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.sources{display:grid;gap:.5rem}.sources a{display:flex;justify-content:space-between;border:1px solid var(--border-color);border-radius:8px;padding:.75rem}.detail-grid aside{align-self:start;position:sticky;top:1rem}.detail-grid aside>a{display:block;border-top:1px solid var(--border-color);padding:1rem 0;color:var(--text-color)}.detail-grid aside b{color:var(--heading-color)}.detail-grid aside p{font-size:.76rem;margin:.35rem 0 0;color:var(--muted-color)}footer{padding-top:2rem;margin-top:2rem;border-top:1px solid var(--border-color);font-weight:600}
+  @media(max-width:760px){.detail-hero{align-items:flex-start;flex-direction:column}.detail-hero h1{font-size:2.8rem}.impact,.detail-grid{grid-template-columns:1fr}.detail-grid{gap:1rem}.detail-grid aside{position:static}.timeline li{grid-template-columns:70px 1fr}}
+</style>

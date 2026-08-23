@@ -1,0 +1,8 @@
+---
+import NodeChangeMap from "../../../components/NodeChangeMap.astro";
+import Layout from "../../../layouts/Layout.astro";
+---
+<Layout title="The Node.js Change Map - Mark Wylde" description="Explore how modules, TypeScript, tooling, Web APIs, security and compatibility changed from Node.js 22 to 26." currentPage="blog">
+  <section class="section"><div class="container"><div class="content-panel map-panel"><NodeChangeMap /></div></div></section>
+</Layout>
+<style>.map-panel{max-width:1400px;margin:0 auto;padding:clamp(1.25rem,3vw,3rem)}</style>

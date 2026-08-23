@@ -1,0 +1,96 @@
+---
+import { mapLandmarks } from "../data/nodeFeatures";
+
+const areas = [
+  ["all", "All regions"],
+  ["modules", "Modules"],
+  ["typescript", "TypeScript"],
+  ["web", "Web platform"],
+  ["tooling", "Tooling"],
+  ["security", "Security"],
+  ["packaging", "Packaging"],
+  ["compatibility", "Compatibility"],
+];
+const journeys = [
+  {
+    id: "typescript",
+    label: "Trace native TypeScript",
+    stops: ["ts-introduced", "ts-default", "ts-stable", "ts-transform-removed"],
+  },
+  {
+    id: "web",
+    label: "Trace the Web platform",
+    stops: ["websocket", "urlpattern", "undici-7", "temporal", "undici-8"],
+  },
+  {
+    id: "upgrade",
+    label: "Trace upgrade hazards",
+    stops: [
+      "abi-127",
+      "test-subtests",
+      "abi-137",
+      "corepack-removed",
+      "legacy-removed",
+      "abi-147",
+    ],
+  },
+];
+const byId = new Map(mapLandmarks.map((item) => [item.id, item]));
+const pathFor = (stops: string[]) =>
+  stops
+    .map((id, i) => {
+      const p = byId.get(id);
+      return p ? `${i ? "L" : "M"}${p.x} ${p.y}` : "";
+    })
+    .join(" ");
+const defaultLandmark = byId.get("ts-introduced") ?? mapLandmarks[0];
+---
+<section class="map-shell" data-node-map>
+ <header class="map-intro"><div><span class="kicker">The Node.js change map</span><h1>One ecosystem, three years of change</h1><p>Subjects form the landscape. The vertical borders show when each change landed. Pick a landmark, follow a route, or head south to find upgrade hazards.</p></div><a href="/blog/nodejs-22-24-26">← Back to the briefing</a></header>
+ <div class="map-controls">
+  <label class="map-search"><span>Find</span><input type="search" placeholder="TypeScript, permissions, Corepack…" data-map-search /></label>
+  <div class="control-row"><div class="filters" aria-label="Filter by region">{areas.map(([value,label],i)=><button type="button" data-area={value} aria-pressed={i===0?"true":"false"}>{label}</button>)}</div><p data-result-count>{mapLandmarks.length} landmarks shown</p></div>
+  <div class="journeys" aria-label="Trace a route"><span>Follow a route</span>{journeys.map(j=><button type="button" data-journey-button={j.id} aria-pressed="false">{j.label}</button>)}<button type="button" data-clear-route hidden>Clear</button></div>
+ </div>
+ <div class="map-layout">
+  <div class="map-viewport"><svg class="map" viewBox="0 0 1200 800" role="img" aria-labelledby="map-title map-desc">
+   <title id="map-title">Node.js feature landscape from version 22 to 26</title><desc id="map-desc">A subject-led landscape with vertical release eras and connected feature milestones.</desc>
+   <defs><pattern id="contours" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="currentColor" stroke-opacity=".05"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+   <rect class="water" width="1200" height="800"/><image class="map-art" href="/nodejs-change-map.png" x="0" y="0" width="1200" height="800" preserveAspectRatio="xMidYMid meet" aria-hidden="true"/><rect class="grid" width="1200" height="800" fill="url(#contours)"/>
+   <g class="era-bands" aria-hidden="true"><rect x="55" y="48" width="360" height="676"/><rect x="415" y="48" width="390" height="676"/><rect x="805" y="48" width="340" height="676"/></g>
+   <path class="mainland" aria-hidden="true" d="M55 105C150 55 260 70 340 105C430 65 540 62 620 100C720 55 855 67 930 112C1035 80 1130 125 1145 205C1160 280 1115 335 1135 405C1155 485 1110 555 1132 630C1142 690 1060 716 965 698C860 735 755 692 665 708C565 730 470 690 385 712C280 730 185 697 95 655C42 605 67 520 48 445C25 360 73 310 52 235C36 180 24 132 55 105Z"/>
+   <g class="regions" aria-hidden="true">
+    <path class="modules" d="M65 76C150 46 255 67 335 54C455 34 565 72 670 59C731 54 781 83 768 132C757 173 684 173 620 164C518 149 457 185 353 166C253 149 182 190 91 164C42 150 25 103 65 76Z"/>
+    <path class="typescript" d="M135 194C226 155 330 184 424 168C535 150 636 178 739 166C853 151 970 175 1084 157C1136 150 1170 188 1142 225C1106 270 1002 253 923 271C817 293 724 265 621 282C513 302 415 269 314 286C222 302 131 277 103 238C89 216 107 203 135 194Z"/>
+    <path class="web" d="M58 312C148 278 245 303 335 289C452 270 535 307 638 294C747 279 833 311 938 290C1036 270 1138 296 1161 340C1185 387 1095 414 1004 398C906 381 825 416 720 400C608 383 519 418 412 399C304 380 222 420 116 396C49 382 18 337 58 312Z"/>
+    <path class="tooling" d="M82 427C183 398 272 432 375 412C480 393 558 429 660 411C760 394 848 430 946 410C1030 393 1112 417 1144 454C1175 490 1119 534 1030 519C919 501 846 544 735 522C629 501 541 545 438 521C342 499 254 536 155 516C80 500 32 455 82 427Z"/>
+    <path class="security" d="M268 548C376 516 490 553 589 535C696 515 794 552 895 532C993 513 1095 537 1122 575C1147 612 1081 639 998 628C890 613 805 647 703 626C600 606 516 640 411 625C320 612 240 587 268 548Z"/>
+    <path class="compatibility" d="M82 649C177 624 265 660 362 641C477 618 566 662 674 641C784 620 871 661 977 637C1063 618 1145 650 1167 689C1181 715 1154 728 1102 724H126C74 718 42 681 82 649Z"/>
+   </g>
+   <g class="region-labels" aria-hidden="true"><text x="470" y="92">MODULE PASSAGE</text><text x="105" y="188">TYPED HIGHLANDS</text><text x="72" y="462">WEB COAST</text><text x="430" y="385">TOOLING COMMONS</text><text x="855" y="260">SECURITY RIDGE</text><text x="400" y="650">COMPATIBILITY REEFS</text></g>
+   <g class="era-borders" aria-hidden="true"><path d="M415 48C390 155 438 220 405 322C378 420 438 522 411 724"/><path d="M805 48C837 150 781 236 811 334C842 432 781 526 806 724"/></g>
+   <g class="era-labels" aria-hidden="true"><text x="88" y="35">NODE 22 <tspan>2024</tspan></text><text x="456" y="35">NODE 24 <tspan>2025</tspan></text><text x="844" y="35">NODE 26 <tspan>2026</tspan></text></g>
+   <g class="journey-paths" aria-hidden="true">{journeys.map(j=><path data-journey-path={j.id} d={pathFor(j.stops)}/>)}</g>
+   <g class="continuity" aria-hidden="true"><path d="M315 440C460 420 585 435 730 445"/><path d="M360 590C570 572 790 596 1000 575"/></g>
+   <g class="landmarks">{mapLandmarks.map(item=><a href={`/blog/nodejs-22-24-26/explore/${item.detailSlug}`} class:list={["landmark",`area-${item.area}`,`kind-${item.kind}`,item.journey&&`journey-${item.journey}`,{selected:item.id===defaultLandmark.id}]} data-landmark={item.id} data-area={item.area} data-search={`${item.label} ${item.summary} ${item.version}`.toLowerCase()} aria-label={`${item.label}, Node ${item.version}. ${item.summary}`}><g transform={`translate(${item.x} ${item.y})`}>{item.kind==="risk"?<path class="marker" d="M0-11 11 0 0 11-11 0Z"/>:item.kind==="milestone"?<rect class="marker" x="-8" y="-8" width="16" height="16" rx="3"/>:<circle class="marker" r="9"/>}<text class="version" x="13" y="-12">{item.version}</text><text class="label" x="0" y="26" text-anchor="middle">{item.label}</text><text class="route-number" x="0" y="4" text-anchor="middle" data-route-number></text></g></a>)}</g>
+  </svg></div>
+  <aside class="map-card" aria-live="polite" data-map-card><div class="card-meta"><span data-card-area>{defaultLandmark.area}</span><span data-card-version>{defaultLandmark.version}</span></div><h2 data-card-title>{defaultLandmark.label}</h2><p data-card-summary>{defaultLandmark.summary}</p><a href={`/blog/nodejs-22-24-26/explore/${defaultLandmark.detailSlug}`} data-card-link>Explore this feature <span>→</span></a><div class="route-nav" data-route-nav hidden><button type="button" data-route-prev>← Previous</button><span data-route-progress></span><button type="button" data-route-next>Next →</button></div></aside>
+ </div>
+ <div class="legend"><span><i class="f"></i> Feature</span><span><i class="m"></i> Milestone</span><span><i class="r"></i> Upgrade risk</span><span><i class="b"></i> Release boundary</span></div>
+ <section class="feature-index"><div><span class="kicker">All landmarks</span><h2>Explore as a list</h2></div><div class="feature-list">{mapLandmarks.map(item=><a href={`/blog/nodejs-22-24-26/explore/${item.detailSlug}`} data-list-id={item.id}><span>Node {item.version} · {item.area}</span><b>{item.label}</b><p>{item.summary}</p></a>)}</div></section>
+</section>
+<script type="application/json" data-map-data set:html={JSON.stringify(mapLandmarks)}/><script type="application/json" data-journey-data set:html={JSON.stringify(journeys)}/>
+<script>
+ const root=document.querySelector('[data-node-map]');if(root){const data=JSON.parse(root.querySelector('[data-map-data]').textContent),journeys=JSON.parse(root.querySelector('[data-journey-data]').textContent),nodes=[...root.querySelectorAll('[data-landmark]')],lists=[...root.querySelectorAll('[data-list-id]')],card=root.querySelector('[data-map-card]');let selected='ts-introduced',active=null,index=0;
+ const select=id=>{const item=data.find(x=>x.id===id);if(!item)return;selected=id;nodes.forEach(n=>n.classList.toggle('selected',n.dataset.landmark===id));card.querySelector('[data-card-area]').textContent=item.area;card.querySelector('[data-card-version]').textContent=item.version;card.querySelector('[data-card-title]').textContent=item.label;card.querySelector('[data-card-summary]').textContent=item.summary;card.querySelector('[data-card-link]').href=`/blog/nodejs-22-24-26/explore/${item.detailSlug}`;history.replaceState(null,'',`#${id}`)};
+ nodes.forEach(n=>{n.addEventListener('mouseenter',()=>select(n.dataset.landmark));n.addEventListener('focus',()=>select(n.dataset.landmark));n.addEventListener('click',e=>{if(selected!==n.dataset.landmark){e.preventDefault();select(n.dataset.landmark)}})});
+ const filter=()=>{const q=root.querySelector('[data-map-search]').value.toLowerCase(),area=root.querySelector('[data-area][aria-pressed="true"]').dataset.area;let count=0;nodes.forEach(n=>{const show=(!q||n.dataset.search.includes(q))&&(area==='all'||n.dataset.area===area);n.classList.toggle('filtered',!show);if(show)count++});lists.forEach(item=>item.hidden=!nodes.find(n=>n.dataset.landmark===item.dataset.listId&&!n.classList.contains('filtered')));root.querySelector('[data-result-count]').textContent=`${count} landmark${count===1?'':'s'} shown`};root.querySelector('[data-map-search]').addEventListener('input',filter);root.querySelectorAll('[data-area]').forEach(b=>b.addEventListener('click',()=>{root.querySelectorAll('[data-area]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));filter()}));
+ const showJourney=(id,i=0)=>{active=journeys.find(j=>j.id===id);if(!active)return;index=Math.max(0,Math.min(i,active.stops.length-1));root.classList.add('tracing');root.querySelectorAll('[data-journey-button]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.journeyButton===id)));root.querySelectorAll('[data-journey-path]').forEach(p=>p.classList.toggle('active',p.dataset.journeyPath===id));nodes.forEach(n=>{const k=active.stops.indexOf(n.dataset.landmark);n.classList.toggle('on-route',k>=0);n.querySelector('[data-route-number]').textContent=k>=0?String(k+1):''});root.querySelector('[data-clear-route]').hidden=false;root.querySelector('[data-route-nav]').hidden=false;root.querySelector('[data-route-progress]').textContent=`${index+1} / ${active.stops.length}`;select(active.stops[index])};root.querySelectorAll('[data-journey-button]').forEach(b=>b.addEventListener('click',()=>showJourney(b.dataset.journeyButton)));root.querySelector('[data-route-prev]').addEventListener('click',()=>showJourney(active.id,index-1));root.querySelector('[data-route-next]').addEventListener('click',()=>showJourney(active.id,index+1));root.querySelector('[data-clear-route]').addEventListener('click',()=>{active=null;root.classList.remove('tracing');root.querySelectorAll('[data-journey-button]').forEach(b=>b.setAttribute('aria-pressed','false'));root.querySelectorAll('[data-journey-path]').forEach(p=>p.classList.remove('active'));nodes.forEach(n=>{n.classList.remove('on-route');n.querySelector('[data-route-number]').textContent=''});root.querySelector('[data-clear-route]').hidden=true;root.querySelector('[data-route-nav]').hidden=true});const initial=location.hash.slice(1);if(data.some(x=>x.id===initial))select(initial)}
+</script>
+<style>
+ .map-shell{--water:var(--surface-2);color:var(--text-color)}.map-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;margin-bottom:2rem}.map-intro>div{max-width:800px}.kicker{display:block;color:var(--accent-color);font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem}.map-intro h1{font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.02;letter-spacing:-.045em;margin:0 0 1rem;text-wrap:balance}.map-intro p{font-size:1.05rem;max-width:720px}.map-controls{border-top:1px solid var(--border-color);padding-top:1.25rem}.map-search{display:flex;gap:1rem;align-items:center;background:var(--surface-2);border:1px solid var(--border-color);border-radius:999px;padding:.7rem 1rem}.map-search span,.journeys>span{font-size:.68rem;text-transform:uppercase;color:var(--muted-color);font-weight:700}.map-search input{border:0;outline:0;background:transparent;color:var(--heading-color);font:inherit;width:100%}.control-row{display:flex;justify-content:space-between;gap:1rem}.filters,.journeys{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.75rem}.filters button,.journeys button{font:inherit;font-size:.74rem;color:var(--text-color);background:transparent;border:1px solid var(--border-color);border-radius:999px;padding:.38rem .68rem;cursor:pointer}.filters button[aria-pressed="true"],.journeys button[aria-pressed="true"]{background:var(--accent-fill);border-color:var(--accent-fill);color:white}.journeys{align-items:center;padding-top:.75rem;border-top:1px solid var(--border-color)}.journeys .clear-route{border:0;color:var(--accent-color)}[data-result-count]{font-size:.72rem;color:var(--muted-color);white-space:nowrap}.map-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:1rem;margin-top:1.5rem}.map-viewport{overflow:auto;background:var(--water);border:1px solid var(--border-color);border-radius:14px}.map{display:block;width:100%;min-width:900px;color:var(--text-color)}.water{fill:var(--water)}.map-art{filter:saturate(.88) brightness(.72)}.grid{color:#d7dcef}.era-bands rect{fill:#858cff;opacity:.028}.era-bands rect:nth-child(2){opacity:.05}.mainland{display:none}.regions path{fill:transparent;stroke:rgba(166,175,255,.14);stroke-width:1.5}.regions .typescript,.regions .tooling{fill:transparent}.regions .compatibility{fill:rgba(217,148,54,.08);stroke:#d99436;stroke-dasharray:3 6}.region-labels text{fill:#c9d0e8;font-size:10px;font-weight:700;letter-spacing:.15em;opacity:.78}.era-borders path{fill:none;stroke:#a8adff;stroke-width:2;stroke-dasharray:5 7;opacity:.42}.era-labels text{fill:#f6f7ff;font-size:13px;font-weight:700;letter-spacing:.09em}.era-labels tspan{fill:#c9d0e8;font-size:10px;font-weight:400}.journey-paths path,.continuity path{fill:none;stroke:#9ba2ff;stroke-width:3;stroke-dasharray:5 8;opacity:.25}.journey-paths path.active{stroke-width:5;opacity:1;stroke-dasharray:none;filter:url(#glow)}.landmark{outline:none;transition:opacity .2s}.marker{fill:#0b1425;stroke:#9ba2ff;stroke-width:3}.kind-risk .marker{stroke:#efa93c}.version{fill:#b7bbff;font-size:8px;font-weight:700;paint-order:stroke;stroke:#071222;stroke-width:3px}.label{fill:#f6f7ff;font-size:10px;font-weight:600;paint-order:stroke;stroke:#071222;stroke-width:4px;stroke-linejoin:round}.route-number{fill:#fff;font-size:8px;font-weight:700}.selected .marker,.landmark:focus .marker{stroke-width:6;filter:url(#glow)}.landmark:hover .marker{stroke-width:5}.filtered{opacity:.08;pointer-events:none}.tracing .landmark:not(.on-route){opacity:.14}.tracing .on-route .marker{fill:#4f46e5;stroke-width:4}.map-card{align-self:start;position:sticky;top:1rem;background:var(--surface-2);border:1px solid var(--border-color);border-radius:14px;padding:1.25rem}.card-meta{display:flex;justify-content:space-between;color:var(--accent-color);font-size:.66rem;text-transform:uppercase;font-weight:700}.map-card h2{font-size:1.55rem;margin:1rem 0 .65rem}.map-card>p{font-size:.86rem;min-height:5em}.map-card>a{display:flex;justify-content:space-between;font-weight:700}.route-nav{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border-color);margin-top:1rem;padding-top:1rem}.route-nav button{font:inherit;font-size:.7rem;background:transparent;color:var(--accent-color);border:0}.route-nav span{font-size:.68rem;color:var(--muted-color)}.legend{display:flex;flex-wrap:wrap;gap:1.25rem;margin:1rem 0;font-size:.72rem;color:var(--muted-color)}.legend span{display:flex;align-items:center;gap:.4rem}.legend i{display:inline-block}.legend .f{width:10px;height:10px;border:2px solid var(--accent-color);border-radius:50%}.legend .m{width:9px;height:9px;border:2px solid var(--accent-color)}.legend .r{width:9px;height:9px;border:2px solid #d99436;transform:rotate(45deg)}.legend .b{width:20px;border-top:2px dashed var(--accent-color)}.feature-index{padding:4rem 0}.feature-index>div:first-child{display:flex;align-items:baseline;gap:1rem}.feature-index h2{font-size:1.8rem}.feature-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}.feature-list a{border:1px solid var(--border-color);border-radius:10px;padding:1rem;color:var(--text-color)}.feature-list span{font-size:.64rem;color:var(--accent-color);text-transform:uppercase;font-weight:700}.feature-list b{display:block;color:var(--heading-color);margin:.25rem 0}.feature-list p{font-size:.8rem;color:var(--muted-color);margin:0}
+ .map-art{filter:saturate(.82) brightness(.76)}.regions path{display:none}
+ @media(max-width:900px){.map-layout{grid-template-columns:1fr}.map-card{position:static}.map{width:1050px}.map-intro{align-items:flex-start;flex-direction:column}.feature-list{grid-template-columns:1fr}.control-row{flex-direction:column}}
+ @media(max-width:520px){.map-intro h1{font-size:2.35rem}.filters,.journeys{flex-wrap:nowrap;overflow:auto;padding-bottom:.35rem}.filters button,.journeys button{white-space:nowrap}.map{width:1050px}.map-viewport{margin-left:-1rem;margin-right:-1rem;border-radius:0}}
+ @media(prefers-reduced-motion:reduce){.landmark{transition:none}}
+</style>
