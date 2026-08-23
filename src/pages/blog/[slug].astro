@@ -219,12 +219,150 @@ const { Content } = await render(entry);
 		border-bottom: 1px solid var(--border-color);
 	}
 
+	/* jump nav: quick anchors to skip straight to a section */
+	.blog-content :global(.jump-nav) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 1.5rem 0 2.5rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.blog-content :global(.jump-nav a) {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 0.82rem;
+		font-weight: 500;
+		color: var(--text-color);
+		background-color: var(--surface-2);
+		border: 1px solid var(--border-color);
+		border-radius: 999px;
+		padding: 6px 14px;
+		text-decoration: none;
+		transition: all 0.15s ease;
+	}
+
+	.blog-content :global(.jump-nav a:hover) {
+		border-color: var(--accent-color);
+		color: var(--accent-color);
+		text-decoration: none;
+	}
+
+	.blog-content :global(.jump-nav .n) {
+		color: var(--muted-color);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* self-contained card around each interactive tool: heading + short
+	   lead + the widget, so it reads as one distinct chunk, not more prose */
+	.blog-content :global(.tool-section) {
+		background-color: var(--surface-2);
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+		padding: 0.5rem 1.75rem 1.75rem;
+		margin: 2.5rem 0;
+	}
+
+	.blog-content :global(.tool-section h2) {
+		margin-top: 1.5rem;
+	}
+
+	.blog-content :global(.tool-section > p) {
+		color: var(--muted-color);
+		margin-bottom: 1.25rem;
+	}
+
+	.blog-content :global(.tool-kicker) {
+		display: block;
+		font-size: 0.76rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--accent-color);
+		margin-top: 1.5rem;
+	}
+
+	.blog-content :global(.tool-section .tool-kicker) {
+		margin-top: 0;
+		padding-top: 1.5rem;
+	}
+
+	/* collapsible deep-dive sections: styled like clickable cards instead
+	   of the bare browser default, so "drill down" reads as an action */
+	.blog-content :global(details) {
+		border: 1px solid var(--border-color);
+		border-radius: 10px;
+		margin: 0.75rem 0;
+		background-color: var(--secondary-bg);
+		overflow: hidden;
+	}
+
+	.blog-content :global(details > summary) {
+		cursor: pointer;
+		list-style: none;
+		padding: 1rem 1.25rem;
+		font-weight: 600;
+		color: var(--heading-color);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.blog-content :global(details > summary::-webkit-details-marker) {
+		display: none;
+	}
+
+	.blog-content :global(details > summary::before) {
+		content: "▸";
+		display: inline-block;
+		color: var(--accent-color);
+		transition: transform 0.15s ease;
+		flex-shrink: 0;
+	}
+
+	.blog-content :global(details[open] > summary::before) {
+		transform: rotate(90deg);
+	}
+
+	.blog-content :global(details > summary:hover) {
+		background-color: var(--primary-bg);
+	}
+
+	.blog-content :global(details > *:not(summary)) {
+		padding: 0 1.25rem;
+	}
+
+	.blog-content :global(details > *:last-child) {
+		padding-bottom: 1.25rem;
+	}
+
+	.blog-content :global(details > summary ~ p:first-of-type) {
+		margin-top: 0;
+	}
+
 	@media (max-width: 768px) {
 		.blog-content :global(.demo-band) {
 			margin-left: -1rem;
 			margin-right: -1rem;
 			padding-left: 1rem;
 			padding-right: 1rem;
+		}
+
+		.blog-content :global(.tool-section) {
+			padding: 0.5rem 1rem 1rem;
+			margin: 1.75rem 0;
+		}
+
+		.blog-content :global(.jump-nav) {
+			gap: 6px;
+			margin: 1.25rem 0 2rem;
+		}
+
+		.blog-content :global(.jump-nav a) {
+			font-size: 0.78rem;
+			padding: 5px 11px;
 		}
 
 		.blog-header {

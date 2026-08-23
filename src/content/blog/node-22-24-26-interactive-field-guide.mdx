@@ -1,0 +1,207 @@
+---
+title: "Node.js 22, 24, 26: An Interactive Field Guide"
+date: "2026-08-23"
+tags: ["Node.js", "JavaScript", "TypeScript", "DevOps", "Runtime"]
+excerpt: "Node 22, 24 and 26 are three different bets about how the runtime should work. Skim the summary up top, then use the decision tool, timeline, feature explorer and migration checklist to dig into whatever part you actually care about."
+---
+
+import FeatureExplorer from "../../components/nodeguide/FeatureExplorer.tsx";
+import MigrationChecklist from "../../components/nodeguide/MigrationChecklist.tsx";
+import PitfallsTable from "../../components/nodeguide/PitfallsTable.tsx";
+import RecommenderTool from "../../components/nodeguide/RecommenderTool.tsx";
+import VersionCards from "../../components/nodeguide/VersionCards.tsx";
+import VersionTimeline from "../../components/nodeguide/VersionTimeline.tsx";
+
+Node 22, 24 and 26 are three different bets on how the runtime should work: **module-system modernisation**, then **tooling and Web-platform consolidation**, then **runtime modernisation with legacy compatibility ripped out**. Node 22 ("Jod") is an LTS line, Node 24 ("Krypton") is the latest LTS line, and Node 26 is Current, due to enter LTS in October 2026.
+
+<VersionCards />
+
+<ul className="jump-nav">
+<li><a href="#which-one-should-you-use"><span className="n">1</span> Decide</a></li>
+<li><a href="#how-we-got-here"><span className="n">2</span> Timeline</a></li>
+<li><a href="#explore-every-capability"><span className="n">3</span> Every capability</a></li>
+<li><a href="#plan-your-own-migration"><span className="n">4</span> Migration plan</a></li>
+<li><a href="#the-deep-dive-one-line-at-a-time"><span className="n">5</span> Deep dive</a></li>
+<li><a href="#cross-version-pitfalls"><span className="n">6</span> Pitfalls</a></li>
+<li><a href="#where-does-that-leave-us-today"><span className="n">7</span> Where does that leave us?</a></li>
+</ul>
+
+<div className="tool-section">
+<span className="tool-kicker">1 · Decide</span>
+
+## Which one should you use?
+
+Tell it what matters to you and it'll rank the three lines against your priorities, live.
+
+<RecommenderTool client:visible />
+</div>
+
+<div className="tool-section">
+<span className="tool-kicker">2 · Timeline</span>
+
+## How we got here
+
+Three major releases, roughly a year apart, plus a long tail of backports. Several of the most important capabilities below shipped well after their line's `.0.0` release, not with it.
+
+<VersionTimeline client:visible />
+</div>
+
+**"Version capability" and "feature introduction" aren't the same thing.** Node backports safe features to maintained LTS lines routinely. Type stripping first appeared in v22.6.0, became default in v22.18.0, but didn't become *stable* until v24.12.0. `import.meta.main` appeared in v24.2.0 and was backported to v22.18.0 too. Treat every "since" below as load-bearing.
+
+<div className="tool-section">
+<span className="tool-kicker">3 · Every capability</span>
+
+## Explore every capability
+
+24 capabilities across module system, TypeScript, Web APIs, testing, security and packaging, searchable instead of one long table.
+
+<FeatureExplorer client:visible />
+</div>
+
+<div className="tool-section">
+<span className="tool-kicker">4 · Migration plan</span>
+
+## Plan your own migration
+
+Two hops are covered here: 22 to 24, and 24 to 26.
+
+<MigrationChecklist client:visible />
+</div>
+
+<span className="tool-kicker">5 · Deep dive</span>
+
+## The deep dive, one line at a time
+
+Everything above is the map. What follows is the terrain. Expand whichever line you need to reason about. If you just needed the decision, you already have it.
+
+<details id="node-22">
+<summary>Node.js v22 ("Jod"): the interoperability release</summary>
+
+Node 22.0.0 shipped on **24 April 2024**. Its defining theme is making Node feel less divided between "old Node" convention and modern JavaScript/Web convention: ESM becomes easier to consume from CommonJS, browser-style `WebSocket` support becomes built in, watch mode becomes production-quality, and ordinary dev commands increasingly need fewer external packages.
+
+The headline change is `require(esm)`. In 22.0.0 it shipped behind `--experimental-require-module`; from **22.12.0** it no longer needed the flag; from **22.13.0** it stopped warning by default. It's deliberately limited to synchronous module graphs. If the target or anything it imports contains top-level `await`, `require()` throws `ERR_REQUIRE_ASYNC_MODULE` and you reach for `import()` instead:
+
+```js
+// math.mjs
+export const square = x => x * x;
+
+// app.cjs (Node 22.12+, no flag needed)
+const { square } = require('./math.mjs');
+console.log(square(5)); // 25
+```
+
+This fixes the "ESM-only dependency breaks my CommonJS app" problem, for synchronous graphs. It still can't make asynchronous ESM load synchronously, and the interop returns a module namespace object rather than a default export unless the package opts into the special `module.exports` interop.
+
+The other major later-line addition is the **module compile cache** (introduced 22.1, JS API from 22.8): Node persists V8 code cache for CommonJS, ESM and TypeScript modules, so repeat launches of an unchanged module graph compile faster. First run is a little slower, because Node has to build the cache.
+
+```js
+import { enableCompileCache } from 'node:module';
+enableCompileCache();
+```
+
+And **built-in TypeScript**: type stripping arrived in 22.6.0 and became default (no flag, no warning) in 22.18.0. It's not a compiler. There's no type checking, `tsconfig.json` is ignored, and only erasable syntax gets handled.
+
+```ts
+// app.ts (runs directly on Node 22.18+)
+type User = { id: number; name: string };
+const user: User = { id: 1, name: 'Ada' };
+console.log(user.name);
+```
+
+**What v22 lets you do that v20 didn't:** a built-in `WebSocket` client by default; `node --run <script>` and stable watch mode; first-party `fs.glob()`/`globSync()`; synchronous `require()` of suitable ESM graphs; Node-managed compile caching; and, on the later releases in the line, native execution of a useful subset of TypeScript.
+
+</details>
+
+<details id="node-24">
+<summary>Node.js v24 ("Krypton"): the consolidation release</summary>
+
+Node 24.0.0 shipped on **6 May 2025**. Compared with v22, it's less about one revolutionary module change and more about making recent innovations coherent and production-ready: newer ECMAScript syntax, npm 11, a stronger Web-platform surface, more reliable async context propagation, and simpler test semantics.
+
+`URLPattern` becoming global gives you a standards-based URL matcher instead of hand-rolled routing regex:
+
+```js
+const users = new URLPattern({ pathname: '/users/:id' });
+const match = users.exec('https://example.com/users/42');
+console.log(match.pathname.groups.id); // "42"
+```
+
+V8 13.6 also brings `RegExp.escape()` (safe literal escaping without a userland helper), explicit resource management (`using` blocks with `Symbol.dispose`), `Float16Array`, and WebAssembly Memory64.
+
+The test runner semantics change here is a real breaking change. `node:test` now automatically waits for subtests, and `test()`/`t.test()` no longer behaves like a returned promise. Code written as `return t.test(...).then(...)` needs rewriting:
+
+```js
+test('parent', t => {
+  t.test('child', () => assert.equal(2 + 2, 4));
+  // the parent automatically waits for the child now
+});
+```
+
+At **24.12.0**, type stripping is marked **stable**. It's still only stripping (no type checking, `tsconfig.json` still ignored), but from here it's a supported guarantee instead of a transitional one. The module compile cache also gains a **portable mode** in 24.12.0, meant to survive a project moving to a different absolute path:
+
+```js
+enableCompileCache({ directory: '/cache/node', portable: true });
+```
+
+The `shell: true` deprecation matters most here: calling `spawn()`/`execFile()` with an `args` array and `{ shell: true }` is now deprecated because those arguments are space-separated rather than escaped, a real shell-injection hazard when values are untrusted. Also gone: `url.parse()` (use WHATWG `URL`) and `tls.SecurePair`.
+
+**What v24 gives you that v22 doesn't at the same baseline:** global `URLPattern`; V8 13.6 language features; npm 11; the `AsyncContextFrame`-based `AsyncLocalStorage`; auto-waiting test subtests; and, by 24.12+, stable built-in TypeScript stripping and a portable compile cache.
+
+</details>
+
+<details id="node-26">
+<summary>Node.js v26: the modernisation release</summary>
+
+Node 26.0.0 shipped on **5 May 2026**. It's a bigger jump than 22→24: new language capability arrives at the same time as a large batch of legacy removals. As of 23 August 2026 it's still Current, expected to move to LTS in October 2026.
+
+**`Temporal` is enabled globally, by default, with no flag.** It gives you first-class timezones, DST-aware arithmetic, immutable values and distinct date/time/duration types, instead of one overloaded mutable `Date`:
+
+```js
+const meeting = Temporal.ZonedDateTime.from('2026-10-25T09:30[Europe/London]');
+const later = meeting.add({ hours: 3 });
+```
+
+V8 14.6 adds Map/WeakMap upsert methods, which remove the classic check-then-insert dance:
+
+```js
+const cache = new Map();
+function getRecord(id) {
+  return cache.getOrInsertComputed(id, () => loadRecord(id));
+}
+```
+
+TypeScript support gets simpler and more restrictive at the same time. `--experimental-transform-types` is removed outright, and the supported model is now strictly erasable-syntax stripping. Code that needs TypeScript to generate JavaScript, like legacy `enum` patterns, needs `tsc`/`tsx` or a rewrite.
+
+**`process.permission.drop()`** (from 26.3.0) lets a process irreversibly give up a permission it was granted at startup, a "read config, then lock the door" pattern. It only affects future checks; already-open file descriptors, sockets or workers stay open.
+
+```js
+const config = fs.readFileSync('/etc/myapp/config.json', 'utf8');
+process.permission.drop('fs.read', '/etc/myapp'); // future reads now denied
+```
+
+**`node --build-sea`** now builds a single-executable application directly (inherited from 25.5), instead of the old two-step blob-generation-then-injection dance. Corepack, though, is no longer bundled with Node from v25 onward. A `corepack enable` step in a Dockerfile or CI job that only worked because v24 shipped it will fail on v26 images.
+
+Also gone: `http.Server.prototype.writeHeader()` (use `writeHead()`), the legacy private `_stream_*` modules, and the compatibility exception for short AES-GCM authentication tags without an explicit `authTagLength`.
+
+**What v26 lets you do compared with v24:** Temporal without a flag; V8 14.6 collection/iterator operations; runtime permission dropping; Undici 8; and direct SEA builds. In exchange, it has the largest migration surface of the three transitions covered here.
+
+</details>
+
+<span className="tool-kicker">6 · Pitfalls</span>
+
+## Cross-version pitfalls
+
+These are the symptom, cause and fix combos that actually bite in practice, whichever hop you're making.
+
+<PitfallsTable />
+
+<span className="tool-kicker">7 · Where does that leave us?</span>
+
+## Where does that leave us today?
+
+The tool up top already gives you a personalised answer. If you skipped it: Node 24 is the safe default (latest LTS, npm 11, `URLPattern`, stable TypeScript from 24.12, none of v26's Corepack or cleanup fallout). Node 26 is worth running ahead of its October LTS date specifically for Temporal, permission dropping, or built-in SEA builds. Node 22 still holds up fine on compatibility grounds; its later releases already have the ESM/CJS fix, native TypeScript and a stable permission model.
+
+None of that is a performance argument. Node doesn't publish a delta between the three lines, so benchmark your actual workload before that becomes the reason you move.
+
+---
+
+*Primary sources: the [Node 22](https://nodejs.org/en/blog/release/v22.0.0), [Node 24](https://nodejs.org/en/blog/release/v24.0.0) and [Node 26](https://nodejs.org/en/blog/release/v26.0.0) release notes, the [Node release status page](https://nodejs.org/en/about/previous-releases), the [TypeScript](https://nodejs.org/api/typescript.html), [module](https://nodejs.org/api/module.html), [permissions](https://nodejs.org/api/permissions.html), [deprecations](https://nodejs.org/api/deprecations.html) and [single-executable applications](https://nodejs.org/api/single-executable-applications.html) docs, and the [TC39 Temporal proposal](https://tc39.es/proposal-temporal/).*
