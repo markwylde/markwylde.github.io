@@ -1,0 +1,237 @@
+---
+title: "A look at spec driven development"
+date: "2026-09-02"
+tags: ["Spec-Driven Development", "AI Agents", "Workflow", "Tooling"]
+excerpt: "Code tells you what a system does. Only a document tells you what it should do. I looked at four spec-driven development frameworks to see which of them keeps that second thing, and I'm moving my projects to OpenSpec: the only one that separates the feature from the work that implements it. Explore all four repo trees side by side."
+---
+
+import LayerMatrix from "../../components/specs/LayerMatrix.tsx";
+import TreeExplorer from "../../components/specs/TreeExplorer.tsx";
+
+I have a folder convention I've been using for a while, and it's simple enough to write out in full:
+
+```
+./features
+  notes.md
+  favourites.md
+  tags.md
+
+./tasks
+  1-implement-database-orm.md
+  2-initiate-notes-crud.md
+  ...
+```
+
+Everything is organised around the feature. Tasks are separate, numbered globally, and one task might cross several features. The ORM work underpins notes, tags and favourites all at once, so it doesn't belong to any of them.
+
+I went looking at the current spec-driven development frameworks to see which one matched. Most of them disagree with me, and they disagree with each other about why.
+
+I've settled on OpenSpec, and I'm moving my projects over to it. It's the only one of the four that keeps the feature separate from the work that implements it. `openspec/specs/notes/spec.md` says what notes is for and stays put; the changes that build notes fold their deltas into it and then archive. The other three make a folder per increment and call that a spec, so the answer to "what is notes supposed to do" ends up spread across however many increments have touched it, with nothing to reconcile them.
+
+<ul className="jump-nav">
+<li><a href="#does-and-should"><span className="n">1</span> Does, and should</a></li>
+<li><a href="#explore-all-four"><span className="n">2</span> Explore all four</a></li>
+<li><a href="#spec-kit"><span className="n">3</span> Spec Kit</a></li>
+<li><a href="#superpowers"><span className="n">4</span> Superpowers</a></li>
+<li><a href="#bmad"><span className="n">5</span> BMAD</a></li>
+<li><a href="#openspec"><span className="n">6</span> OpenSpec</a></li>
+<li><a href="#what-happens-to-tasks"><span className="n">7</span> What happens to ./tasks</a></li>
+</ul>
+
+## Does, and should
+
+Current behaviour is derivable. It's in the code. If I want to know what notes does today I can read `src/` or run the app. A markdown file describing current behaviour is a second copy of something I already have, and it goes quietly wrong the first time someone merges a fix without updating it.
+
+What isn't derivable is what the system is supposed to do.
+
+<p className="pullout">Code tells you what a system does. Only a document tells you what it should do.</p>
+
+The obvious objection is that the tasks already give me this. Fold the log and you get the system, like replaying a state machine. That works, up to a point: replaying every task tells you how the thing got where it is. Three things don't survive the fold:
+
+- **Prohibitions.** "Notes are never hard-deleted, only archived" constrains code nobody has written yet. Its absence from `src/` is indistinguishable from nobody having got to it.
+- **Rationale.** Why archive rather than delete. A log records what was done, never what was rejected on the way.
+- **The gap.** The distance between should and does is the work. A document that only ever described current behaviour has a gap of zero by construction, so it can't generate work.
+
+That last one is why I split features from tasks. `./features/notes.md` says where notes ought to be, the numbered tasks close the distance, and when the two disagree it's the code that has the bug. That only holds if the file describes intent rather than reporting behaviour.
+
+<aside className="callout callout-aside">
+<span className="callout-label">Not a new idea</span>
+
+Requirements engineering has had a word for this since the nineties. Jackson and Zave separate the **indicative**, what is true of the world, from the **optative**, what you want to be true and are building the machine to bring about. A spec is optative. Code is indicative. I spent a while reinventing this badly before finding out it was named.
+</aside>
+
+## Telling them apart
+
+Spec Kit's own docs name the axis: **spec persistence**. A *spec-first* framework writes the spec, builds from it and discards it. A *spec-anchored* one keeps the spec and edits it for the next change. My convention is spec-anchored, and I'd been using it without knowing there was a term for it.
+
+The crude version, the one you can answer by opening a repo, is to ask what survives the implementation. Not which files are still on disk, since all four keep everything. Which files you'd open and edit six months later, rather than read as history.
+
+It's a proxy and it leaks. It catches agent-context files like `CLAUDE.md`, which are durable without being specs. But it sorts the four quickly, and it's what the explorer below is built on.
+
+<div className="tool-section">
+<span className="tool-kicker">Explore</span>
+
+## Explore all four
+
+Every file in these four repos has a fate: durable and worth coming back to edit, a frozen record of one increment nobody reconciles, scratch that gets executed once and ignored, or the framework's own machinery.
+
+Switch between the trees, click any file to see what's actually inside it, and tick **only what survives** to strip each repo down to the files still worth editing six months later.
+
+<TreeExplorer client:visible />
+</div>
+
+## Spec Kit
+
+Spec Kit is very procedural. We do this, then we do that, then we do another thing: `/speckit.constitution`, `/speckit.specify`, `/speckit.plan`, `/speckit.tasks`, `/speckit.implement`, with gates between the phases.
+
+Its unit of work is a numbered feature tied to a git branch:
+
+```
+specs/
+  001-capture-notes/
+    spec.md  plan.md  research.md  data-model.md  contracts/  tasks.md
+  002-due-dates-reminders/
+    ...
+```
+
+The numbering is global rather than per-feature, so `002` is the second feature in the project, not the second attempt at due dates. Folder names are derived from your description by stripping stop words and taking roughly the first three surviving words, which is why you'll want `--short-name` most of the time. The branch name and the folder name have to match, because the commands locate the active feature from your current branch.
+
+<aside className="callout callout-warn">
+<span className="callout-label">Where it broke for me</span>
+
+A numbered folder records an increment. Add note pinning six months after note capture and you have `001-capture-notes/` and `007-note-pinning/`, and the intent behind notes now lives in two places that will never reconcile.
+
+There's `constitution.md` for principles and `CLAUDE.md` for agent context. Nothing that says what notes is for.
+</aside>
+
+To be fair to it, the workflow is the best documented of the four and the phase gates are real. If you work in genuinely independent slices the append-only log is fine. My projects aren't like that. A notes app evolves.
+
+## Superpowers
+
+Superpowers is the odd one out. It isn't a spec framework. It ships an engineering culture as a folder of skills: brainstorming, worktree isolation, TDD where code written before its test gets deleted, review by a fresh agent, and a verification step that refuses to accept a green test suite as proof of completion.
+
+Its entire artifact surface is one flat directory:
+
+```
+docs/plans/
+  2026-03-14-notes-capture-design.md
+  2026-03-14-notes-capture.md
+```
+
+Those plans are scratch. They're written to be executable by an agent with no context: 2-to-5-minute steps, exact file paths, literal test commands, "run it and watch it fail" as a real step. Then the branch merges and nobody reads them again. There's an open request to make the location configurable on the grounds that plans are personal working documents rather than project artifacts, which tells you how its own users read them.
+
+<aside className="callout callout-aside">
+<span className="callout-label">Different axis</span>
+
+Superpowers is spec-first taken to its conclusion: it leaves nothing behind and takes no position on what a spec is. That's why it stacks on any of the other three rather than competing with them.
+</aside>
+
+## BMAD
+
+BMAD simulates an agile team. Analyst, PM, architect, scrum master, dev, test architect, each with workflows, thirty-odd of them in the dev module alone. Artifacts land in `_bmad-output/`:
+
+```
+_bmad-output/
+  project-context.md
+  planning-artifacts/
+    prd.md  architecture.md  epics.md  epics/
+  implementation-artifacts/
+    sprint-status.yaml
+    stories/
+      1.1.quick-capture-field.md
+      1.2.persist-on-blur.md
+```
+
+Its unit is the story, nested under an epic, and epics are planning slices. So it lands where Spec Kit does: `epics/epic-1-notes-capture.md` describes a chunk of work rather than what notes is meant to be. Epic 4 will also change how notes behave, and neither file is the spec for notes, because there isn't one.
+
+<aside className="callout callout-key">
+<span className="callout-label">The reason to look at BMAD</span>
+
+`sprint-status.yaml` is the exception. It's a single living file tracking every story across every epic, with real tooling built on top of it. That's much closer to my `./tasks` queue than a `tasks.md` buried inside one feature's folder.
+</aside>
+
+It's also heavy for a small project, the output paths aren't fully reconciled between workflows (some write to `docs/`, others read from `_bmad-output/`), and the tree has been restructured across recent releases.
+
+## OpenSpec
+
+OpenSpec is the one that matched, and it matched almost exactly. It splits the thing the others conflate:
+
+```
+openspec/
+  specs/                        # the layer I was missing
+    notes/spec.md
+    todos/spec.md
+    tags/spec.md
+  changes/
+    add-note-pinning/
+      proposal.md  design.md  tasks.md
+      specs/notes/spec.md       # delta only
+    archive/
+      2026-03-14-add-notes-capture/
+```
+
+`specs/` is organised by domain, one folder per capability, which is my `./features` with a different name. `changes/` holds proposals, and a change's spec files are deltas instead of copies: sections headed `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`. On archive, ADDED appends to the real spec, MODIFIED replaces the requirement, REMOVED deletes it, and the change folder moves into `changes/archive/` with a date prefix.
+
+So `notes/spec.md` is one file that accumulates. Increments fold in and then get out of the way, still readable in the archive but no longer the record.
+
+One quibble with how it's sold. OpenSpec's docs describe `specs/` as how your system currently works, which is the indicative reading, and it undersells the thing. I use that file for the optative half: `notes/spec.md` says notes are never hard-deleted, and that's a decision, binding on code that doesn't exist yet. Read it as current behaviour and it's a duplicate of `src/`. Read it as intent and it's the only copy.
+
+<aside className="callout callout-key">
+<span className="callout-label">On the always-current claim</span>
+
+A record of intent stays current because staying current is its entire job. A record of behaviour duplicates something you already have, so maintaining it is pure overhead, which is how increment-based frameworks end up with spec folders nobody reads. They keep the derivable half and throw away the half that can't be derived.
+</aside>
+
+### Two bits of friction
+
+<details>
+<summary>Why <code>specs/notes/spec.md</code> and not <code>specs/notes.md</code>?</summary>
+
+The folder-per-spec thing looked like ceremony to me at first. The answer is in the archive code: it enumerates capabilities by reading directories, so "every subdirectory" is an unambiguous rule where "every `.md` file except the ones that aren't capabilities" would need an ignore list. It also means both trees, real specs and change deltas, resolve through one path function. And a directory can gain children later where a file can't, which is why the open proposal for nested capability paths is even possible.
+
+I still think nine editor tabs all named `spec.md` is worse than nine named `notes.md`. Turn on your editor's unique-path-segment setting and move on.
+
+</details>
+
+<details>
+<summary>Where do BDD journeys live?</summary>
+
+I wanted `specs/notes/journeys.md` for Gherkin-style journeys. That doesn't work. The merge only ever targets `spec.md`, and there's no delta format for anything else, so the file would be inert and would drift.
+
+The supported answer is fenced Gherkin inside the `### Requirement:` / `#### Scenario:` structure, which stays mergeable and can be extracted into real `.feature` files at test time. Cross-capability journeys, the ones that span notes and tags and todos, go in the test tree as hand-written `.feature` files, because no single capability spec can own them.
+
+</details>
+
+## What happens to `./tasks`
+
+An OpenSpec change is not scoped to one capability. `proposal.md` names the affected specs, and the delta folder carries one file per capability the change touches. So `1-implement-database-orm.md` isn't homeless here: it's a change called `add-database-orm` whose proposal names notes, tags and favourites, with its own `tasks.md` covering all three. Deltas are scoped to individual requirements, so two changes in flight can both edit `notes/spec.md` as long as they touch different requirements.
+
+That's most of what I wanted from a global task list. A unit of work that serves three features without belonging to any of them.
+
+What's missing is ordering rather than scope. Each change carries its own `tasks.md`, so with three changes in flight there's no one place showing all outstanding work, and nothing expresses that one change should land before another. `openspec list` covers the first half at the command line. The sequencing my numbering implied has nowhere to live.
+
+Spec Kit is the one that genuinely can't express it. `specs/001-capture-notes/tasks.md` belongs to one feature on one branch, so shared ORM work has to be adopted by whichever slice needs it first. BMAD's `sprint-status.yaml` is the only file in any of these four holding ordered state across the whole project, and it comes attached to a whole agile simulation.
+
+<aside className="callout callout-key">
+<span className="callout-label">What I landed on</span>
+
+**OpenSpec** owns `openspec/specs/` as the intent layer. **Superpowers** governs how the agent executes tasks, keeping its TDD, debugging and review skills and dropping `writing-plans`, since OpenSpec's `tasks.md` already does that job. A **real issue tracker** holds the ordering across changes.
+
+Nothing collides, because the Superpowers skills I keep produce no artifacts of their own.
+</aside>
+
+The specs half of my convention maps onto OpenSpec cleanly. The tasks half maps onto it too, apart from the ordering, and I've stopped trying to make a folder do a tracker's job.
+
+---
+
+## Appendix: which layers each one has
+
+Six layers, four frameworks. Only one column has a durable per-capability spec, and only one has anywhere to put a task that spans three features.
+
+<LayerMatrix />
+
+<aside className="callout callout-aside">
+<span className="callout-label">Caveat</span>
+
+Structures are as of September 2026. All four move fast, so check against your installed version.
+</aside>

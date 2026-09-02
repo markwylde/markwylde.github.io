@@ -134,7 +134,11 @@ const {
 		--shadow-color: rgba(17, 24, 39, 0.07);
 		--hero-bg: #eef1f8;
 		--avatar-bg: #f1f4fa;
+		--code-bg: #f6f8fd;         /* code blocks: a touch lighter than surface-2 */
+		--code-border: #dfe4f0;
 		--container-padding: 20px;
+		--font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas,
+			'Liberation Mono', monospace;
 	}
 
 	[data-theme="dark"] {
@@ -153,6 +157,50 @@ const {
 		--shadow-color: rgba(0, 0, 0, 0.45);
 		--hero-bg: #0e1626;
 		--avatar-bg: #18233a;
+		--code-bg: #0a1322;         /* code blocks: recessed navy, not slate grey */
+		--code-border: #1e2b45;
+	}
+
+	/* Shiki emits both themes as --shiki-light / --shiki-dark custom properties
+	   (defaultColor: false in astro.config.mjs). Pick one by the site's theme
+	   attribute so highlighting follows the toggle, not the OS setting. */
+	:root .astro-code,
+	:root .astro-code span {
+		color: var(--shiki-light);
+		font-style: var(--shiki-light-font-style);
+		font-weight: var(--shiki-light-font-weight);
+		text-decoration: var(--shiki-light-text-decoration);
+	}
+
+	[data-theme="dark"] .astro-code,
+	[data-theme="dark"] .astro-code span {
+		color: var(--shiki-dark);
+		font-style: var(--shiki-dark-font-style);
+		font-weight: var(--shiki-dark-font-weight);
+		text-decoration: var(--shiki-dark-text-decoration);
+	}
+
+	/* Drop each theme's own background: code sits on our surface, not on
+	   GitHub grey in light mode or Night Owl's near-black in dark. */
+	pre.astro-code {
+		background-color: var(--code-bg) !important;
+		border: 1px solid var(--code-border);
+		border-radius: 10px;
+		padding: 1rem 1.15rem;
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+		line-height: 1.6;
+		tab-size: 2;
+		-moz-tab-size: 2;
+	}
+
+	pre.astro-code code {
+		background: none;
+		border: none;
+		padding: 0;
+		font-family: inherit;
+		font-size: inherit;
 	}
 
 	* {

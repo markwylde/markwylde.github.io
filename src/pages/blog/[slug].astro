@@ -113,18 +113,18 @@ const { Content } = await render(entry);
 		background-color: var(--surface-2);
 		padding: 2px 4px;
 		border-radius: 3px;
-		font-family: 'Courier New', monospace;
+		font-family: var(--font-mono);
 		font-size: 0.9rem;
 		border: 1px solid var(--border-color);
 	}
 
 	.blog-content :global(pre) {
-		background-color: var(--surface-2);
+		background-color: var(--code-bg);
 		padding: 1rem;
 		border-radius: 8px;
 		overflow-x: auto;
 		margin: 1rem 0;
-		border: 1px solid var(--border-color);
+		border: 1px solid var(--code-border);
 	}
 
 	.blog-content :global(pre code) {
@@ -340,6 +340,79 @@ const { Content } = await render(entry);
 
 	.blog-content :global(details > summary ~ p:first-of-type) {
 		margin-top: 0;
+	}
+
+	/* callouts: a coloured rail plus a small label, used to lift a claim,
+	   a caveat or a definition out of the run of prose */
+	.blog-content :global(.callout) {
+		--callout-accent: var(--accent-color);
+		margin: 1.75rem 0;
+		padding: 1rem 1.25rem 1rem 1.15rem;
+		border: 1px solid var(--border-color);
+		border-left: 3px solid var(--callout-accent);
+		border-radius: 0 10px 10px 0;
+		background-color: var(--surface-2);
+	}
+
+	.blog-content :global(.callout > *:first-child) {
+		margin-top: 0;
+	}
+
+	.blog-content :global(.callout > *:last-child) {
+		margin-bottom: 0;
+	}
+
+	.blog-content :global(.callout-label) {
+		display: block;
+		font-size: 0.72rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.07em;
+		color: var(--callout-accent);
+		margin-bottom: 0.5rem;
+	}
+
+	.blog-content :global(.callout-key) {
+		--callout-accent: #2f9e6e;
+	}
+
+	.blog-content :global(.callout-warn) {
+		--callout-accent: #b9832b;
+	}
+
+	.blog-content :global(.callout-aside) {
+		--callout-accent: var(--muted-color);
+	}
+
+	/* a pull-quote sized claim, for the one sentence the section turns on */
+	.blog-content :global(.pullout) {
+		margin: 2rem 0;
+		padding: 0;
+		border: none;
+		font-size: 1.22rem;
+		line-height: 1.5;
+		font-weight: 600;
+		color: var(--heading-color);
+		text-align: center;
+	}
+
+	.blog-content :global(.pullout::before),
+	.blog-content :global(.pullout::after) {
+		content: "";
+		display: block;
+		width: 42px;
+		height: 2px;
+		margin: 0 auto;
+		background-color: var(--accent-color);
+		opacity: 0.55;
+	}
+
+	.blog-content :global(.pullout::before) {
+		margin-bottom: 1.1rem;
+	}
+
+	.blog-content :global(.pullout::after) {
+		margin-top: 1.1rem;
 	}
 
 	@media (max-width: 768px) {

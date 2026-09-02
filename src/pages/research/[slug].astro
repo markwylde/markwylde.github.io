@@ -108,18 +108,18 @@ const { Content } = await render(entry);
     background-color: var(--surface-2);
     padding: 2px 4px;
     border-radius: 3px;
-    font-family: "Courier New", monospace;
+    font-family: var(--font-mono);
     font-size: 0.9rem;
     border: 1px solid var(--border-color);
   }
 
   .research-content :global(pre) {
-    background-color: var(--surface-2);
+    background-color: var(--code-bg);
     padding: 1rem;
     border-radius: 6px;
     overflow-x: auto;
     margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--code-border);
   }
 
   .research-content :global(pre code) {
