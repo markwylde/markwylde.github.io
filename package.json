@@ -13,12 +13,12 @@
     "format:fix": "biome format --write"
   },
   "dependencies": {
-    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/mdx": "^8.0.1",
     "@astrojs/react": "^5.0.5",
     "@biomejs/biome": "^2.4.15",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^6.3.3",
+    "astro": "^7.3.2",
     "mermaid": "^11.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
