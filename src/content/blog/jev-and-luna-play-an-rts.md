@@ -1,5 +1,5 @@
 ---
-title: "Two AIs playing an RTS: Jev on the units, Luna on the strategy"
+title: "Playing with Jev - RTS Game"
 date: "2026-09-26"
 tags: ["AI", "Jev", "OpenRouter", "Game Dev", "TypeScript"]
 excerpt: "I built a small real-time strategy game where Jev, a decisions model on OpenRouter, controls every unit every two seconds and GPT Luna rewrites each side's strategy every thirty. A full game costs under three cents."
