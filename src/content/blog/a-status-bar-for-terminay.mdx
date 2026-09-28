@@ -77,6 +77,16 @@ This is the version I went with:
 
 The left side is concept 2's tinted bar with concept 4's behaviour. The tab segment carries the layout glyph, and moving between the panes in **Terminal 2** only animates in the path segments that differ. The right side is devices, a label, and the dot. The header just names the server.
 
+## Asking for several at once
+
+This is how I like to approach design tasks with AI. Instead of asking for one status bar, I asked for five at the same time, in one file, so I could compare them and comment on them until I got to something I was happy with.
+
+My prompt said "just in a index.html is fine then we can refine and choose one". A single throwaway HTML file was enough. The concepts didn't have to fit Terminay's real code yet, so each one only had to be good enough to look at and click through. All five shared the same fake window, projects, tabs and panes, which meant switching between them only changed the bar, and I could compare them like for like.
+
+The final design took pieces from more than one of them. My feedback was a list of pieces: the colour from concept 2, the right-hand side from concept 4, no dot in the header, no server name in the bar. I could only give that feedback because I had all five in front of me. If I'd asked for one status bar I'd have been reacting to that one design, and I'd never have seen the tinted bar and the device icons together.
+
+It also kept the code out of it until the design was settled. The OpenSpec change and the implementation came after I'd picked the mash-up, so the real work started from a design I'd already clicked through.
+
 ## Making it real
 
 From there I asked Claude Code to write it up as an OpenSpec change and implement it, with an option in the View menu to hide or show the status bar. It's shown by default.
