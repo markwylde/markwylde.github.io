@@ -1,0 +1,92 @@
+---
+title: "Designing a status bar for Terminay"
+date: "2026-09-28"
+tags: ["Terminay", "UI Design", "Claude Code", "Prototyping"]
+excerpt: "Terminay's remote access control sat in the top right with a play/stop button, and I didn't like it. I asked Claude Code for five status bar prototypes in one HTML file, picked the parts I liked from two of them, and turned that into the real thing. Every prototype is playable below."
+---
+
+import StatusBarDemo from "../../components/statusbar/StatusBarDemo.tsx";
+
+Terminay has a control in the top right corner of the window. It names the server you're working on, and it has a play/stop button for exposing that server so you can reach it from other devices. When a phone connected, a blue pill with a count appeared next to it.
+
+I didn't like it.
+
+Whether your embedded Terminay server is exposed is worth telling people. But being able to remote into Terminay from your phone is the whole selling point. It's an obvious feature, and we had it right in your face in the top right corner of every window.
+
+Here's roughly what it looked like. Switch between the states underneath and watch the top right.
+
+<StatusBarDemo client:visible variant="before" initialExposure="idle" />
+
+Not all of it was wrong. The server name matters. When Terminay runs in Electron it has its own embedded server, which it shows as **Local**, but you can also connect to remote servers, and the header names whichever one you're on. That needed to stay.
+
+The online/offline part seemed redundant, and my gut feeling was to remove the play/stop button. Maybe a blue dot when someone is connected.
+
+## A status bar
+
+That paired with something I'd been wanting to add for a while: a single status bar along the bottom of Terminay.
+
+Terminay has projects, each project has terminal tabs, and tabs can be split into panes. The bar would stay fixed at the bottom of the window, but what it says would follow whichever terminal is selected. On the left it would show that terminal's working directory and its Git branch. On the right it would show how many clients are connected, and whether the server is exposed. The exposed part only applies when running in Electron, since that's the only case where there's a local server to expose. For the dot I wanted three states:
+
+- **Red** when the server isn't exposed
+- **Grey** when it's exposed but nobody is connected
+- **Blue** when someone is connected
+
+I asked Claude Code for five proof-of-concept status bars in a single `index.html`, so I could see how each one behaved when switching between tabs before we chose one to refine. It mocked up a Terminay window with two projects, a few terminal tabs, and a tab split into two panes, so each bar had something to follow.
+
+Each demo below is one of those concepts. Click the project tabs at the top, the terminal tabs, and the two panes inside **Terminal 2**, and watch what the bar does. The buttons underneath switch the remote access state.
+
+## 1. Quiet strip
+
+A thin 24px bar in the style of VS Code. When focus moves, only the segment that changed flashes in the project's colour. In this one, and in concepts 2 to 4, the header control loses its play/stop button and keeps the server name, with a blue dot when a device is connected.
+
+<StatusBarDemo client:visible variant="c1" />
+
+## 2. Project-tinted
+
+The bar takes the project's colour, the same colour as the tab strip above it, so switching project recolours it. The folder path is a breadcrumb, and the server sits in a pill on the right that pulses while devices are connected.
+
+<StatusBarDemo client:visible variant="c2" />
+
+## 3. Ambient
+
+This one tries to disappear. It uses the terminal's background colour and dim text, and brightens when you hover over it. The dot is the only thing that stays bright. The server name only shows up on hover.
+
+<StatusBarDemo client:visible variant="c3" />
+
+## 4. Focus-follow
+
+This one was built around split panes. A small glyph shows the tab's layout and which pane has focus. When you move between two terminals whose paths share a prefix, only the part of the path that differs animates in. It also shows the process running in the terminal, and draws connected devices as icons instead of a number.
+
+<StatusBarDemo client:visible variant="c4" />
+
+## 5. Server hub
+
+The most drastic one. The top right menu is gone completely. The dot on the right of the status bar opens a panel with the expose toggle (what the play/stop button used to do), the connected devices, and the server switcher.
+
+<StatusBarDemo client:visible variant="c5" />
+
+## Picking one
+
+I liked the project-tinted approach in concept 2 a lot. But for the right-hand side I preferred concept 4: the device icons, `2 devices`, and the dot. So I asked for a mash-up of the two.
+
+I also asked for two things to be removed: the dot from the top right, and the server name from the bottom right. That leaves the server name in the header and the connection state in the status bar, with neither repeated.
+
+This is the version I went with:
+
+<StatusBarDemo client:visible variant="final" />
+
+The left side is concept 2's tinted bar with concept 4's behaviour. The tab segment carries the layout glyph, and moving between the panes in **Terminal 2** only animates in the path segments that differ. The right side is devices, a label, and the dot. The header just names the server.
+
+## Making it real
+
+From there I asked Claude Code to write it up as an OpenSpec change and implement it, with an option in the View menu to hide or show the status bar. It's shown by default.
+
+A few things changed between the prototype and the app, because the prototype could make up any data it wanted and the app can't:
+
+- **No process name.** The Terminay server knows each terminal's foreground process, but it doesn't send it to the app yet. Showing it would mean a protocol change, so it's left for later.
+- **Ahead of main, not ahead/behind upstream.** The Git status the app already has counts commits ahead of the default branch, so that's what the branch chip shows, next to the count of uncommitted changes.
+- **No polling for the directory.** Terminay has a rule against polling without my approval, and asking the server for a terminal's working directory means walking the process table. So the bar asks when focus changes, when the window regains focus, and shortly after you press Enter.
+- **No "not a repo".** The first version said "not a repo" when a directory wasn't inside one of the project's worktrees. When Claude Code launched the app to check it, the test project's root was the home directory, and the bar said "not a repo" about a directory that was a Git repository. The branch chip now just doesn't appear when the branch isn't known.
+- **`~` is a guess.** The app isn't told the server's home directory, so it recognises the usual layouts (`/Users/name`, `/home/name`, `C:\Users\name`) and shows those as `~`.
+
+The status bar is hidden on the phone layout, where there isn't room for it, and whether it's shown is a per-device setting. You can toggle it from **View → Show Status Bar**, the command bar, or a shortcut you bind yourself. The header control is down to the server name and a chevron. Exposure is still started and stopped from the connection menu, and clicking the right side of the status bar opens that menu too.
