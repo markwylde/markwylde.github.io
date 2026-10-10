@@ -1,0 +1,780 @@
+<title>markwylde.com redesign concepts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Sans:wght@400..700&family=Manrope:wght@400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<style>
+/* Five concepts over one shared markup. Each concept is a token set plus a
+   layout block scoped by :root[data-design="n"]; the base rules below are
+   only what all five agree on. Default tokens are concept 1 (Note). */
+:root {
+  --bg: #ffffff; --surface: #f5f6f8; --surface-2: #eef0f4;
+  --fg: #3a4150; --heading: #12151c; --muted: #6c7483; --line: #e4e7ed;
+  --accent: #2456d6; --on-accent: #ffffff; --accent-soft: #eaf0fe;
+  --code-bg: #f5f6f9; --art-bg: #eef1f7;
+  --tok-k: #9a3fb5; --tok-s: #1f7a4d; --tok-c: #7b8494;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --gutter: clamp(16px, 4vw, 40px);
+  --bar-h: 0px;
+  --bar-bg: #15171c; --bar-fg: #e8eaef; --bar-mute: #9299a8; --bar-line: #2c303a;
+  --bar-on: #ffffff; --bar-on-fg: #111318;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111318; --surface: #1a1d24; --surface-2: #222630;
+    --fg: #c5cad5; --heading: #f2f4f8; --muted: #8b93a3; --line: #2a2e39;
+    --accent: #8fb0ff; --on-accent: #0c1220; --accent-soft: #1b2440;
+    --code-bg: #171a21; --art-bg: #dfe4ee;
+    --tok-k: #d7a2ea; --tok-s: #8fd3a8; --tok-c: #7f8898;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111318; --surface: #1a1d24; --surface-2: #222630;
+  --fg: #c5cad5; --heading: #f2f4f8; --muted: #8b93a3; --line: #2a2e39;
+  --accent: #8fb0ff; --on-accent: #0c1220; --accent-soft: #1b2440;
+  --code-bg: #171a21; --art-bg: #dfe4ee;
+  --tok-k: #d7a2ea; --tok-s: #8fd3a8; --tok-c: #7f8898;
+  color-scheme: dark;
+}
+
+/* 2 Editorial */
+:root[data-design="2"] {
+  --bg: #fbfbfc; --surface: #f1f2f5; --surface-2: #e9ebf0;
+  --fg: #33363f; --heading: #15171d; --muted: #6d7180; --line: #dcdee5;
+  --accent: #8a1c3b; --on-accent: #ffffff; --accent-soft: #f6e9ed;
+  --code-bg: #f1f2f5; --art-bg: transparent;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+}
+:root[data-design="2"][data-theme="dark"] {
+  --bg: #14151a; --surface: #1c1e25; --surface-2: #252831;
+  --fg: #c9cad2; --heading: #f1f0ec; --muted: #9093a1; --line: #2d303a;
+  --accent: #ee9bb2; --on-accent: #2a0a14; --accent-soft: #33202a;
+  --code-bg: #1a1c22; --art-bg: #e6e4df;
+}
+/* 3 Sidebar */
+:root[data-design="3"] {
+  --bg: #fafbfc; --surface: #ffffff; --surface-2: #f0f2f6;
+  --fg: #414858; --heading: #131722; --muted: #6a7284; --line: #e1e5ec;
+  --accent: #4f46e5; --on-accent: #ffffff; --accent-soft: #edecfd;
+  --code-bg: #f0f2f6; --art-bg: #edecfd;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+:root[data-design="3"][data-theme="dark"] {
+  --bg: #0d111c; --surface: #131928; --surface-2: #1a2134;
+  --fg: #c1c9da; --heading: #f1f4fa; --muted: #8791a8; --line: #232c42;
+  --accent: #9a94ff; --on-accent: #0f0d2e; --accent-soft: #1f2147;
+  --code-bg: #111727; --art-bg: #dfe3f3;
+}
+/* 4 Bento */
+:root[data-design="4"] {
+  --bg: #eceef2; --surface: #ffffff; --surface-2: #f2f4f7;
+  --fg: #454b59; --heading: #10131a; --muted: #6b7282; --line: #e3e6ec;
+  --accent: #0b6bcb; --on-accent: #ffffff; --accent-soft: #dcebfa;
+  --code-bg: #f2f4f7; --art-bg: #dcebfa;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-body);
+}
+:root[data-design="4"][data-theme="dark"] {
+  --bg: #0c0e13; --surface: #171a22; --surface-2: #20242e;
+  --fg: #c3c8d4; --heading: #f3f5f9; --muted: #8a92a2; --line: #2a2f3b;
+  --accent: #6db3f7; --on-accent: #06203a; --accent-soft: #1a2c40;
+  --code-bg: #12151c; --art-bg: #cfe2f6;
+}
+/* 5 Statement */
+:root[data-design="5"] {
+  --bg: #ffffff; --surface: #f3f4f7; --surface-2: #e9ebf0;
+  --fg: #2f3440; --heading: #0a0c12; --muted: #666d7c; --line: #d9dce4;
+  --accent: #2540ff; --on-accent: #ffffff; --accent-soft: #e8ebff;
+  --code-bg: #f3f4f7; --art-bg: transparent;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
+}
+:root[data-design="5"][data-theme="dark"] {
+  --bg: #0a0c13; --surface: #141722; --surface-2: #1d2130;
+  --fg: #c6cad6; --heading: #f4f5f9; --muted: #8c93a4; --line: #272b39;
+  --accent: #8c9bff; --on-accent: #0a0f3a; --accent-soft: #1a1f45;
+  --code-bg: #12151e; --art-bg: #e3e6f2;
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-wrap: break-word;
+}
+.site h1, .site h2, .site h3, .site p, .site ul { margin: 0; padding: 0; }
+.site ul { list-style: none; }
+.site h1, .site h2, .site h3 { color: var(--heading); font-family: var(--font-display); text-wrap: balance; line-height: 1.2; }
+.site a { color: inherit; text-decoration: none; }
+.site img { display: block; max-width: 100%; }
+.site :focus-visible, .pbar :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.site { padding-inline: var(--gutter); margin-inline: auto; }
+
+.hdr-in { display: flex; align-items: center; gap: .5rem 1rem; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: .65rem; }
+.brand-av { width: 2.25rem; height: 2.25rem; border-radius: 50%; object-fit: cover; flex: none; }
+.brand-txt { display: flex; flex-direction: column; line-height: 1.25; }
+.brand-name { color: var(--heading); font-weight: 600; white-space: nowrap; }
+.brand-role { color: var(--muted); font-size: .8rem; }
+.nav { display: flex; gap: .15rem; margin-left: auto; }
+.nav a { padding: .4rem .6rem; font-size: .95rem; }
+.hdr-links { display: none; }
+.mode {
+  display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0;
+  background: none; border: 1px solid var(--line); border-radius: 8px;
+  color: var(--fg); cursor: pointer;
+}
+.mode:hover { color: var(--accent); border-color: var(--accent); }
+
+.eyebrow { color: var(--muted); font-size: .9rem; }
+.hero-art img { width: 100%; height: auto; }
+.stack { display: flex; flex-wrap: wrap; gap: .4rem; }
+.cta, .links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; }
+.logos { display: flex; flex-wrap: wrap; gap: 1.25rem 2.25rem; align-items: center; }
+.logos img { width: 7rem; height: 2rem; object-fit: contain; filter: grayscale(1); opacity: .7; }
+.logo-d, :root[data-theme="dark"] .logo-l { display: none; }
+:root[data-theme="dark"] .logo-d { display: block; }
+.proj a { display: flex; gap: 1rem; align-items: center; }
+.proj img { width: 2.25rem; height: 2.25rem; flex: none; object-fit: contain; }
+.proj .txt { min-width: 0; flex: 1; }
+.proj h3 { font-size: 1rem; }
+.proj p { color: var(--muted); font-size: .95rem; line-height: 1.45; }
+.arrow { flex: none; color: var(--muted); transition: transform .15s ease; }
+.proj a:hover .arrow { transform: translateX(3px); color: var(--accent); }
+.post-row a { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: .25rem 1rem; }
+.post-row time { color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; padding-top: .15em; }
+.post-row h3 { font-size: 1.05rem; }
+.post-row p { color: var(--muted); font-size: .95rem; margin-top: .25rem; }
+.post-row a:hover h3 { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+.tags li { font-size: .75rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: .05rem .4rem; }
+.home .post-row p, .home .post-row .tags { display: none; }
+.more { display: inline-block; margin-top: 1rem; color: var(--accent); font-weight: 600; }
+.email { color: var(--accent); font-weight: 600; }
+.page-head p { color: var(--muted); margin-top: .5rem; }
+.about-side img { width: 9rem; }
+.about-side h3 { font-size: 1.1rem; margin-block: 1rem .5rem; }
+.about-side .links { margin-top: 1rem; }
+.back { color: var(--muted); font-size: .9rem; }
+.back:hover { color: var(--accent); }
+.post-meta { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; color: var(--muted); font-size: .9rem; margin-top: .75rem; }
+.post-meta .tags { margin-top: 0; }
+.ftr { color: var(--muted); font-size: .875rem; padding-block: 2.5rem; }
+
+.prose { max-width: 68ch; }
+.site .prose > * + * { margin-top: 1.1em; }
+.site .prose h2, .site .prose h3 { margin-top: 2em; font-size: 1.35em; }
+.site .prose h3 { font-size: 1.1em; }
+.prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose ul { list-style: disc; padding-left: 1.25rem; }
+.prose li + li { margin-top: .35em; }
+.prose code { font-family: var(--font-mono); font-size: .86em; background: var(--code-bg); border: 1px solid var(--line); border-radius: 4px; padding: .1em .35em; }
+.prose pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.6; tab-size: 2; }
+.prose pre code { background: none; border: 0; padding: 0; font-size: inherit; color: var(--heading); }
+.tok-k { color: var(--tok-k); } .tok-s { color: var(--tok-s); } .tok-c { color: var(--tok-c); font-style: italic; }
+.prose blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--accent); color: var(--heading); }
+.tablewrap { overflow-x: auto; }
+.prose table { border-collapse: collapse; width: 100%; font-size: .95em; }
+.prose th, .prose td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose th { color: var(--heading); font-weight: 600; white-space: nowrap; }
+
+/* ---------- prototype switcher (not part of any design) ---------- */
+.pbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background: var(--bar-bg); color: var(--bar-fg);
+  font: 500 13px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding: 6px max(10px, env(safe-area-inset-left, 0px));
+  display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+}
+.pbar-row { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; }
+.pbar-l { color: var(--bar-mute); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.seg { display: flex; gap: 2px; background: var(--bar-line); border-radius: 8px; padding: 2px; overflow-x: auto; scrollbar-width: none; }
+.seg button, .pbar-btn {
+  font: inherit; color: var(--bar-fg); background: none; border: 0; border-radius: 6px;
+  padding: 6px 10px; cursor: pointer; white-space: nowrap; display: flex; gap: 6px;
+}
+.seg button b { font-weight: 700; color: var(--bar-mute); }
+.seg button[aria-pressed="true"] { background: var(--bar-on); color: var(--bar-on-fg); }
+.seg button[aria-pressed="true"] b { color: inherit; }
+.pbar-btn { border: 1px solid var(--bar-line); margin-left: auto; }
+.pbar-desc { color: var(--bar-mute); font-weight: 400; flex: 1 1 14rem; min-width: 0; }
+@media (max-width: 640px) {
+  .pbar-l, .pbar-desc { display: none; }
+  .pbar-row { flex: 1 1 100%; }
+  #seg-design { flex: 1; } #seg-design button { flex: 1; justify-content: center; padding-inline: 4px; }
+  #seg-design button:not([aria-pressed="true"]) span { display: none; }
+}
+
+/* ================= 1 · NOTE — one narrow column, reads like a letter ================= */
+:root[data-design="1"] {
+  .site { max-width: calc(42rem + 2 * var(--gutter)); }
+  .hdr { padding-block: 1.25rem; }
+  .brand-role { display: none; }
+  .nav a { color: var(--muted); }
+  .nav a:hover { color: var(--heading); }
+  .nav a[aria-current] { color: var(--heading); font-weight: 600; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+  .mode { border: 0; }
+  .hero { display: grid; gap: 1.5rem; padding-block: 2.5rem 0; }
+  .hero-art { order: -1; width: 6rem; height: 6rem; border-radius: 50%; background: var(--art-bg); overflow: hidden; }
+  .hero-copy { display: grid; gap: .9rem; }
+  .eyebrow { display: none; }
+  .hero h1 { font-size: clamp(1.75rem, 6vw, 2.25rem); letter-spacing: -.02em; }
+  .lede { font-size: 1.2rem; color: var(--heading); line-height: 1.45; }
+  .stack { color: var(--muted); font-size: .9rem; gap: .15rem .5rem; }
+  .stack li:not(:last-child)::after { content: "·"; margin-left: .5rem; }
+  .btn, .links a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+  .blk { margin-top: 3.25rem; }
+  .blk > h2 { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .9rem; font-family: var(--font-body); }
+  .how-list { display: grid; gap: .9rem; }
+  .how-list h3 { font-size: 1rem; }
+  .how-list p { color: var(--muted); }
+  .proj + .proj, .post-row + .post-row { border-top: 1px solid var(--line); }
+  .proj a, .post-row a { padding-block: .85rem; }
+  .contact { display: grid; gap: .75rem; }
+  .contact > h2 { margin-bottom: 0; }
+  .page { padding-top: 2.5rem; }
+  .page-head h1 { font-size: 2rem; letter-spacing: -.02em; }
+  .page-head { margin-bottom: 2rem; }
+  .year { margin-top: 2.5rem; }
+  .year > h2 { font-size: .8rem; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: .5rem; }
+  .about-side { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .post-head { margin-bottom: 2rem; }
+  .post-head h1 { font-size: clamp(1.75rem, 6vw, 2.4rem); letter-spacing: -.02em; margin-top: 1rem; }
+  .prose { font-size: 1.0625rem; line-height: 1.7; }
+  .ftr { margin-top: 4rem; border-top: 1px solid var(--line); }
+  @media (max-width: 480px) {
+    .nav { order: 3; flex: 1 1 100%; margin-left: -.6rem; }
+    .mode { margin-left: auto; }
+    .post-row a { grid-template-columns: 1fr; }
+  }
+}
+
+/* ================= 2 · EDITORIAL — serif headlines, label gutter, illustration up front ================= */
+:root[data-design="2"] {
+  .site { max-width: 74rem; }
+  .hdr { padding-block: 1.25rem; border-bottom: 1px solid var(--line); }
+  .brand-av, .brand-role { display: none; }
+  .brand-name { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 1.6rem; }
+  .nav a { font-size: .9rem; font-weight: 500; color: var(--muted); }
+  .nav a:hover, .nav a[aria-current] { color: var(--accent); }
+  .mode { border-radius: 50%; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: center; padding-block: clamp(2.5rem, 7vw, 5.5rem); }
+  .hero-copy { display: grid; gap: 1.1rem; justify-items: start; }
+  .eyebrow { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+  .hero h1 { font-size: clamp(2.6rem, 7.5vw, 5rem); font-weight: 500; letter-spacing: -.025em; line-height: 1; }
+  .lede { font-family: var(--font-display); font-style: italic; font-size: clamp(1.3rem, 3vw, 1.7rem); line-height: 1.3; color: var(--heading); }
+  .intro { max-width: 34rem; font-size: 1.05rem; }
+  .stack { font-size: .85rem; color: var(--muted); gap: .1rem .5rem; }
+  .stack li:not(:last-child)::after { content: "/"; margin-left: .5rem; opacity: .5; }
+  .hero-art { background: var(--art-bg); border-radius: 50% 50% 8px 8px; padding: 6%; }
+  .btn, .links a { font-weight: 600; text-decoration: underline; text-underline-offset: 5px; color: var(--heading); }
+  .btn.primary { background: var(--heading); color: var(--bg); text-decoration: none; padding: .7rem 1.2rem; border-radius: 2px; }
+  .btn.primary:hover { background: var(--accent); color: var(--on-accent); }
+  .blk { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1rem 2rem; padding-block: 2.5rem; border-top: 1px solid var(--line); }
+  .blk > * { grid-column: 2; }
+  .blk > h2 { grid-column: 1; grid-row: 1 / span 4; font-style: italic; font-weight: 400; font-size: 1.5rem; }
+  .how-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.5rem 2rem; }
+  .how-list h3 { font-size: 1.3rem; font-weight: 500; margin-bottom: .35rem; }
+  .proj-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.75rem 2.5rem; }
+  .proj a { align-items: flex-start; }
+  .proj h3 { font-size: 1.4rem; font-weight: 500; }
+  .posts { display: grid; gap: 1.5rem; }
+  .post-row a { grid-template-columns: 7rem minmax(0, 1fr); }
+  .post-row time { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; padding-top: .55em; }
+  .post-row h3 { font-size: 1.45rem; font-weight: 500; }
+  .contact p { font-family: var(--font-display); font-size: 1.4rem; line-height: 1.35; color: var(--heading); max-width: 36rem; }
+  .email { font-size: 1.1rem; }
+  .page { padding-block: clamp(2rem, 6vw, 4rem) 1rem; }
+  .page-head { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+  .page-head h1, .post-head h1 { font-size: clamp(2.4rem, 7vw, 4rem); font-weight: 500; letter-spacing: -.02em; line-height: 1.05; }
+  .page-head p { font-family: var(--font-display); font-style: italic; font-size: 1.3rem; }
+  .year { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1rem 2rem; padding-block: 2rem; border-bottom: 1px solid var(--line); }
+  .year > h2 { font-size: 2rem; font-weight: 400; font-style: italic; color: var(--muted); }
+  .about-body { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 3rem; align-items: start; }
+  .post { max-width: 42rem; margin-inline: auto; }
+  .post-head { text-align: center; margin-bottom: 2.5rem; }
+  .post-head h1 { margin-top: 1.25rem; }
+  .post-meta { justify-content: center; }
+  .prose { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.65; }
+  .prose pre, .prose table { font-family: var(--font-body); }
+  .ftr { border-top: 1px solid var(--line); margin-top: 3rem; }
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-art { max-width: 15rem; }
+    .blk, .year { display: block; }
+    .blk > h2, .year > h2 { margin-bottom: 1.25rem; }
+    .about-body { grid-template-columns: 1fr; }
+    .post-row a { grid-template-columns: 1fr; }
+    .post-row time { padding-top: 0; }
+  }
+  @media (max-width: 480px) {
+    .nav { order: 3; flex: 1 1 100%; margin-left: -.6rem; }
+    .mode { margin-left: auto; }
+  }
+}
+
+/* ================= 3 · SIDEBAR — identity rail on desktop, tab bar on phones ================= */
+:root[data-design="3"] {
+  .site { max-width: 78rem; }
+  .brand-name { font-size: 1.05rem; }
+  .nav a { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-radius: 6px; }
+  .nav a:hover { color: var(--heading); }
+  .nav a[aria-current] { background: var(--accent-soft); color: var(--accent); }
+  .hero { padding-bottom: .5rem; }
+  .hero-art { display: none; }
+  .hero-copy { display: grid; gap: 1rem; justify-items: start; }
+  .eyebrow { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .hero h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 600; letter-spacing: -.025em; line-height: 1.08; }
+  .lede { font-size: 1.25rem; color: var(--heading); line-height: 1.45; }
+  .stack li { font-family: var(--font-mono); font-size: .78rem; border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: .15rem .5rem; }
+  .btn, .links a { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: .5rem .9rem; font-weight: 500; color: var(--heading); }
+  .btn:hover, .links a:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .blk { margin-top: 3.5rem; }
+  .blk > h2, .year > h2 { display: flex; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: .78rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .blk > h2::after, .year > h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .how-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: 1.5rem; }
+  .how-list h3 { font-size: 1rem; margin-bottom: .3rem; }
+  .how-list p { color: var(--muted); font-size: .95rem; }
+  .proj-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: .75rem; }
+  .proj a { height: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 1rem; align-items: flex-start; }
+  .proj a:hover { border-color: var(--accent); }
+  .post-row + .post-row { border-top: 1px solid var(--line); }
+  .post-row a { padding-block: .9rem; }
+  .post-row time, .post-meta time { font-family: var(--font-mono); font-size: .78rem; }
+  .tags li { font-family: var(--font-mono); font-size: .7rem; }
+  .contact { display: grid; gap: .9rem; }
+  .contact > h2 { margin-bottom: .35rem; }
+  .email { font-family: var(--font-mono); }
+  .page-head { margin-bottom: 2.5rem; }
+  .page-head h1, .post-head h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 600; letter-spacing: -.02em; }
+  .post-head { margin-bottom: 2rem; }
+  .post-head h1 { margin-top: 1rem; }
+  .year + .year { margin-top: 2.5rem; }
+  .about-side { margin-top: 3rem; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 1.5rem; }
+  .prose { font-size: 1.03rem; line-height: 1.7; }
+  @media (min-width: 900px) {
+    .site { display: grid; grid-template-columns: 17rem minmax(0, 1fr); padding-left: 0; }
+    .hdr { position: sticky; top: var(--bar-h); align-self: start; height: calc(100vh - var(--bar-h)); padding: 2.5rem 1.5rem 1.5rem var(--gutter); border-right: 1px solid var(--line); grid-row: 1 / span 2; }
+    .hdr-in { flex-direction: column; flex-wrap: nowrap; align-items: stretch; height: 100%; gap: 2rem; }
+    .brand { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .brand-av { width: 6rem; height: 6rem; border-radius: 1.25rem; }
+    .brand-name { font-size: 1.25rem; }
+    .nav { flex-direction: column; margin-left: -.6rem; gap: .2rem; }
+    .nav a { padding: .55rem .6rem; }
+    .hdr-links { display: grid; gap: .4rem; margin-top: auto; font-size: .9rem; color: var(--muted); }
+    .hdr-links a:hover { color: var(--accent); }
+    .mode { align-self: flex-start; }
+    .main { padding: 3.5rem 0 0 clamp(2rem, 5vw, 4rem); max-width: 54rem; }
+    .ftr { padding-left: clamp(2rem, 5vw, 4rem); }
+  }
+  @media (max-width: 899px) {
+    .site { padding-bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px)); }
+    .hdr { position: sticky; top: var(--bar-h); z-index: 5; background: var(--bg); margin-inline: calc(var(--gutter) * -1); padding: .6rem var(--gutter); border-bottom: 1px solid var(--line); }
+    .mode { margin-left: auto; }
+    .nav { position: fixed; inset: auto 0 0 0; z-index: 6; margin: 0; gap: 0; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-top: 1px solid var(--line); padding: .35rem .5rem calc(.35rem + env(safe-area-inset-bottom, 0px)); }
+    .nav a { text-align: center; padding: .75rem .25rem; font-size: .72rem; }
+    .main { padding-top: 2rem; }
+    .post-row a { grid-template-columns: 1fr; }
+  }
+}
+
+/* ================= 4 · BENTO — everything is a tile; the home page is one grid ================= */
+:root[data-design="4"] {
+  .site { max-width: 74rem; }
+  .hdr { padding-top: 1rem; }
+  .hdr-in { background: var(--surface); border-radius: 999px; padding: .4rem .4rem .4rem .5rem; flex-wrap: nowrap; }
+  .brand-role { display: none; }
+  .brand-name { font-weight: 700; }
+  .nav a { border-radius: 999px; font-weight: 600; font-size: .9rem; padding: .45rem .8rem; color: var(--muted); }
+  .nav a:hover { color: var(--heading); }
+  .nav a[aria-current] { background: var(--heading); color: var(--bg); }
+  .mode { border-radius: 50%; border-color: transparent; background: var(--surface-2); flex: none; }
+  .main { margin-top: 1rem; }
+  .main.home { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
+  .hero { display: contents; }
+  .hero-copy, .hero-art, .blk, .page { background: var(--surface); border-radius: 1.5rem; padding: clamp(1.25rem, 3vw, 2.25rem); }
+  .hero-copy { grid-column: span 8; display: grid; gap: 1rem; justify-items: start; align-content: center; }
+  .hero-art { grid-column: span 4; background: var(--art-bg); display: grid; place-items: end center; padding-bottom: 0; overflow: hidden; }
+  .hero-art img { max-width: 20rem; }
+  .eyebrow { font-weight: 600; font-size: .85rem; }
+  .hero h1 { font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
+  .lede { font-size: 1.2rem; font-weight: 500; color: var(--heading); line-height: 1.4; }
+  .stack li { background: var(--surface-2); border-radius: 999px; padding: .2rem .7rem; font-size: .82rem; font-weight: 600; }
+  .btn, .links a { border-radius: 999px; padding: .6rem 1.1rem; font-weight: 700; font-size: .92rem; background: var(--surface-2); color: var(--heading); }
+  .btn:hover, .links a:hover { background: var(--accent-soft); }
+  .btn.primary { background: var(--accent); color: var(--on-accent); }
+  .blk { grid-column: span 12; }
+  .blk > h2, .year > h2 { font-size: .95rem; font-weight: 800; margin-bottom: 1.1rem; }
+  .clients { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2.5rem; }
+  .clients > h2 { margin: 0; color: var(--muted); }
+  .how { grid-column: span 5; }
+  .how-list { display: grid; gap: 1.1rem; }
+  .how-list h3 { font-size: 1rem; font-weight: 700; }
+  .how-list p { color: var(--muted); font-size: .95rem; }
+  .projects { grid-column: span 7; }
+  .proj-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .75rem; }
+  .proj a { height: 100%; background: var(--surface-2); border-radius: 1rem; padding: 1rem; flex-direction: column; align-items: flex-start; gap: .75rem; }
+  .proj a:hover { background: var(--accent-soft); }
+  .proj h3 { font-weight: 700; }
+  .proj .arrow { display: none; }
+  .writing { grid-column: span 7; }
+  .posts { display: grid; gap: .25rem; }
+  .post-row a { padding: .7rem .8rem; margin-inline: -.8rem; border-radius: .75rem; }
+  .post-row a:hover { background: var(--surface-2); }
+  .post-row h3 { font-weight: 700; }
+  .more { font-weight: 700; }
+  .contact { grid-column: span 5; background: var(--accent); color: var(--on-accent); display: grid; gap: 1rem; align-content: start; }
+  .contact > h2 { color: inherit; margin: 0; font-size: 1.5rem; letter-spacing: -.02em; }
+  .contact .email { color: inherit; font-size: 1.15rem; font-weight: 800; text-decoration: underline; text-underline-offset: 5px; }
+  .contact .links a { background: none; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+  .page { max-width: 56rem; margin-inline: auto; }
+  .page-head { margin-bottom: 2rem; }
+  .page-head h1, .post-head h1 { font-size: clamp(1.9rem, 6vw, 2.8rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+  .post-head { margin-bottom: 2rem; }
+  .post-head h1 { margin-top: 1rem; }
+  .year + .year { margin-top: 2rem; }
+  .about-body { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; gap: 2rem; align-items: start; }
+  .about-side { background: var(--surface-2); border-radius: 1rem; padding: 1.25rem; }
+  .tags li { border: 0; background: var(--surface-2); border-radius: 999px; padding: .1rem .55rem; font-weight: 600; }
+  .prose { font-size: 1.03rem; line-height: 1.7; }
+  .ftr { text-align: center; }
+  @media (max-width: 860px) {
+    .hero-copy, .hero-art, .how, .projects, .writing, .contact { grid-column: span 12; }
+    .hero-art img { max-width: 14rem; }
+    .about-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .brand-txt { display: none; }
+    .nav a { padding: .45rem .6rem; font-size: .85rem; }
+    .hdr-in { gap: .25rem; }
+    .post-row a { grid-template-columns: 1fr; }
+    .hero-copy, .hero-art, .blk, .page { border-radius: 1.1rem; }
+  }
+}
+
+/* ================= 5 · STATEMENT — oversized type does the talking ================= */
+:root[data-design="5"] {
+  .site { max-width: 86rem; }
+  .hdr { padding-block: 1.1rem; }
+  .brand-av { display: none; }
+  .brand-txt { flex-direction: row; gap: .75rem; align-items: baseline; }
+  .brand-name { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
+  .nav a { font-weight: 500; color: var(--heading); padding-inline: .1rem; margin-inline: .5rem; border-bottom: 2px solid transparent; }
+  .nav a:hover { border-color: var(--line); }
+  .nav a[aria-current] { border-color: var(--accent); }
+  .mode { border: 0; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); gap: 1.25rem clamp(1.5rem, 5vw, 5rem); padding-block: clamp(2rem, 6vw, 4.5rem) 0; grid-template-rows: repeat(5, auto) 1fr; }
+  .hero-copy { display: contents; }
+  .hero-copy > * { grid-column: 1; justify-self: start; }
+  .eyebrow { font-weight: 500; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
+  .hero .eyebrow, .hero h1 { grid-column: 1 / -1; }
+  .hero h1 { font-size: clamp(2.9rem, 11vw, 9rem); font-weight: 800; letter-spacing: -.035em; line-height: .92; margin-bottom: clamp(.5rem, 2vw, 1.5rem); }
+  .lede { font-family: var(--font-display); font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.2; color: var(--heading); max-width: 24ch; }
+  .intro { max-width: 36rem; font-size: 1.08rem; }
+  .stack { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; gap: .15rem .6rem; }
+  .stack li:not(:last-child)::after { content: "/"; margin-left: .6rem; color: var(--accent); }
+  .hero-art { grid-column: 2; grid-row: 3 / span 4; align-self: end; background: var(--art-bg); border-radius: 1rem; }
+  .btn, .links a { font-weight: 600; color: var(--heading); border-bottom: 2px solid var(--line); padding-block: .2rem; }
+  .btn:hover, .links a:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--on-accent); border: 0; padding: .9rem 1.5rem; }
+  .btn.primary:hover { background: var(--heading); color: var(--bg); }
+  .blk { margin-top: clamp(3.5rem, 9vw, 7rem); }
+  .blk > h2, .page-head h1 { font-size: clamp(1.9rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -.035em; line-height: 1; margin-bottom: clamp(1.25rem, 3vw, 2rem); }
+  .clients > h2 { font-family: var(--font-body); font-size: .8rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0; }
+  .clients { margin-top: clamp(2.5rem, 6vw, 4rem); padding-block: 1.25rem; border-block: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 3rem; }
+  .how-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 2rem; }
+  .how-list li { border-top: 3px solid var(--heading); padding-top: 1rem; }
+  .how-list h3 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .4rem; }
+  .proj { border-top: 1px solid var(--line); }
+  .proj:last-child { border-bottom: 1px solid var(--line); }
+  .proj a { padding-block: clamp(1rem, 2.5vw, 1.75rem); gap: 1rem 1.5rem; }
+  .proj .txt { display: grid; grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); gap: .25rem 2rem; align-items: baseline; }
+  .proj h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -.035em; line-height: 1; }
+  .proj p { font-size: 1.05rem; max-width: 34rem; }
+  .proj a:hover h3 { color: var(--accent); }
+  .arrow { font-size: 1.75rem; color: var(--heading); }
+  .post-row { border-top: 1px solid var(--line); }
+  .post-row a { grid-template-columns: 8rem minmax(0, 1fr); padding-block: 1.1rem; }
+  .post-row time { font-weight: 500; padding-top: .35em; }
+  .post-row h3 { font-size: clamp(1.2rem, 2.6vw, 1.6rem); font-weight: 700; letter-spacing: -.02em; }
+  .post-row p { max-width: 44rem; }
+  .more { font-size: 1.1rem; margin-top: 1.5rem; }
+  .contact { background: var(--heading); color: var(--bg); margin-inline: calc(var(--gutter) * -1); padding: clamp(2.5rem, 7vw, 5.5rem) var(--gutter); display: grid; gap: 1.25rem; }
+  .contact > h2 { color: inherit; font-family: var(--font-body); font-size: .8rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+  .contact p { max-width: 34rem; font-size: 1.1rem; }
+  .contact .email { color: inherit; font-family: var(--font-display); font-size: clamp(1.9rem, 8.5vw, 6.5rem); font-weight: 800; letter-spacing: -.035em; line-height: 1; }
+  .contact .email:hover { color: var(--accent-soft); }
+  .contact .links a { color: inherit; border-color: color-mix(in srgb, currentColor 35%, transparent); }
+  .page { padding-top: clamp(2rem, 6vw, 4rem); }
+  .page-head h1 { font-size: clamp(2.9rem, 11vw, 8rem); font-weight: 800; letter-spacing: -.035em; line-height: .9; margin-bottom: 1rem; }
+  .page-head p { font-size: 1.2rem; }
+  .page-head { margin-bottom: clamp(2rem, 5vw, 4rem); }
+  .year { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: 0 2rem; margin-top: 3rem; }
+  .year > h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; padding-top: 1rem; border-top: 3px solid var(--heading); margin-bottom: 1rem; }
+  .about-body { display: grid; grid-template-columns: minmax(0, 1fr) 18rem; gap: 4rem; align-items: start; }
+  .post { max-width: 46rem; }
+  .post-head { margin-bottom: 2.5rem; }
+  .post-head h1 { font-size: clamp(2.2rem, 7vw, 4.25rem); font-weight: 800; letter-spacing: -.045em; line-height: .98; margin-top: 1.25rem; }
+  .prose { font-size: 1.1rem; line-height: 1.7; }
+  .prose h2 { font-size: 1.6em !important; letter-spacing: -.03em; }
+  .ftr { padding-block: 1.5rem; }
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-art { grid-column: 1; grid-row: auto; max-width: 16rem; }
+    .proj .txt, .year, .about-body { grid-template-columns: 1fr; }
+    .about-body { gap: 2.5rem; }
+    .post-row a { grid-template-columns: 1fr; }
+    .post-row time { padding-top: 0; }
+  }
+  @media (max-width: 520px) {
+    .brand-role { display: none; }
+    .nav { order: 3; flex: 1 1 100%; margin-left: -.5rem; }
+    .mode { margin-left: auto; }
+    .proj img { display: none; }
+  }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="pbar" id="pbar">
+  <div class="pbar-row">
+    <span class="pbar-l">Design</span>
+    <div class="seg" id="seg-design" role="group" aria-label="Design concept"></div>
+  </div>
+  <div class="pbar-row">
+    <span class="pbar-l">Page</span>
+    <div class="seg" id="seg-page" role="group" aria-label="Page"></div>
+    <button class="pbar-btn" id="pbar-theme" type="button">Dark</button>
+  </div>
+  <span class="pbar-desc" id="pbar-desc"></span>
+</div>
+
+<div class="site">
+  <header class="hdr"><div class="hdr-in">
+    <a class="brand" href="#" data-go="home">
+      <img class="brand-av" src="assets/avatar-portrait.png" alt="" width="72" height="72">
+      <span class="brand-txt"><span class="brand-name">Mark Wylde</span><span class="brand-role">Software engineer</span></span>
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="#" data-go="home">Home</a><a href="#" data-go="about">About</a><a href="#" data-go="blog">Blog</a><a href="#" data-go="research">Research</a>
+    </nav>
+    <div class="hdr-links">
+      <a href="mailto:mark@wylde.net">mark@wylde.net</a>
+      <a href="https://github.com/markwylde" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://linkedin.com/in/mwylde" target="_blank" rel="noreferrer">LinkedIn</a>
+    </div>
+    <button class="mode" id="mode" type="button" aria-label="Switch between light and dark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"/></svg>
+    </button>
+  </div></header>
+  <main class="main" id="view"></main>
+  <footer class="ftr">© 2026 Mark Wylde</footer>
+</div>
+
+<script>
+const DESIGNS = [
+  ["Note", "One narrow column. Reads like a letter, no chrome."],
+  ["Editorial", "Serif headlines, section labels in a left gutter, illustration up front."],
+  ["Sidebar", "Identity rail on desktop that becomes a top bar and bottom tabs on phones."],
+  ["Bento", "Everything is a tile. The home page is one grid that stacks on mobile."],
+  ["Statement", "Oversized type does the talking. Your email is the call to action."],
+];
+const PAGES = [["home", "Home"], ["about", "About"], ["blog", "Blog"], ["post", "Post"]];
+
+const CLIENTS = [["RBS", "rbs", "svg", "svg"], ["Allianz", "allianz", "svg", "png"], ["AUCloud", "aucloud", "png", "png"], ["Checkatrade", "checkatrade", "svg", "svg"], ["Legal 500", "legal500", "svg", "svg"]];
+const PROJECTS = [
+  ["Terminay", "A desktop terminal workspace built with Electron, React, and Vite.", "https://github.com/markwylde/terminay", "terminay"],
+  ["DarkAuth", "Zero-knowledge authentication with OIDC compatibility.", "https://github.com/puzed/darkauth", "darkauth"],
+  ["WrapGuard", "Userspace WireGuard proxy for routing app traffic without kernel modules.", "https://github.com/puzed/wrapguard", "wrapguard"],
+  ["PagedNet", "Static-site hosting for uploading, managing, and moderating deployed sites.", "https://paged.net", "pagednet"],
+];
+const HOW = [
+  ["AI-assisted development", "Using AI tools to ship faster and smarter."],
+  ["Continuous deployments", "Shipping iteratively with confidence."],
+  ["Product driven development", "Solving real problems for real people."],
+];
+const POSTS = [
+  ["2026-09-28", "Designing a status bar for Terminay", "Terminay's remote access control sat in the top right with a play/stop button, and I didn't like it. I asked Claude Code for five status bar prototypes in one HTML file, picked the parts I liked from two of them, and turned that into the real thing.", ["Terminay", "UI Design", "Claude Code"]],
+  ["2026-09-26", "Playing with Jev - RTS Game", "I built a small real-time strategy game where Jev, a decisions model on OpenRouter, controls every unit every two seconds and GPT Luna rewrites each side's strategy every thirty. A full game costs under three cents.", ["AI", "Jev", "Game Dev"]],
+  ["2026-09-02", "A look at spec driven development", "Code tells you what a system does. Only a document tells you what it should do. I looked at four spec-driven development frameworks to see which of them keeps that second thing.", ["Spec-Driven Development", "AI Agents", "Workflow"]],
+  ["2026-08-23", "Node.js 22, 24, 26: An Interactive Field Guide", "Node 22, 24 and 26 are three different bets about how the runtime should work. Skim the summary up top, then use the decision tool, timeline, feature explorer and migration checklist.", ["Node.js", "JavaScript", "Runtime"]],
+  ["2026-07-04", "DarkAuth Mini: Clone, Compose Up, Log In", "A companion OAuth server you drop next to your project so a fresh clone can log in without a real account, a hosted identity provider, or a single .env file passed around.", ["DarkAuth", "OIDC", "Docker"]],
+  ["2026-06-15", "The Five Stages of a Believable Cursor", "What does it actually take to make a fake mouse cursor move like a real one? A hands-on tour through linear interpolation, easing, Bézier curves and the biomechanics of why arms curve.", ["Animation", "JavaScript", "UX"]],
+  ["2026-06-08", "Zero-Knowledge without a Password", "DarkAuth derives your encryption keys from your password and never lets the server see them. So what happens when there's no password?", ["DarkAuth", "Passkeys", "SCIM"]],
+  ["2026-03-02", "DarkAuth: Hardening the Zero-Knowledge Auth Server", "January and February were a massive security sprint for DarkAuth. From overhauling session security to tightening ZK/OIDC flows and modernizing RBAC, here's what actually shipped.", ["DarkAuth", "Security", "OIDC"]],
+  ["2026-01-01", "Building AntNS: DNS for the Decentralized Internet", "How I built a DNS-like system for Autonomi that solves the fundamental conflict between discoverability and ownership using Ed25519 signatures and shared registers.", ["Autonomi", "DNS", "Cryptography"]],
+  ["2025-10-04", "AutoRules: AI-Powered Code Validation", "How I built a tool that validates every file in your codebase against custom rules using AI, running at 300 tokens/second for less than a cent.", ["AI", "Code Quality", "Testing"]],
+  ["2025-08-02", "DuckDB and OPFS for Browser Storage", "How I built a todo list using DuckDB WebAssembly and Origin Private File System storage to create persistent browser-based database applications.", ["DuckDB", "OPFS", "WebAssembly"]],
+  ["2025-06-26", "Building Zerokey: A Zero-Knowledge Cross-Domain Secret Sharing Library", "How I built a library to share encryption keys between domains without servers ever seeing them, using URL fragments and modern cryptography.", ["Cryptography", "Security", "Privacy"]],
+  ["2025-01-31", "Bringing Claude Code to Gitea: From GitHub Actions to Self-Hosted Git", "How I adapted Anthropic's Claude Code Action for Gitea, enabling AI-powered code assistance in self-hosted Git environments.", ["Gitea", "AI", "Claude"]],
+  ["2023-06-22", "From Frameworks to Functions", "Challenge the norm of using big frameworks and discover the benefits of simple, functional programming approaches.", ["Functional Programming", "Express"]],
+  ["2023-06-15", "Stop Mocking Internal Logic", "Why you should stop mocking internal application logic and start mocking external dependencies with test servers instead.", ["Testing", "Mocking"]],
+  ["2023-04-18", "You Don't Need Redux", "Explore why Redux might be overkill for your React application and discover simpler alternatives for state management.", ["React", "Redux"]],
+  ["2022-12-12", "Building a simple command-line tool with NodeJS", "Learn how to create command-line tools using Node.js from scratch, with both bare-bones and library-assisted approaches.", ["Node.js", "CLI"]],
+  ["2022-12-12", "Build a custom REPL using NodeJS", "Learn how to build your own custom Read-Eval-Print Loop (REPL) using Node.js for interactive development and administration.", ["Node.js", "REPL"]],
+  ["2022-12-11", "How to create a native http server", "Learn how to build a simple HTTP server using Node.js without any external dependencies or frameworks.", ["Node.js", "HTTP", "JavaScript"]],
+  ["2022-12-11", "An introduction to the JavaScript event loop", "Deep dive into how the JavaScript event loop works in Node.js and why it's essential for building scalable applications.", ["JavaScript", "Node.js", "Event Loop"]],
+];
+const RESEARCH = [["2026-08-23", "Node.js v22, v24 and v26: A Rigorous Comparative Analysis", "", []]];
+
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmt = (d) => { const [y, m, day] = d.split("-"); return `${+day} ${MONTHS[m - 1]} ${y}`; };
+const ext = (href) => `href="${href}" target="_blank" rel="noreferrer"`;
+const code = (src) => `<pre><code>${esc(src).replace(/(\/\/.*)|('[^']*')|\b(import|from|const)\b/g, (m, c, s, k) => `<span class="tok-${c ? "c" : s ? "s" : "k"}">${m}</span>`)}</code></pre>`;
+
+const contactLinks = `<div class="links"><a ${ext("https://github.com/markwylde")}>GitHub</a><a ${ext("https://linkedin.com/in/mwylde")}>LinkedIn</a></div>`;
+const postRow = ([date, title, excerpt, tags]) => `<li class="post-row"><a href="#" data-go="post"><time datetime="${date}">${fmt(date)}</time><div><h3>${esc(title)}</h3><p>${esc(excerpt)}</p>${tags.length ? `<ul class="tags">${tags.map((t) => `<li>${t}</li>`).join("")}</ul>` : ""}</div></a></li>`;
+
+const VIEWS = {
+  home: () => `
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Software engineer · 15+ years on the web</p>
+        <h1>Hi, I'm Mark Wylde.</h1>
+        <p class="lede">I build useful, reliable products with modern web tech.</p>
+        <p class="intro">I've built my reputation pulling teams out of technical rabbit holes and focusing them on delivering products through continuous iteration.</p>
+        <ul class="stack"><li>TypeScript</li><li>Node.js</li><li>React</li><li>Postgres</li><li>CI/CD</li><li>AI</li></ul>
+        <div class="cta"><a class="btn primary" href="mailto:mark@wylde.net">Email me</a><a class="btn" ${ext("https://github.com/markwylde")}>GitHub</a><a class="btn" ${ext("https://linkedin.com/in/mwylde")}>LinkedIn</a></div>
+      </div>
+      <div class="hero-art"><img src="assets/avatar-typing.png" alt="Cartoon of Mark typing on a laptop" width="640" height="640"></div>
+    </section>
+    <section class="blk clients"><h2>Career clients</h2>
+      <ul class="logos">${CLIENTS.map(([n, f, l, d]) => `<li><img class="logo-l" src="assets/${f}-light.${l}" alt="${n}"><img class="logo-d" src="assets/${f}-dark.${d}" alt="${n}"></li>`).join("")}</ul>
+    </section>
+    <section class="blk how"><h2>How I work</h2>
+      <ul class="how-list">${HOW.map(([h, p]) => `<li><h3>${h}</h3><p>${p}</p></li>`).join("")}</ul>
+    </section>
+    <section class="blk projects"><h2>Personal projects</h2>
+      <ul class="proj-list">${PROJECTS.map(([n, d, href, f]) => `<li class="proj"><a ${ext(href)}><img src="assets/${f}.svg" alt=""><div class="txt"><h3>${n}</h3><p>${d}</p></div><span class="arrow" aria-hidden="true">→</span></a></li>`).join("")}</ul>
+    </section>
+    <section class="blk writing"><h2>Recent writing</h2>
+      <ul class="posts">${POSTS.slice(0, 4).map(postRow).join("")}</ul>
+      <a class="more" href="#" data-go="blog">All ${POSTS.length} posts →</a>
+    </section>
+    <section class="blk contact"><h2>Get in touch</h2>
+      <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great.</p>
+      <a class="email" href="mailto:mark@wylde.net">mark@wylde.net</a>
+      ${contactLinks}
+    </section>`,
+
+  about: () => `
+    <article class="page about">
+      <header class="page-head"><h1>About</h1><p>I've been developing web solutions for over 15 years.</p></header>
+      <div class="about-body">
+        <div class="prose">
+          <p>I've built my reputation pulling teams out of technical rabbit holes and focusing them on delivering products through continuous iteration.</p>
+          <p>I'm fascinated by what technology enables us to build, particularly how simple and effective the web stack can be. With experience across different industries, countries, and tech stacks, I've learned to cut through complexity and identify what really matters.</p>
+          <h2>What I do</h2>
+          <ul><li>Build scalable web applications with JavaScript/TypeScript and Node.js</li><li>Mentor development teams and establish great cultures</li><li>Help startups find product-market fit through pragmatic technical decisions</li><li>Architect simple, maintainable backend systems</li><li>Contribute to open source projects and community building</li></ul>
+          <h2>My approach</h2>
+          <p>I believe the best solutions come from understanding business and product problems first, then applying technology thoughtfully. Great software emerges when we balance technical excellence with real-world constraints.</p>
+          <ul><li>Ship early, iterate often, fail fast</li><li>Technology should solve real problems, not create new ones</li><li>Simple solutions beat complex ones every time</li><li>Don't be married to your code. Code should be throw away</li><li>The best architecture is the one that adapts to change</li></ul>
+          <h2>Experience highlights</h2>
+          <ul><li>Led technical teams through successful product launches</li><li>Rescued projects from technical debt and architectural problems</li><li>Built systems handling millions of requests per day</li><li>Mentored dozens of developers from junior to senior level</li><li>Consulted for startups through to enterprise organizations</li></ul>
+        </div>
+        <aside class="about-side">
+          <img src="assets/avatar-juggle.png" alt="Cartoon of Mark juggling">
+          <h3>Let's work together</h3>
+          <p>Looking for someone who can help your team build better products faster?</p>
+          <p><a class="email" href="mailto:mark@wylde.net">mark@wylde.net</a></p>
+          ${contactLinks}
+        </aside>
+      </div>
+    </article>`,
+
+  blog: (items = POSTS, title = "Blog", sub = "Thoughts on web development, simplicity, and building things that work") => {
+    const years = [...new Set(items.map((p) => p[0].slice(0, 4)))];
+    return `<article class="page blog">
+      <header class="page-head"><h1>${title}</h1><p>${sub}</p></header>
+      ${years.map((y) => `<section class="year"><h2>${y}</h2><ul class="posts">${items.filter((p) => p[0].startsWith(y)).map(postRow).join("")}</ul></section>`).join("")}
+    </article>`;
+  },
+  research: () => VIEWS.blog(RESEARCH, "Research", "Long-form notes and deep dives. Less polished than the blog."),
+
+  post: () => `
+    <article class="page post">
+      <header class="post-head">
+        <a class="back" href="#" data-go="blog">← Blog</a>
+        <h1>How to create a native http server</h1>
+        <div class="post-meta"><time datetime="2022-12-11">11 December 2022</time><ul class="tags"><li>Node.js</li><li>HTTP</li><li>JavaScript</li></ul></div>
+      </header>
+      <div class="prose">
+        <p>NodeJS is a powerful and popular JavaScript runtime that allows you to build a wide range of applications, including native HTTP servers. In this article, we will explore how to create a simple HTTP server using NodeJS.</p>
+        <p>Once you have NodeJS installed, you can create a new file called <code>server.js</code> and open it in your favorite text editor.</p>
+        <h2>Import the module</h2>
+        <p>The first thing we need to do is to import the <code>http</code> module, which provides all of the functionality we need to create an HTTP server.</p>
+        ${code("import http from 'http';")}
+        <h2>Handle a request</h2>
+        <p>Next, we will use the <code>http.createServer()</code> method to create a new HTTP server. This method takes a callback function as an argument, which will be executed every time the server receives a new request.</p>
+        ${code("const server = http.createServer((request, response) => {\n  response.statusCode = 200;\n  response.setHeader('Content-Type', 'text/html');\n  response.end('<h1>Hello, World!</h1>'); // the whole page, in one call\n});")}
+        <blockquote><p>With these few lines of code, you can create a simple HTTP server using NodeJS.</p></blockquote>
+        <h2>Listen on a port</h2>
+        <p>Finally, we need to start the server and listen for incoming requests on a specific port.</p>
+        ${code("server.listen(3000, () => {\n  console.log('Server is listening on port 3000');\n});")}
+        <div class="tablewrap"><table>
+          <thead><tr><th>Call</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>http.createServer()</code></td><td>Creates the server and runs your callback for every request</td></tr>
+            <tr><td><code>response.setHeader()</code></td><td>Sets a header such as the content type</td></tr>
+            <tr><td><code>response.end()</code></td><td>Sends the body and finishes the response</td></tr>
+            <tr><td><code>server.listen()</code></td><td>Starts listening on a port, then calls back when ready</td></tr>
+          </tbody>
+        </table></div>
+        <p>You can then use this server to handle requests and generate responses for your application.</p>
+      </div>
+    </article>`,
+};
+
+const root = document.documentElement;
+const state = { design: 1, page: "home" };
+const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+
+function readHash() {
+  const m = /^#d([1-5])-(home|about|blog|research|post)$/.exec(location.hash);
+  if (m) { state.design = +m[1]; state.page = m[2]; return true; }
+  return false;
+}
+function render(scroll) {
+  root.dataset.design = state.design;
+  const view = document.getElementById("view");
+  view.className = `main ${state.page}`;
+  view.innerHTML = VIEWS[state.page]();
+  const navPage = state.page === "post" ? "blog" : state.page;
+  document.querySelectorAll(".nav a").forEach((a) => a.dataset.go === navPage ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+  document.querySelectorAll("#seg-design button").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.d === state.design));
+  document.querySelectorAll("#seg-page button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.p === state.page));
+  document.getElementById("pbar-desc").textContent = DESIGNS[state.design - 1][1];
+  document.getElementById("pbar-theme").textContent = root.dataset.theme === "dark" ? "Light" : "Dark";
+  try { history.replaceState(null, "", `#d${state.design}-${state.page}`); } catch {}
+  store.set("mw-concept", `${state.design}-${state.page}`);
+  if (scroll) window.scrollTo(0, 0);
+}
+function setTheme(t) { root.dataset.theme = t; store.set("mw-theme", t); render(false); }
+
+document.getElementById("seg-design").innerHTML = DESIGNS.map(([n], i) => `<button type="button" id="d-btn-${i + 1}" data-d="${i + 1}" title="${n}"><b>${i + 1}</b><span>${n}</span></button>`).join("");
+document.getElementById("seg-page").innerHTML = PAGES.map(([p, n]) => `<button type="button" id="p-btn-${p}" data-p="${p}">${n}</button>`).join("");
+
+document.addEventListener("click", (e) => {
+  const go = e.target.closest("[data-go]"), d = e.target.closest("[data-d]"), p = e.target.closest("[data-p]");
+  if (go) { e.preventDefault(); state.page = go.dataset.go; render(true); }
+  else if (d) { state.design = +d.dataset.d; render(false); }
+  else if (p) { state.page = p.dataset.p; render(true); }
+  else if (e.target.closest("#mode, #pbar-theme")) setTheme(root.dataset.theme === "dark" ? "light" : "dark");
+});
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
+  if (e.key >= "1" && e.key <= "5") { state.design = +e.key; render(false); }
+});
+window.addEventListener("hashchange", () => { if (readHash()) render(true); });
+new ResizeObserver(([en]) => root.style.setProperty("--bar-h", `${en.target.offsetHeight}px`)).observe(document.getElementById("pbar"));
+
+if (!readHash()) { const m = /^([1-5])-(\w+)$/.exec(store.get("mw-concept") || ""); if (m && VIEWS[m[2]]) { state.design = +m[1]; state.page = m[2]; } }
+root.dataset.theme = store.get("mw-theme") || root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+render(false);
+</script>
