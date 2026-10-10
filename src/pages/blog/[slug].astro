@@ -21,6 +21,7 @@ const { Content } = await render(entry);
 			<div class="content-panel blog-article-panel">
 				<article class="blog-post">
 					<header class="blog-header">
+					<a href="/blog" class="back-link">← Blog</a>
 					<h1>{entry.data.title}</h1>
 					<div class="blog-meta">
 						<time datetime={entry.data.date}>
@@ -50,31 +51,12 @@ const { Content } = await render(entry);
 </Layout>
 
 <style>
-	.blog-article-panel {
-		max-width: 1400px;
-		margin: 0 auto;
-	}
-
-	.blog-post {
-		margin: 0 auto;
-	}
-
 	.blog-header {
 		margin-bottom: 2rem;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid var(--border-color);
 	}
 
 	.blog-header h1 {
-		margin-bottom: 1rem;
-		color: var(--heading-color);
-	}
-
-	.blog-meta {
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		gap: 10px;
+		margin: 1rem 0 0.75rem;
 	}
 
 	.blog-content {
@@ -198,22 +180,11 @@ const { Content } = await render(entry);
 		border-top: 1px solid var(--border-color);
 	}
 
-	.back-link {
-		color: var(--accent-color);
-		text-decoration: none;
-		font-weight: 500;
-		transition: color 0.3s ease;
-	}
-
-	.back-link:hover {
-		color: var(--heading-color);
-	}
-
 	/* full-bleed band for the small inline demos: background spans the
 	   content card, inner content stays aligned with the text column */
 	.blog-content :global(.demo-band) {
-		margin: 1.75rem -3rem;
-		padding: 1.5rem 3rem;
+		margin: 1.75rem calc(var(--pad) * -1);
+		padding: 1.5rem var(--pad);
 		background-color: var(--surface-2);
 		border-top: 1px solid var(--border-color);
 		border-bottom: 1px solid var(--border-color);
@@ -416,13 +387,6 @@ const { Content } = await render(entry);
 	}
 
 	@media (max-width: 768px) {
-		.blog-content :global(.demo-band) {
-			margin-left: -1rem;
-			margin-right: -1rem;
-			padding-left: 1rem;
-			padding-right: 1rem;
-		}
-
 		.blog-content :global(.tool-section) {
 			padding: 0.5rem 1rem 1rem;
 			margin: 1.75rem 0;
@@ -436,20 +400,6 @@ const { Content } = await render(entry);
 		.blog-content :global(.jump-nav a) {
 			font-size: 0.78rem;
 			padding: 5px 11px;
-		}
-
-		.blog-header {
-			margin-bottom: 1rem;
-		}
-
-		.blog-header h1 {
-			line-height: 1.2;
-			margin-bottom: 0.5rem;
-		}
-
-		.blog-meta {
-			flex-direction: column;
-			align-items: flex-start;
 		}
 
 		.blog-content {

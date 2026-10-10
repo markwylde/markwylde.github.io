@@ -8,58 +8,50 @@ const sortedPosts = blogPosts.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
 
-// Group posts by month
-const postsByMonth = sortedPosts.reduce((acc, post) => {
-  const date = new Date(post.data.date);
-  const monthYear = date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-  });
-  if (!acc[monthYear]) {
-    acc[monthYear] = [];
+// Group posts by year
+const postsByYear = sortedPosts.reduce((acc, post) => {
+  const year = new Date(post.data.date).getFullYear().toString();
+  if (!acc[year]) {
+    acc[year] = [];
   }
-  acc[monthYear].push(post);
+  acc[year].push(post);
   return acc;
 }, {});
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 
-const formatDay = (date) =>
-  date.toLocaleDateString("en-US", { day: "numeric" });
-
-const formatWeekday = (date) =>
-  date.toLocaleDateString("en-US", { weekday: "short" });
+const formatDate = (date) =>
+  date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 ---
 
 <Layout title="Blog - Mark Wylde" currentPage="blog">
   <section class="section">
     <div class="container">
       <div class="content-panel">
-        <div class="blog-header">
+        <header class="page-header">
           <h1>Blog</h1>
           <p>Thoughts on web development, simplicity, and building things that work</p>
-        </div>
+        </header>
 
-        <div class="blog-list">
         {
-          Object.entries(postsByMonth).map(([monthYear, posts]) => (
-            <section class="month-section">
-              <h2 class="month-heading">{monthYear}</h2>
-              <ul class="posts-list">
-                {posts.map((post) => {
+          years.map((year) => (
+            <section class="year-section">
+              <h2 class="year-heading">{year}</h2>
+              <ul class="post-rows">
+                {postsByYear[year].map((post) => {
                   const postDate = new Date(post.data.date);
                   return (
-                    <li class="post-item">
-                      <a href={`/blog/${getPostSlug(post)}`} class="post-link">
-                        <span class="post-date">
-                          <span class="post-day">{formatDay(postDate)}</span>
-                          <span class="post-weekday">
-                            {formatWeekday(postDate)}
-                          </span>
-                        </span>
-                        <span class="post-content">
-                          <span class="post-title">{post.data.title}</span>
-                          <span class="post-excerpt">{post.data.excerpt}</span>
+                    <li class="post-row">
+                      <a href={`/blog/${getPostSlug(post)}`}>
+                        <time datetime={postDate.toISOString()}>{formatDate(postDate)}</time>
+                        <span>
+                          <span class="post-row-title">{post.data.title}</span>
+                          <span class="post-row-excerpt">{post.data.excerpt}</span>
                           {post.data.tags.length > 0 && (
-                            <span class="post-tags">
+                            <span class="blog-tags">
                               {post.data.tags.map((tag) => (
                                 <span class="tag">{tag}</span>
                               ))}
@@ -75,155 +67,19 @@ const formatWeekday = (date) =>
           ))
         }
       </div>
-      </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .blog-header {
-    text-align: center;
-    margin-bottom: 3.5rem;
+  .year-section + .year-section {
+    margin-top: 2rem;
   }
 
-  .blog-header h1 {
+  .year-heading {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0;
     margin-bottom: 0.75rem;
-    color: var(--heading-color);
-  }
-
-  .blog-header p {
-    color: var(--muted-color);
-    margin-bottom: 0;
-  }
-
-  .blog-list {
-    margin: 0 auto;
-  }
-
-  .month-section {
-    margin-bottom: 3.5rem;
-  }
-
-  .month-heading {
-    font-weight: 700;
-    color: var(--heading-color);
-    margin-bottom: 0;
-    padding: 0 0 0.75rem 5.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .posts-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .post-item {
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .post-link {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 1.25rem 0;
-    text-decoration: none;
-    color: inherit;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-  }
-
-  .post-link:hover {
-    background-color: var(--surface-2);
-  }
-
-  .post-link:hover .post-title {
-    color: var(--accent-color);
-  }
-
-  .post-date {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-width: 4rem;
-    padding-top: 0.25rem;
-    color: var(--muted-color);
-    text-align: center;
-  }
-
-  .post-day {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--heading-color);
-  }
-
-  .post-weekday {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.25rem;
-  }
-
-  .post-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .post-title {
-    font-weight: 600;
-    line-height: 1.35;
-    color: var(--heading-color);
-    transition: color 0.2s ease;
-  }
-
-  .post-excerpt {
-    line-height: 1.6;
-    color: var(--text-color);
-    opacity: 0.9;
-  }
-
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.25rem;
-  }
-
-  @media (max-width: 640px) {
-    .blog-header {
-      margin-bottom: 2.5rem;
-    }
-
-    .month-heading {
-      padding-left: 0;
-    }
-
-    .post-link {
-      gap: 1rem;
-      padding: 1rem 0;
-    }
-
-    .post-date {
-      min-width: 2.75rem;
-      padding-top: 0.15rem;
-    }
-
-    .post-day {
-      font-size: 1.15rem;
-    }
-
-    .post-weekday {
-      font-size: 0.65rem;
-    }
-
-    .post-excerpt {
-      line-height: 1.5;
-    }
   }
 </style>

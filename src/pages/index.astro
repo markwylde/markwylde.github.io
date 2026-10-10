@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import avatarImage from "../assets/avatar-typing-transparent.png";
 import allianzDarkLogo from "../assets/logos/allianz-dark.png";
 import allianzLightLogo from "../assets/logos/allianz-light.svg";
@@ -78,6 +79,32 @@ const personalProjects = [
     logo: pagedNetLogo,
   },
 ];
+const howIWork = [
+  {
+    title: "AI-assisted development",
+    text: "Using AI tools to ship faster and smarter.",
+  },
+  {
+    title: "Continuous deployments",
+    text: "Shipping iteratively with confidence.",
+  },
+  {
+    title: "Product driven development",
+    text: "Solving real problems for real people.",
+  },
+];
+
+const allPosts = (await getCollection("blog")).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+const recentPosts = allPosts.slice(0, 4);
+
+const formatDate = (date) =>
+  date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 ---
 
 <Layout
@@ -85,406 +112,252 @@ const personalProjects = [
 	currentPage="home"
 	preloadImages={[avatarImage]}
 >
-	<header class="hero">
-		<div
-			class="container"
-			style="width: 100%; max-width: 1400px; margin: auto; padding: 0 var(--container-padding, 20px); overflow: hidden;"
-		>
-			<div class="hero-content">
-				<div class="hero-text">
-					<p class="name">Hi, I'm Mark Wylde</p>
-					<p class="tagline">I build useful, reliable products with modern web tech.</p>
-					<div class="tech-tags">
-						<span class="tech-tag">TypeScript</span>
-						<span class="tech-tag">Node.js</span>
-						<span class="tech-tag">React</span>
-						<span class="tech-tag">Postgres</span>
-						<span class="tech-tag">CI/CD</span>
-						<span class="tech-tag">AI</span>
-					</div>
-					
-					<div class="hero-features">
-						<div class="feature-item">
-							<div class="feature-icon ai-icon">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-							</div>
-							<div class="feature-content">
-								<strong>AI-Assisted Development</strong>
-								<span>Using AI tools to ship faster and smarter.</span>
-							</div>
-						</div>
-						<div class="feature-item">
-							<div class="feature-icon rocket-icon">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-5c1.62-2.2 5-3 5-3"/><path d="M12 15v5s3.03-.55 5-2c2.2-1.62 3-5 3-5"/></svg>
-							</div>
-							<div class="feature-content">
-								<strong>Continuous Deployments</strong>
-								<span>Shipping iteratively with confidence.</span>
-							</div>
-						</div>
-						<div class="feature-item">
-							<div class="feature-icon user-icon">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-							</div>
-							<div class="feature-content">
-								<strong>Product Driven Development</strong>
-								<span>Solving real problems for real people.</span>
-							</div>
-						</div>
-					</div>
+	<div class="container home">
+		<header class="tile hero">
+			<div class="hero-copy">
+				<p class="eyebrow">Software engineer · 15+ years on the web</p>
+				<h1>Hi, I'm Mark Wylde.</h1>
+				<p class="lede">I build useful, reliable products with modern web tech.</p>
+				<p class="intro">
+					I've built my reputation pulling teams out of technical rabbit holes and focusing them on
+					delivering products through continuous iteration.
+				</p>
+				<ul class="tech-tags">
+					<li>TypeScript</li>
+					<li>Node.js</li>
+					<li>React</li>
+					<li>Postgres</li>
+					<li>CI/CD</li>
+					<li>AI</li>
+				</ul>
+				<div class="pill-links">
+					<a class="pill pill-primary" href="mailto:mark@wylde.net">Email me</a>
+					<a class="pill" href="https://github.com/markwylde" target="_blank" rel="noreferrer">GitHub</a>
+					<a class="pill" href="https://linkedin.com/in/mwylde" target="_blank" rel="noreferrer">LinkedIn</a>
 				</div>
-				<div class="hero-avatar">
+			</div>
+			<div class="hero-art">
+				<img
+					src={avatarImage.src}
+					width={avatarImage.width}
+					height={avatarImage.height}
+					alt="Cartoon of Mark typing on a laptop"
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
+				/>
+			</div>
+		</header>
+
+		<ul class="tile client-grid" aria-label="Career clients">
+			{careerClients.map((client) => (
+				<li class={`client-logo ${client.className ?? ""}`} role="img" aria-label={client.name}>
 					<img
-						src={avatarImage.src}
-						width={avatarImage.width}
-						height={avatarImage.height}
-						alt="Mark Wylde - Avatar"
-						class="hero-image"
-						loading="eager"
-						decoding="async"
-						fetchpriority="high"
+						src={client.lightLogo.src}
+						alt=""
+						class="client-logo-image client-logo-image-light"
+						loading="lazy"
 					/>
-				</div>
-			</div>
+					<img
+						src={client.darkLogo.src}
+						alt=""
+						class="client-logo-image client-logo-image-dark"
+						loading="lazy"
+					/>
+				</li>
+			))}
+		</ul>
 
-			<div class="hero-clients">
-				<p class="hero-clients-heading">Career Clients</p>
-				<div class="client-grid" aria-label="Career clients">
-					{careerClients.map((client) => (
-						<div class="client-card">
-							<div class={`client-logo ${client.className ?? ""}`} role="img" aria-label={client.name}>
-								<img
-									src={client.lightLogo.src}
-									alt=""
-									class="client-logo-image client-logo-image-light"
-									loading="lazy"
-								/>
-								<img
-									src={client.darkLogo.src}
-									alt=""
-									class="client-logo-image client-logo-image-dark"
-									loading="lazy"
-								/>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	</header>
+		<ul class="how-grid" aria-label="How I work">
+			{howIWork.map((item) => (
+				<li class="tile how-tile">
+					<h2>{item.title}</h2>
+					<p>{item.text}</p>
+				</li>
+			))}
+		</ul>
 
-	<section id="projects" class="section">
-		<div class="container">
-			<div class="section-heading project-heading">
-				<h2>Personal Projects</h2>
-			</div>
-			<div class="personal-project-grid">
+		<section id="projects" class="tile projects">
+			<h2 class="tile-heading">Personal projects</h2>
+			<ul class="project-grid">
 				{personalProjects.map((project) => (
-					<div class="personal-project-card">
-						<div class="project-header">
+					<li>
+						<a class="project-tile" href={project.href} target="_blank" rel="noreferrer">
 							<img src={project.logo.src} alt="" class="project-logo" loading="lazy" />
-							<div class="project-title-area">
+							<span class="project-text">
 								<strong>{project.name}</strong>
 								<span>{project.description}</span>
-							</div>
-						</div>
-						<a
-							class="view-project-btn"
-							href={project.href}
-							target="_blank"
-							rel="noreferrer"
-						>
-							View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; flex-shrink: 0;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+							</span>
 						</a>
-					</div>
+					</li>
 				))}
+			</ul>
+		</section>
+
+		<section id="writing" class="tile writing">
+			<h2 class="tile-heading">Recent writing</h2>
+			<ul class="post-rows">
+				{recentPosts.map((post) => (
+					<li class="post-row">
+						<a href={`/blog/${post.id}`}>
+							<time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+							<span class="post-row-title">{post.data.title}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+			<a class="more-link" href="/blog">All {allPosts.length} posts →</a>
+		</section>
+
+		<section id="contact" class="tile contact">
+			<div class="contact-copy">
+				<h2>Get in touch</h2>
+				<p>
+					I'm always open to discussing new projects, creative ideas, or opportunities to be part of
+					something great.
+				</p>
 			</div>
-		</div>
-	</section>
-
-	<section id="about" class="section">
-		<div class="container">
-			<h2>About Me</h2>
-			<div class="about-grid">
-				<div class="about-card">
-					<h3>Experience</h3>
-					<ul class="about-bullets">
-						<li>15+ years developing web solutions</li>
-						<li>Helped teams escape technical rabbit holes</li>
-						<li>Focus on continuous delivery cycles</li>
-					</ul>
-				</div>
-				<div class="about-card">
-					<h3>Expertise</h3>
-					<ul class="about-bullets">
-						<li>Cut through complexity to identify what matters</li>
-						<li>Cross-industry & tech stack experience</li>
-						<li>Business-first approach to technical solutions</li>
-					</ul>
-				</div>
-				<div class="about-card">
-					<h3>Philosophy</h3>
-					<ul class="about-bullets">
-						<li>Ship early, iterate often, fail fast</li>
-						<li>Technology should solve real problems</li>
-						<li>Focus on shipping product, not perfect code</li>
-					</ul>
+			<div class="contact-actions">
+				<a class="contact-email" href="mailto:mark@wylde.net">mark@wylde.net</a>
+				<div class="pill-links">
+					<a class="pill" href="https://github.com/markwylde" target="_blank" rel="noreferrer">GitHub</a>
+					<a class="pill" href="https://linkedin.com/in/mwylde" target="_blank" rel="noreferrer">LinkedIn</a>
 				</div>
 			</div>
-		</div>
-	</section>
-
-	<section id="contact" class="section" style="padding-bottom: 80px;">
-		<div class="container">
-			<h2 class="centered-heading">Get In Touch</h2>
-			<p style="text-align: center; color: var(--text-color);">
-				I'm always open to discussing new projects, creative ideas, or opportunities to be part of something great. <br>
-				Feel free to reach out!
-			</p>
-			<div class="home-contact-links">
-				<a href="mailto:mark@wylde.net">Email Me</a>
-				<a href="https://github.com/markwylde" target="_blank">GitHub</a>
-				<a href="https://linkedin.com/in/mwylde" target="_blank">LinkedIn</a>
-			</div>
-		</div>
-	</section>
-
-	<script>
-		const heroAvatarVideo = document.querySelector("[data-hero-avatar-video]");
-
-		if (heroAvatarVideo instanceof HTMLVideoElement) {
-			const heroAvatarSource = heroAvatarVideo.querySelector("source");
-
-			function syncHeroAvatarVideo() {
-				const isDark =
-					document.documentElement.getAttribute("data-theme") === "dark";
-				const nextSrc = isDark
-					? heroAvatarVideo.dataset.darkSrc
-					: heroAvatarVideo.dataset.lightSrc;
-				const nextPoster = isDark
-					? heroAvatarVideo.dataset.darkPoster
-					: heroAvatarVideo.dataset.lightPoster;
-
-				if (!heroAvatarSource || !nextSrc) {
-					return;
-				}
-
-				if (nextPoster) {
-					heroAvatarVideo.poster = nextPoster;
-				}
-
-				if (heroAvatarSource.getAttribute("src") === nextSrc) {
-					return;
-				}
-
-				heroAvatarSource.setAttribute("src", nextSrc);
-				heroAvatarVideo.load();
-				heroAvatarVideo.play().catch(() => {});
-			}
-
-			syncHeroAvatarVideo();
-
-			new MutationObserver(syncHeroAvatarVideo).observe(
-				document.documentElement,
-				{
-					attributeFilter: ["data-theme"],
-					attributes: true,
-				},
-			);
-		}
-	</script>
+		</section>
+	</div>
 </Layout>
 
 <style>
-	/* Hero Section Styles */
-	.hero {
-		background-color: var(--hero-bg, var(--primary-bg));
-		background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
-		background-size: 30px 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 80px 0 60px;
-		border-bottom: 1px solid var(--border-color);
+	/* The home page is one 12-column grid of tiles inside the shared container. */
+	.home {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: var(--gap);
+		margin-top: var(--gap);
 	}
 
-	.hero > .container {
-		width: 100%;
-		max-width: 1400px;
-		margin: auto;
-		padding: 0 var(--container-padding);
+	.home > * {
+		grid-column: span 12;
+	}
+
+	.tile {
+		background-color: var(--secondary-bg);
+		border-radius: var(--radius);
+		padding: var(--pad);
+	}
+
+	ul {
+		list-style: none;
+	}
+
+	.tile-heading {
+		font-size: 0.95rem;
+		font-weight: 800;
+		letter-spacing: 0;
+		margin-bottom: 1.1rem;
+	}
+
+	/* Hero: copy on the left, illustration on a disc sized to the figure. */
+	.hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) clamp(13rem, 30vw, 23rem);
+		gap: 0 1rem;
+		padding: 0;
 		overflow: hidden;
 	}
 
-	.hero-content {
+	.hero-copy {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(300px, 450px);
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		gap: clamp(40px, 8vw, 140px);
+		gap: 1rem;
+		justify-items: start;
+		align-content: center;
+		padding: var(--pad);
 	}
 
-	.hero-text {
-		min-width: 0;
-		max-width: 760px;
+	.hero-copy > * {
+		margin: 0;
 	}
 
-	.hero-text .name {
-		font-size: 3.5rem;
-		font-weight: 700;
-		margin-bottom: 0.5rem;
-		line-height: 1.1;
-		color: var(--heading-color);
-		letter-spacing: -0.02em;
-		white-space: nowrap;
+	.eyebrow {
+		font-weight: 600;
+		font-size: 0.85rem;
+		color: var(--muted-color);
 	}
 
-	.hero-text .tagline {
-		font-size: 1.5rem;
-		font-weight: 400;
-		color: var(--text-color);
-		margin-bottom: 1.5rem;
+	.hero h1 {
+		font-size: clamp(2rem, 5.5vw, 3.4rem);
+		letter-spacing: -0.035em;
+		line-height: 1.05;
+	}
+
+	.lede {
+		font-size: 1.2rem;
+		font-weight: 500;
 		line-height: 1.4;
+		color: var(--heading-color);
 	}
 
 	.tech-tags {
 		display: flex;
-		flex-wrap: nowrap;
-		gap: 10px;
-		margin-bottom: 1.5em;
-		overflow-x: auto;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-		max-width: 100%;
-		width: 100%;
+		flex-wrap: wrap;
+		gap: 0.4rem;
 	}
 
-	.tech-tags::-webkit-scrollbar {
-		display: none;
-	}
-
-	.tech-tag {
-		background-color: var(--accent-fill);
-		color: var(--on-accent);
-		padding: 6px 12px;
-		border-radius: 20px;
-		font-size: 0.9rem;
-		font-weight: 400;
-		white-space: nowrap;
-		flex-shrink: 0;
-	}
-
-	.hero-features {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-	}
-
-	.feature-item {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		max-width: 450px;
-	}
-
-	.feature-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 44px;
-		height: 44px;
-		color: var(--accent-color);
-		flex-shrink: 0;
-	}
-
-	.feature-content {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-	}
-
-	.feature-content strong {
-		font-size: 1rem;
-		color: var(--heading-color);
+	.tech-tags li {
+		background-color: var(--surface-2);
+		border-radius: 999px;
+		padding: 0.2rem 0.7rem;
+		font-size: 0.82rem;
 		font-weight: 600;
 	}
 
-	.feature-content span {
-		font-size: 0.85rem;
-		color: var(--text-color);
-		opacity: 0.8;
+	.hero-art {
+		position: relative;
+		align-self: end;
+		margin-right: var(--pad);
+		padding-top: var(--pad);
 	}
 
-	.hero-avatar {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		justify-self: center;
-		width: min(100%, 450px);
+	.hero-art::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 16%;
 		aspect-ratio: 1;
+		border-radius: 50%;
+		background-color: var(--avatar-bg);
 	}
 
-	.hero-avatar img {
-		aspect-ratio: 1;
+	.hero-art img {
+		position: relative;
+		display: block;
 		width: 100%;
-		height: 100%;
-		object-fit: contain;
+		height: auto;
 	}
 
-	.hero-clients {
-		margin-top: 80px;
-		width: 100%;
-	}
-
-	.hero-clients-heading {
-		font-size: 0.85rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--text-color);
-		opacity: 0.6;
-		margin-bottom: 24px;
-		text-align: center;
-	}
-
-	.section-heading {
-		margin-bottom: 30px;
-	}
-
-	.section-heading h2 {
-		font-size: 1.8rem;
-		font-weight: 700;
-		letter-spacing: -0.01em;
-	}
-
+	/* Client logos: just the logos, spread across the tile. */
 	.client-grid {
-		display: grid;
-		grid-template-columns: repeat(5, minmax(0, 1fr));
-		gap: 20px;
-		align-items: center;
-	}
-
-	.client-card {
-		--client-logo-width: 178px;
-		--client-logo-height: 52px;
-		height: 60px;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-around;
+		gap: 1.25rem 2.5rem;
 	}
 
 	.client-logo {
+		--client-logo-width: 178px;
+		--client-logo-height: 52px;
 		display: grid;
 		place-items: center;
-		width: 100%;
-		height: 68px;
 	}
 
 	.client-logo-image {
 		grid-area: 1 / 1;
 		display: block;
-		width: min(100%, var(--client-logo-width));
+		width: var(--client-logo-width);
+		max-width: 100%;
 		height: var(--client-logo-height);
 		object-fit: contain;
 		filter: grayscale(100%) opacity(0.7);
@@ -515,6 +388,8 @@ const personalProjects = [
 		--client-logo-height: 46px;
 	}
 
+	/* Exactly one logo per client is ever rendered: light by default, dark
+	   when the site theme is dark. */
 	.client-logo-image-dark {
 		display: none;
 	}
@@ -527,181 +402,179 @@ const personalProjects = [
 		display: block;
 	}
 
-	.project-heading {
-		margin-top: 40px;
-	}
-
-	.personal-project-grid {
+	/* How I work: three equal tiles. */
+	.how-grid {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 40px;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--gap);
 	}
 
-	.personal-project-card {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		gap: 16px;
+	.how-tile {
+		padding-block: 1.5rem;
 	}
 
-	.project-header {
-		display: flex;
-		gap: 16px;
-		align-items: flex-start;
-	}
-
-	.project-logo {
-		width: 48px;
-		height: 48px;
-		object-fit: contain;
-		flex-shrink: 0;
-	}
-
-	.project-title-area {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-	}
-
-	.project-title-area strong {
-		font-size: 1.25rem;
-		color: var(--heading-color);
+	.how-tile h2 {
+		font-size: 1rem;
 		font-weight: 700;
+		letter-spacing: 0;
+		margin-bottom: 0.15rem;
 	}
 
-	.project-title-area span {
+	.how-tile p {
+		color: var(--muted-color);
+		font-size: 0.95rem;
 		line-height: 1.5;
-		color: var(--text-color);
-		opacity: 0.9;
-	}
-
-	.view-project-btn {
-		display: inline-flex;
-		align-items: center;
-		color: var(--accent-color);
-		font-weight: 600;
-		width: fit-content;
-		text-decoration: none;
-	}
-
-	/* About Section Styles */
-	.about-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 40px;
-		margin-top: 30px;
-	}
-
-	.about-card {
-		padding: 0;
-	}
-
-	.about-card h3 {
-		color: var(--accent-color);
-		margin-bottom: 16px;
-		font-size: 1.1rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-	}
-
-	.about-bullets {
-		list-style: none;
-		padding-left: 0;
 		margin: 0;
 	}
 
-	.about-bullets li {
-		padding: 8px 0 8px 24px;
-		position: relative;
-		line-height: 1.4;
-		color: var(--text-color);
+	.home > .projects {
+		grid-column: span 7;
 	}
 
-	.about-bullets li::before {
-		content: '→';
-		position: absolute;
-		left: 0;
-		color: var(--accent-color);
-		font-weight: 700;
-		opacity: 0.7;
+	.home > .writing {
+		grid-column: span 5;
 	}
 
-	.centered-heading {
-		text-align: center;
-		margin-bottom: 20px;
+	.project-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
 	}
 
-	.home-contact-links {
+	.project-tile {
 		display: flex;
-		justify-content: center;
-		gap: 30px;
-		margin-top: 30px;
-		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.75rem;
+		height: 100%;
+		background-color: var(--surface-2);
+		border-radius: var(--radius-inner);
+		padding: 1rem;
+		color: inherit;
+		transition: background-color 0.2s ease;
 	}
 
-	.home-contact-links a {
-		font-weight: 600;
+	.project-tile:hover {
+		background-color: var(--accent-soft);
+		color: inherit;
+	}
+
+	.project-logo {
+		width: 2.25rem;
+		height: 2.25rem;
+		object-fit: contain;
+	}
+
+	.project-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+
+	.project-text strong {
+		font-weight: 700;
 		color: var(--heading-color);
-		text-decoration: none;
 	}
 
-	@media (max-width: 1000px) {
-		.client-grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+	.project-text span {
+		color: var(--muted-color);
+		font-size: 0.95rem;
+		line-height: 1.45;
+	}
+
+	.writing .post-row a {
+		grid-template-columns: 1fr;
+	}
+
+	.more-link {
+		display: inline-block;
+		margin-top: 1rem;
+		font-weight: 700;
+	}
+
+	.contact {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 1.25rem 3rem;
+		align-items: center;
+		background-color: var(--accent-fill);
+		color: var(--on-accent);
+	}
+
+	.contact h2 {
+		color: inherit;
+		margin-bottom: 0.5rem;
+	}
+
+	.contact p {
+		max-width: 34rem;
+		margin: 0;
+	}
+
+	.contact-actions {
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.contact-email {
+		color: inherit;
+		font-size: 1.4rem;
+		font-weight: 800;
+		text-decoration: underline;
+		text-underline-offset: 5px;
+	}
+
+	.contact-email:hover {
+		color: inherit;
+		text-decoration-thickness: 2px;
+	}
+
+	.contact .pill,
+	.contact .pill:hover {
+		background: none;
+		color: inherit;
+		box-shadow: inset 0 0 0 1.5px currentColor;
+	}
+
+	@media (max-width: 860px) {
+		.home > .projects,
+		.home > .writing {
+			grid-column: span 12;
+		}
+
+		.how-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.contact {
+			grid-template-columns: 1fr;
 		}
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 640px) {
 		.hero {
-			padding: 60px 0 40px;
-		}
-
-		.hero-text .name { font-size: 2.8rem; }
-		.hero-text .tagline { font-size: 1.25rem; }
-
-		.hero-content {
-			grid-template-columns: 1fr;
-			text-align: left;
-			gap: 40px;
-		}
-
-		.hero-text {
-			width: 100%;
-		}
-		
-		.feature-item {
-			max-width: 100%;
-		}
-
-		.hero-avatar {
-			width: 100%;
-			max-width: 400px;
-		}
-
-		.personal-project-grid {
 			grid-template-columns: 1fr;
 		}
-	}
 
-	@media (max-width: 620px) {
+		.hero-art {
+			width: 15rem;
+			justify-self: end;
+			padding-top: 0;
+			margin-top: -1rem;
+		}
+
 		.client-grid {
-			grid-template-columns: 1fr;
-			gap: 30px;
+			justify-content: flex-start;
 		}
 
-		.client-card {
-			height: 40px;
-		}
-
-		.personal-project-card {
-			padding: 0;
+		.client-logo {
+			zoom: 0.8;
 		}
 	}
 
-	:global(:root:not([data-theme="dark"])) .hero,
-	:global([data-theme="light"]) .hero {
-		background-image: radial-gradient(circle, rgba(37, 99, 235, 0.22) 1.2px, transparent 1.2px);
-		background-size: 36px 36px;
+	@media (max-width: 560px) {
+		.project-grid {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

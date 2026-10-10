@@ -1,5 +1,5 @@
 ---
-import avatarImage from "../assets/avatar-juggle.png";
+import avatarImage from "../assets/avatar-juggle-transparent.png";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -7,11 +7,13 @@ import Layout from "../layouts/Layout.astro";
 	<section class="section">
 		<div class="container">
 			<div class="content-panel">
-				<h2>About Me</h2>
+				<header class="page-header">
+					<h1>About</h1>
+					<p>I've been developing web solutions for over 15 years.</p>
+				</header>
 				<div class="about-content">
 					<div class="about-text">
 						<p>
-							Hello! I'm Mark Wylde, and I've been developing web solutions for over 15 years.
 							I've built my reputation pulling teams out of technical rabbit holes and focusing them on delivering products through continuous iteration.
 						</p>
 
@@ -65,18 +67,16 @@ import Layout from "../layouts/Layout.astro";
 					</div>
 
 					<div class="contact-section">
-						<div class="avatar-container">
-							<img src={avatarImage.src} alt="Mark Wylde Avatar" class="avatar" />
-						</div>
+						<img src={avatarImage.src} alt="Cartoon of Mark juggling" class="avatar" />
 						<h3>Let's Work Together</h3>
 						<p>
 							Looking for someone who can help your team build better products faster?
 							I'm always open to discussing new projects, technical challenges, or opportunities to collaborate.
 						</p>
-						<div class="contact-methods">
-							<a href="mailto:mark@wylde.net">Email Me</a>
-							<a href="https://github.com/markwylde" target="_blank">GitHub</a>
-							<a href="https://linkedin.com/in/mwylde" target="_blank">LinkedIn</a>
+						<div class="pill-links">
+							<a class="pill pill-primary" href="mailto:mark@wylde.net">Email me</a>
+							<a class="pill" href="https://github.com/markwylde" target="_blank" rel="noreferrer">GitHub</a>
+							<a class="pill" href="https://linkedin.com/in/mwylde" target="_blank" rel="noreferrer">LinkedIn</a>
 						</div>
 					</div>
 				</div>
@@ -86,71 +86,55 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <style>
-	.avatar-container {
-		display: flex;
-		justify-content: center;
-		margin-bottom: 2rem;
-	}
-
-	.avatar {
-		width: 200px;
-		height: 200px;
-		border-bottom-left-radius: 50%;
-		border-bottom-right-radius: 50%;
-		object-fit: cover;
-		box-shadow: 0 5px 15px var(--shadow-color);
-	}
-
 	.about-content {
 		display: grid;
-		grid-template-columns: 2fr 1fr;
-		gap: 40px;
-		margin-top: 2rem;
+		grid-template-columns: minmax(0, 1fr) 19rem;
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
 	}
 
 	.about-text h3 {
 		margin-top: 2rem;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.focus-list {
-		margin-left: 1.5rem;
+		margin-left: 1.25rem;
 		margin-bottom: 1.5rem;
 	}
 
 	.focus-list li {
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.35rem;
 	}
 
 	.contact-section {
-		height: fit-content;
+		background-color: var(--surface-2);
+		border-radius: var(--radius-inner);
+		padding: 1.25rem;
 	}
 
-	.contact-methods {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		margin-top: 15px;
+	.avatar {
+		display: block;
+		width: 9rem;
+		height: auto;
 	}
 
-	.contact-methods a {
-		padding: 10px 20px;
-		border: 1px solid var(--border-color);
-		border-radius: 5px;
-		transition: background-color 0.3s ease, color 0.3s ease;
-		text-align: center;
+	.contact-section h3 {
+		font-size: 1.1rem;
+		margin: 1rem 0 0.5rem;
 	}
 
-	.contact-methods a:hover {
+	.contact-section .pill {
+		background-color: var(--secondary-bg);
+	}
+
+	.contact-section .pill-primary {
 		background-color: var(--accent-fill);
-		color: var(--on-accent);
-		text-decoration: none;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 860px) {
 		.about-content {
 			grid-template-columns: 1fr;
-			gap: 30px;
 		}
 	}
 </style>
