@@ -136,9 +136,9 @@ What people who've shipped this seem to do is not trust the subscription to last
 
 The fix was small once I knew the limit wasn't real. The placeholder banner is gone, so a push that only changes the count shows nothing. The phone tells each server it accepts those pushes. When I click into a terminal on my desktop, the server sends the phone a sealed push that says "here is what's still outstanding", and the service worker closes any banner that isn't on that list and sets the badge to the new total.
 
-On the phone itself, the terminal switcher shows which terminals need me.
+Writing this post is how I found out the phone layout had no notification list at all, so that got built too. The bell is at the top right and the list slides up from the bottom.
 
-![Terminay on a phone with the terminal switcher open, one terminal red and one green](../../assets/pwa-push/terminay-notifications-mobile.png)
+![Terminay on a phone with the Notifications sheet open](../../assets/pwa-push/terminay-notifications-mobile.png)
 
 I haven't tested any of this on Android yet. Web Push and VAPID are the same there, but I don't know how the badge calls or a push that shows nothing behave in Chrome on a phone, so I'm not going to claim it works until I've held one and watched it.
 
