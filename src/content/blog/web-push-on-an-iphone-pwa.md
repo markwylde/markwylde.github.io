@@ -138,7 +138,11 @@ The fix was small once I knew the limit wasn't real. The placeholder banner is g
 
 Writing the docs for this is how I found out the phone layout had no notification list at all, so that got built too. The bell is at the top right and the list slides up from the bottom.
 
+<div class="phone-shot">
+
 ![Terminay on a phone with the Notifications sheet open](../../assets/pwa-push/terminay-notifications-mobile.png)
+
+</div>
 
 I haven't tested any of this on Android yet. Web Push and VAPID are the same there, but I don't know how the badge calls or a push that shows nothing behave in Chrome on a phone, so I'm not going to claim it works until I've held one and watched it.
 

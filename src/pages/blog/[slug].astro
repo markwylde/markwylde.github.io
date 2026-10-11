@@ -149,6 +149,46 @@ const { Content } = await render(entry);
 		margin: 1.5rem 0;
 	}
 
+	/* A screenshot taken at phone width, drawn inside a phone so it is shown
+	   at about the size it is on a phone instead of filling the column. Wrap
+	   the image in <div class="phone-shot"> with a blank line either side. */
+	.blog-content :global(.phone-shot) {
+		display: flex;
+		justify-content: center;
+		margin: 2rem 0;
+	}
+
+	.blog-content :global(.phone-shot p) {
+		position: relative;
+		width: min(300px, 78vw);
+		margin: 0;
+		padding: 44px 10px 10px;
+		border: 1px solid #44484f;
+		border-radius: 46px;
+		background: #000;
+		box-shadow:
+			inset 0 0 0 2px #26292e,
+			0 18px 50px rgba(0, 0, 0, 0.3);
+	}
+
+	.blog-content :global(.phone-shot p::before) {
+		content: "";
+		position: absolute;
+		top: 13px;
+		left: 50%;
+		width: 84px;
+		height: 22px;
+		margin-left: -42px;
+		border-radius: 11px;
+		background: #17191c;
+	}
+
+	.blog-content :global(.phone-shot img) {
+		display: block;
+		margin: 0;
+		border-radius: 0 0 36px 36px;
+	}
+
 	.blog-content :global(table) {
 		width: 100%;
 		border-collapse: collapse;
