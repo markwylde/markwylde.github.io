@@ -136,7 +136,7 @@ What people who've shipped this seem to do is not trust the subscription to last
 
 The fix was small once I knew the limit wasn't real. The placeholder banner is gone, so a push that only changes the count shows nothing. The phone tells each server it accepts those pushes. When I click into a terminal on my desktop, the server sends the phone a sealed push that says "here is what's still outstanding", and the service worker closes any banner that isn't on that list and sets the badge to the new total.
 
-Writing this post is how I found out the phone layout had no notification list at all, so that got built too. The bell is at the top right and the list slides up from the bottom.
+Writing the docs for this is how I found out the phone layout had no notification list at all, so that got built too. The bell is at the top right and the list slides up from the bottom.
 
 ![Terminay on a phone with the Notifications sheet open](../../assets/pwa-push/terminay-notifications-mobile.png)
 
