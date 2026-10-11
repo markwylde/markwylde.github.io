@@ -1,5 +1,5 @@
 ---
-title: "Web Push on an iPhone PWA: badges, banners, and taking them back"
+title: "Web Push on an iPhone PWA"
 date: "2026-10-11"
 tags: ["Terminay", "PWA", "Web Push", "iOS", "Service Workers", "Claude Code"]
 excerpt: "I wanted Terminay's notifications on my phone, and I wanted them to disappear from my phone when I dealt with them on my desktop. Claude Code told me an iPhone couldn't do the second part and built around it. A throwaway test app showed that it can."
