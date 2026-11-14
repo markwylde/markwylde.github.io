@@ -1,4 +1,5 @@
 ---
+
 title: "AutoRules: AI-Powered Code Validation"
 date: "2025-10-04"
 tags: ["AI", "Code Quality", "Security", "Testing", "Open Source"]
@@ -12,6 +13,7 @@ I've been building [DarkAuth](https://github.com/puzed/darkauth), a zero-knowled
 As you can imagine, this project has some pretty serious concerns:
 
 **Security risks:**
+
 1. Accidentally sending the user's password to the server
 2. Accidentally sending the user's derived encryption key to the server
 3. Introducing vulnerabilities in controllers or models
@@ -64,6 +66,7 @@ include password data in the request body or headers.
 That's it. Title, glob pattern, separator, then natural language criteria.
 
 The glob pattern targets which files to check:
+
 - `src/**/*.ts` - all TypeScript files
 - `packages/*/controllers/*.ts` - just controllers
 - `**/*.{js,ts}` - both JS and TS files
@@ -81,6 +84,7 @@ Here's what happens when you run it:
 **5. Report**: After all files are checked, the AI does one final analysis looking at all the results together. This catches patterns across files that individual checks might miss. Then it generates an interactive HTML report.
 
 The report shows:
+
 - Total files checked per rule
 - Pass/fail counts
 - Which specific files failed and why
@@ -114,11 +118,13 @@ Speed comes from three things:
 ## Future ideas
 
 I'm thinking this could work really well in GitHub Actions. Imagine:
+
 - Run AutoRules on every pull request
 - Post results as a comment
 - Block merges if critical rules fail
 
 You could have rules like:
+
 - "Does this file use deprecated functions?"
 - "Are there any SQL injection vulnerabilities?"
 - "Does this follow our error handling patterns?"
@@ -129,6 +135,7 @@ It's like having an AI code reviewer that actually checks every file systematica
 ## When to use it
 
 AutoRules is great for:
+
 - Security-critical codebases where specific patterns must never appear
 - Enforcing code style consistency across large projects
 - Auditing third-party code or dependencies
@@ -136,6 +143,7 @@ AutoRules is great for:
 - Continuous monitoring of code quality
 
 Not ideal for:
+
 - Complex logic validation (AI can miss subtle bugs)
 - Anything requiring deep understanding of business logic
 - Real-time validation during development (it's fast but not instant)
@@ -151,6 +159,7 @@ Error handling is solid - if a file fails to check, it's reported but doesn't st
 ## What's next
 
 I've only got one rule so far for DarkAuth, but I'm planning to add more:
+
 - Check for encryption key leaks
 - Validate controller authorization patterns
 - Ensure database queries use parameterized statements

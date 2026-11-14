@@ -1,4 +1,5 @@
 ---
+
 title: "How to create a native http server"
 date: "2022-12-11"
 tags: ["Node.js", "HTTP", "JavaScript"]
@@ -14,7 +15,7 @@ Once you have NodeJS installed, you can create a new file called `server.js` and
 The first thing we need to do is to import the `http` module, which provides all of the functionality we need to create an HTTP server. You can do this by adding the following line of code to your server.js file:
 
 ```javascript
-import http from 'http';
+import http from "http";
 ```
 
 Next, we will use the `http.createServer()` method to create a new HTTP server. This method takes a callback function as an argument, which will be executed every time the server receives a new request.
@@ -34,8 +35,8 @@ Inside the callback function, you can add code to handle the incoming request an
 ```javascript
 const server = http.createServer((request, response) => {
   response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/html');
-  response.end('<h1>Hello, World!</h1>');
+  response.setHeader("Content-Type", "text/html");
+  response.end("<h1>Hello, World!</h1>");
 });
 ```
 
@@ -43,7 +44,7 @@ Finally, we need to start the server and listen for incoming requests on a speci
 
 ```javascript
 server.listen(3000, () => {
-  console.log('Server is listening on port 3000');
+  console.log("Server is listening on port 3000");
 });
 ```
 

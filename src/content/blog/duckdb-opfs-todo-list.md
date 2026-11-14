@@ -1,4 +1,5 @@
 ---
+
 title: "DuckDB and OPFS for Browser Storage"
 date: "2025-08-02"
 tags: ["DuckDB", "OPFS", "WebAssembly", "Functional Programming", "Web Storage", "TypeScript"]
@@ -55,18 +56,24 @@ I wrapped all the database stuff in functions:
 
 ```typescript
 async function addTodo(db: Database, text: string): Promise<void> {
-  await db.exec(`
+  await db.exec(
+    `
     INSERT INTO todos (text, completed, created_at) 
     VALUES (?, FALSE, CURRENT_TIMESTAMP)
-  `, [text]);
+  `,
+    [text],
+  );
 }
 
 async function toggleTodo(db: Database, id: number): Promise<void> {
-  await db.exec(`
+  await db.exec(
+    `
     UPDATE todos 
     SET completed = NOT completed 
     WHERE id = ?
-  `, [id]);
+  `,
+    [id],
+  );
 }
 ```
 
@@ -75,7 +82,7 @@ The OPFS part is where it gets interesting. When your browser supports it, DuckD
 ```typescript
 async function initializeDatabase(): Promise<Database> {
   const bundle = await DuckDBBundle();
-  
+
   if (bundle.logger) {
     bundle.logger.useConsole();
   }
@@ -83,12 +90,12 @@ async function initializeDatabase(): Promise<Database> {
   const worker = new Worker(bundle.mainWorker!);
   const logger = new ConsoleLogger();
   const db = new AsyncDuckDB(logger, worker);
-  
+
   await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
 
   // OPFS connection when available
   const conn = await db.connect();
-  
+
   return { db, conn };
 }
 ```
@@ -112,13 +119,13 @@ The UI updates reactively without any framework:
 
 ```typescript
 function renderTodos(state: TodoState): void {
-  const container = document.getElementById('todo-list');
+  const container = document.getElementById("todo-list");
   if (!container) return;
-  
+
   const filteredTodos = getFilteredTodos(state);
   container.innerHTML = filteredTodos
-    .map(todo => renderTodoItem(todo))
-    .join('');
+    .map((todo) => renderTodoItem(todo))
+    .join("");
 }
 ```
 
@@ -127,6 +134,7 @@ function renderTodos(state: TodoState): void {
 It falls back gracefully. If your browser supports OPFS, you get persistence. If not, it runs in memory and you lose data on refresh. No configuration needed.
 
 The WebAssembly overhead is pretty minimal:
+
 - About 2MB initial download
 - Queries run at near-native speed
 - Memory usage is efficient
@@ -148,12 +156,14 @@ The main challenge is the bundle size. 2MB is a lot for some use cases, though i
 ## When to use this
 
 It's great for:
+
 - Offline-first apps
 - Data analysis tools
 - Privacy-focused apps where data never leaves the device
 - Prototypes that don't need a backend
 
 Probably not ideal for:
+
 - Apps where bundle size matters a lot
 - Anything that needs IE support
 - Real-time collaboration

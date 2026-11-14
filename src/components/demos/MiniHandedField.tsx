@@ -19,30 +19,39 @@ const CSS = `
 export default function MiniHandedField() {
   const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const r = root.current!;
+    const container = root.current;
+    if (!container) return;
+    const r = container;
     const field = r.querySelector("#field") as SVGGElement;
     const palm = r.querySelector("#palm") as SVGTextElement;
     const ring = r.querySelector("#ring") as SVGCircleElement;
     const handsEl = r.querySelector("#hands") as HTMLElement;
     const NS = "http://www.w3.org/2000/svg";
-    const W = 360, H = 250;
+    const W = 360,
+      H = 250;
     let handed = "right";
 
     type Pt = { x: number; y: number };
 
     const pivotFor = (): Pt =>
-      handed === "left" ? { x: -W * 0.1, y: H * 1.28 } : { x: W * 1.1, y: H * 1.28 };
+      handed === "left"
+        ? { x: -W * 0.1, y: H * 1.28 }
+        : { x: W * 1.1, y: H * 1.28 };
 
     // a lateral stroke of length L centred at M: arc on the circle of radius |M-Pv| about Pv
     function lateralArc(M: Pt, L: number, pv: Pt) {
-      const rx = M.x - pv.x, ry = M.y - pv.y, R = Math.hypot(rx, ry) || 1;
-      const radx = rx / R, rady = ry / R;          // unit, pivot -> point (away from pivot)
-      const tx = -rady, ty = radx;             // tangential (perpendicular)
-      const S = { x: M.x - tx * L / 2, y: M.y - ty * L / 2 };
-      const E = { x: M.x + tx * L / 2, y: M.y + ty * L / 2 };
-      const dphi = 2 * Math.asin(Math.min(1, (L / 2) / R));
+      const rx = M.x - pv.x,
+        ry = M.y - pv.y,
+        R = Math.hypot(rx, ry) || 1;
+      const radx = rx / R,
+        rady = ry / R; // unit, pivot -> point (away from pivot)
+      const tx = -rady,
+        ty = radx; // tangential (perpendicular)
+      const S = { x: M.x - (tx * L) / 2, y: M.y - (ty * L) / 2 };
+      const E = { x: M.x + (tx * L) / 2, y: M.y + (ty * L) / 2 };
+      const dphi = 2 * Math.asin(Math.min(1, L / 2 / R));
       const sagitta = R * (1 - Math.cos(dphi / 2));
-      const C = { x: M.x + radx * 2 * sagitta, y: M.y + rady * 2 * sagitta };   // control bulges away from pivot
+      const C = { x: M.x + radx * 2 * sagitta, y: M.y + rady * 2 * sagitta }; // control bulges away from pivot
       return { S, E, C };
     }
 
@@ -53,21 +62,42 @@ export default function MiniHandedField() {
         for (let cy = 52; cy <= 198; cy += 49) {
           const { S, E, C } = lateralArc({ x: cx, y: cy }, 46, pv);
           const a = document.createElementNS(NS, "path");
-          a.setAttribute("class", "arc"); a.setAttribute("d", `M ${S.x} ${S.y} Q ${C.x} ${C.y} ${E.x} ${E.y}`);
+          a.setAttribute("class", "arc");
+          a.setAttribute("d", `M ${S.x} ${S.y} Q ${C.x} ${C.y} ${E.x} ${E.y}`);
           const d = document.createElementNS(NS, "circle");
-          d.setAttribute("class", "end"); d.setAttribute("cx", String(E.x)); d.setAttribute("cy", String(E.y)); d.setAttribute("r", "2.6");
-          field.appendChild(a); field.appendChild(d);
+          d.setAttribute("class", "end");
+          d.setAttribute("cx", String(E.x));
+          d.setAttribute("cy", String(E.y));
+          d.setAttribute("r", "2.6");
+          field.appendChild(a);
+          field.appendChild(d);
         }
       }
-      const px = handed === "left" ? 26 : 320, py = 212;
-      palm.setAttribute("x", String(px - 11)); palm.setAttribute("y", String(py + 8));
-      ring.setAttribute("cx", String(px)); ring.setAttribute("cy", String(py));
+      const px = handed === "left" ? 26 : 320,
+        py = 212;
+      palm.setAttribute("x", String(px - 11));
+      palm.setAttribute("y", String(py + 8));
+      ring.setAttribute("cx", String(px));
+      ring.setAttribute("cy", String(py));
     }
 
-    ([["right", "Right-handed"], ["left", "Left-handed"]] as const).forEach(([h, label]) => {
+    (
+      [
+        ["right", "Right-handed"],
+        ["left", "Left-handed"],
+      ] as const
+    ).forEach(([h, label]) => {
       const b = document.createElement("button");
-      b.className = "btn" + (h === handed ? " active" : ""); b.textContent = label;
-      b.addEventListener("click", () => { handed = h; [...handsEl.children].forEach(c => c.classList.remove("active")); b.classList.add("active"); draw(); });
+      b.className = `btn${h === handed ? " active" : ""}`;
+      b.textContent = label;
+      b.addEventListener("click", () => {
+        handed = h;
+        [...handsEl.children].forEach((c) => {
+          c.classList.remove("active");
+        });
+        b.classList.add("active");
+        draw();
+      });
       handsEl.appendChild(b);
     });
     draw();
@@ -77,12 +107,32 @@ export default function MiniHandedField() {
     <div className="demo demo-handed-field" ref={root}>
       <style>{CSS}</style>
       <div className="mini">
-        <div className="caption">Each stroke here is a <b>lateral (sideways) swipe</b>, the kind that traces a circular arc centred on the wrist. They fan out as concentric arcs around the palm — and they're <b>tighter near the palm, gentler far away</b>, because curvature is 1 ÷ radius. Flip the handedness and the whole fan mirrors.</div>
+        <div className="caption">
+          Each stroke here is a <b>lateral (sideways) swipe</b>, the kind that
+          traces a circular arc centred on the wrist. They fan out as concentric
+          arcs around the palm — and they're{" "}
+          <b>tighter near the palm, gentler far away</b>, because curvature is 1
+          ÷ radius. Flip the handedness and the whole fan mirrors.
+        </div>
         <div className="stage">
-          <svg id="svg" viewBox="0 0 360 250" preserveAspectRatio="xMidYMid meet">
-            <rect className="pad" x="16" y="14" width="328" height="208" rx="12" />
+          <svg
+            id="svg"
+            viewBox="0 0 360 250"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <title>Cursor arcs around the wrist</title>
+            <rect
+              className="pad"
+              x="16"
+              y="14"
+              width="328"
+              height="208"
+              rx="12"
+            />
             <circle className="palm-ring" id="ring" r="16" />
-            <text className="palm" id="palm">🤚</text>
+            <text className="palm" id="palm">
+              🤚
+            </text>
             <g id="field"></g>
           </svg>
         </div>

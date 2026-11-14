@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
 
+type Point = { x: number; y: number };
+type OnFrame = ((point: Point) => void) | null;
+type Geometry = { left: number; top: number; width: number; height: number };
+
 const CSS = `
 .demo-cursor{max-width:1000px;margin:1.75rem auto;border:1px solid var(--border-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
   --accent:#3584e4;       /* Adwaita blue   */
@@ -118,7 +122,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const r = root.current!;
+    const container = root.current;
+    if (!container) return;
+    const r = container;
     let alive = true;
     let lastRaf = 0;
     const rafs = new Set<number>();
@@ -141,7 +147,13 @@ export default function CursorDemo({ variant }: { variant: number }) {
     const loopEl = r.querySelector("#loop") as HTMLInputElement;
 
     const filesIcon = r.querySelector("#filesIcon") as HTMLElement;
-    const explorer = r.querySelector("#explorer") as any;
+    let restoreGeometry: {
+      left: string;
+      top: string;
+      width: string;
+      height: string;
+    } | null = null;
+    const explorer = r.querySelector("#explorer") as HTMLElement;
     const explorerBar = r.querySelector("#explorerBar") as HTMLElement;
     const explorerMin = r.querySelector("#explorerMin") as HTMLElement;
     const explorerMax = r.querySelector("#explorerMax") as HTMLElement;
@@ -205,15 +217,15 @@ export default function CursorDemo({ variant }: { variant: number }) {
       return { x: rc.x + rc.w * fx, y: rc.y + rc.h * fy };
     }
     const centerOf = (el: Element) => pointOf(el, 0.5, 0.5);
-    function posOf(el: any) {
+    function posOf(el: HTMLElement) {
       return {
         x: parseFloat(el.style.left) || 0,
         y: parseFloat(el.style.top) || 0,
       };
     }
-    function setPos(el: any, x: number, y: number) {
-      el.style.left = x + "px";
-      el.style.top = y + "px";
+    function setPos(el: HTMLElement, x: number, y: number) {
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
     }
     function clampPos(el: Element, x: number, y: number) {
       const rc = rectOf(el);
@@ -230,7 +242,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
       const maxY = Math.max(TOP + 6, screen.clientHeight - DOCK - rc.h);
       return { x: rand(6, maxX), y: rand(TOP + 6, maxY) };
     }
-    function farDestFor(el: Element) {
+    function farDestFor(el: HTMLElement) {
       const cur = posOf(el);
       let best = randomDestFor(el),
         bestD = -1;
@@ -248,7 +260,13 @@ export default function CursorDemo({ variant }: { variant: number }) {
     // ===================================================================
     //  MOTION  —  shared helpers (defined once, reused by mt1..mt7)
     // ===================================================================
-    function cubicBezier(p0: any, p1: any, p2: any, p3: any, t: number) {
+    function cubicBezier(
+      p0: Point,
+      p1: Point,
+      p2: Point,
+      p3: Point,
+      t: number,
+    ) {
       const u = 1 - t,
         uu = u * u,
         tt = t * t;
@@ -288,7 +306,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     const randomEaser = () =>
       makeEaser(rand(0.2, 0.5), rand(0, 0.12), rand(0.5, 0.8), rand(0.88, 1));
     const easeMinJerk = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
-    const quad = (p0: any, c: any, p1: any, t: number) => {
+    const quad = (p0: Point, c: Point, p1: Point, t: number) => {
       const u = 1 - t;
       return {
         x: u * u * p0.x + 2 * u * t * c.x + t * t * p1.x,
@@ -296,8 +314,8 @@ export default function CursorDemo({ variant }: { variant: number }) {
       };
     };
     const on = (id: string) => {
-      const e = r.querySelector("#" + id) as HTMLInputElement | null;
-      return !!(e && e.checked);
+      const e = r.querySelector(`#${id}`) as HTMLInputElement | null;
+      return !!e?.checked;
     };
     function palmPivot() {
       const W = screen.clientWidth,
@@ -309,7 +327,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 1: teleport ----
-    function mt1(end: any, onFrame: any = null, _curveMul = 1) {
+    function mt1(end: Point, onFrame: OnFrame = null, _curveMul = 1) {
       pos.x = end.x;
       pos.y = end.y;
       applyCursor();
@@ -318,7 +336,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 2: straight line, constant speed ----
-    function mt2(end: any, onFrame: any = null, _curveMul = 1) {
+    function mt2(end: Point, onFrame: OnFrame = null, _curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -342,7 +360,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 3: eased straight, min-jerk ----
-    function mt3(end: any, onFrame: any = null, _curveMul = 1) {
+    function mt3(end: Point, onFrame: OnFrame = null, _curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -367,7 +385,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 4: eased quadratic curve, fixed bow ----
-    function mt4(end: any, onFrame: any = null, curveMul = 1) {
+    function mt4(end: Point, onFrame: OnFrame = null, curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -399,7 +417,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 5: cubic, randomised control points, |sin2θ| weighting ----
-    function mt5(end: any, onFrame: any = null, curveMul = 1) {
+    function mt5(end: Point, onFrame: OnFrame = null, curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -448,7 +466,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 6: palm-pivot clothoid + randomise ----
-    function mt6(end: any, onFrame: any = null, curveMul = 1) {
+    function mt6(end: Point, onFrame: OnFrame = null, curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -513,7 +531,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     // ---- Stage 7: composable, reads fx checkboxes live ----
-    function mt7(end: any, onFrame: any = null, curveMul = 1) {
+    function mt7(end: Point, onFrame: OnFrame = null, curveMul = 1) {
       return new Promise<void>((resolve) => {
         const start = { x: pos.x, y: pos.y };
         const dx = end.x - start.x,
@@ -557,7 +575,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
         }
 
         // control points
-        let c1: any, c2: any;
+        let c1: Point, c2: Point;
         if (!useCurve) {
           c1 = { x: start.x + dx * 0.33, y: start.y + dy * 0.33 };
           c2 = { x: start.x + dx * 0.66, y: start.y + dy * 0.66 };
@@ -630,7 +648,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
     }
 
     const movers = [mt1, mt2, mt3, mt4, mt5, mt6, mt7];
-    const moveTo = (end: any, onFrame: any = null, curveMul = 1) =>
+    const moveTo = (end: Point, onFrame: OnFrame = null, curveMul = 1) =>
       movers[variant - 1](end, onFrame, curveMul);
     // ===================================================================
 
@@ -664,9 +682,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
 
     function spawnRipple(x: number, y: number, right = false) {
       const rip = document.createElement("div");
-      rip.className = "ripple" + (right ? " right" : "");
-      rip.style.left = x + "px";
-      rip.style.top = y + "px";
+      rip.className = `ripple${right ? " right" : ""}`;
+      rip.style.left = `${x}px`;
+      rip.style.top = `${y}px`;
       screen.appendChild(rip);
       setTimeout(() => rip.remove(), 600);
     }
@@ -684,25 +702,25 @@ export default function CursorDemo({ variant }: { variant: number }) {
       if (el) el.classList.remove("pressed");
       await releaseCursor();
     }
-    async function clickAt(point: any, el: Element | null) {
+    async function clickAt(point: Point, el: Element | null) {
       await moveTo(point);
       await tapGesture(el);
     }
     async function click(el: Element) {
       await clickAt(centerOf(el), el);
     }
-    async function doubleClickAt(point: any, el: Element | null) {
+    async function doubleClickAt(point: Point, el: Element | null) {
       await moveTo(point);
       await tapGesture(el);
       await sleep(jitter(110, 25));
       await tapGesture(el);
     }
-    async function rightClickAt(point: any, el: Element | null) {
+    async function rightClickAt(point: Point, el: Element | null) {
       await moveTo(point);
       await tapGesture(el, { right: true });
     }
 
-    async function grabAndDrag(win: any, handle: Element, dest: any) {
+    async function grabAndDrag(win: HTMLElement, handle: Element, dest: Point) {
       const hb = rectOf(handle);
       const grab = { x: hb.x + hb.w * rand(0.3, 0.6), y: hb.y + hb.h * 0.5 };
       await moveTo(grab);
@@ -715,7 +733,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
       const destCursor = { x: dest.x + offX, y: dest.y + offY };
       await moveTo(
         destCursor,
-        (p: any) => {
+        (p: Point) => {
           const c = clampPos(win, p.x - offX, p.y - offY);
           setPos(win, c.x, c.y);
         },
@@ -763,11 +781,11 @@ export default function CursorDemo({ variant }: { variant: number }) {
         height: H * 0.52,
       };
     }
-    function applyGeom(g: any) {
-      explorer.style.left = g.left + "px";
-      explorer.style.top = g.top + "px";
-      explorer.style.width = g.width + "px";
-      explorer.style.height = g.height + "px";
+    function applyGeom(g: Geometry) {
+      explorer.style.left = `${g.left}px`;
+      explorer.style.top = `${g.top}px`;
+      explorer.style.width = `${g.width}px`;
+      explorer.style.height = `${g.height}px`;
     }
 
     async function openExplorer() {
@@ -788,7 +806,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
 
     async function maximizeExplorer(): Promise<void> {
       if (explorer.classList.contains("maximized")) return restoreExplorer();
-      explorer._restore = {
+      restoreGeometry = {
         left: explorer.style.left,
         top: explorer.style.top,
         width: explorer.style.width,
@@ -796,21 +814,21 @@ export default function CursorDemo({ variant }: { variant: number }) {
       };
       explorer.classList.add("tween", "maximized");
       explorer.style.left = "8px";
-      explorer.style.top = TOP + 6 + "px";
-      explorer.style.width = screen.clientWidth - 16 + "px";
-      explorer.style.height = screen.clientHeight - TOP - DOCK - 12 + "px";
+      explorer.style.top = `${TOP + 6}px`;
+      explorer.style.width = `${screen.clientWidth - 16}px`;
+      explorer.style.height = `${screen.clientHeight - TOP - DOCK - 12}px`;
       await sleep(300);
       explorer.classList.remove("tween");
     }
     async function restoreExplorer() {
-      if (!explorer._restore) return;
+      if (!restoreGeometry) return;
       explorer.classList.add("tween");
       explorer.classList.remove("maximized");
       applyGeom({
-        left: parseFloat(explorer._restore.left),
-        top: parseFloat(explorer._restore.top),
-        width: parseFloat(explorer._restore.width),
-        height: parseFloat(explorer._restore.height),
+        left: parseFloat(restoreGeometry.left),
+        top: parseFloat(restoreGeometry.top),
+        width: parseFloat(restoreGeometry.width),
+        height: parseFloat(restoreGeometry.height),
       });
       await sleep(300);
       explorer.classList.remove("tween");
@@ -895,8 +913,8 @@ export default function CursorDemo({ variant }: { variant: number }) {
       const rc = menu.getBoundingClientRect();
       const cx = Math.min(x, screen.clientWidth - rc.width - 6);
       const cy = Math.min(y, screen.clientHeight - DOCK - rc.height);
-      menu.style.left = Math.max(6, cx) + "px";
-      menu.style.top = Math.max(TOP + 6, cy) + "px";
+      menu.style.left = `${Math.max(6, cx)}px`;
+      menu.style.top = `${Math.max(TOP + 6, cy)}px`;
       raf(() => menu.classList.add("in"));
     }
     function hideMenu(menu: HTMLElement) {
@@ -917,7 +935,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
       explorer.classList.remove("maximized", "minimized", "tween", "lifted");
       explorer.style.transform = "";
       explorer.style.opacity = "";
-      explorer._restore = null;
+      restoreGeometry = null;
       taskItem.classList.remove("active", "minimized");
       folderDocs.classList.remove("deleted", "selected");
     }
@@ -1076,13 +1094,13 @@ export default function CursorDemo({ variant }: { variant: number }) {
     });
 
     // ---- manual window dragging (delegated to any .titlebar) ------------
-    let manual: any = null;
+    let manual: { win: HTMLElement; offX: number; offY: number } | null = null;
     screen.addEventListener("pointerdown", (e: PointerEvent) => {
       if (running) return;
       const t = e.target as Element;
       const bar = t.closest(".titlebar");
       if (!bar || t.closest(".win-controls")) return;
-      const win = bar.closest(".win") as any;
+      const win = bar.closest<HTMLElement>(".win");
       if (
         !win ||
         win.classList.contains("maximized") ||
@@ -1120,7 +1138,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
 
     const onResize = () => {
       syncLayer();
-      [explorer, confirmModal].forEach((w: any) => {
+      [explorer, confirmModal].forEach((w) => {
         if (w.style.display !== "none" && !w.classList.contains("maximized")) {
           const c = clampPos(w, posOf(w).x, posOf(w).y);
           setPos(w, c.x, c.y);
@@ -1151,7 +1169,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
       alive = false;
       running = false;
       cancelAnimationFrame(lastRaf);
-      rafs.forEach((id) => cancelAnimationFrame(id));
+      rafs.forEach((id) => {
+        cancelAnimationFrame(id);
+      });
       rafs.clear();
       if (clockTimer) clearTimeout(clockTimer);
       animateBtn.removeEventListener("click", run);
@@ -1170,8 +1190,8 @@ export default function CursorDemo({ variant }: { variant: number }) {
         {variant === 7 ? (
           <>
             <div className="ctl-row">
-              <button className="btn-animate" id="animateBtn">
-                <svg viewBox="0 0 24 24" fill="currentColor">
+              <button type="button" className="btn-animate" id="animateBtn">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
                 </svg>{" "}
                 Run
@@ -1212,8 +1232,8 @@ export default function CursorDemo({ variant }: { variant: number }) {
           </>
         ) : (
           <div className="ctl-row">
-            <button className="btn-animate" id="animateBtn">
-              <svg viewBox="0 0 24 24" fill="currentColor">
+            <button type="button" className="btn-animate" id="animateBtn">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>{" "}
               Run
@@ -1245,6 +1265,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           </div>
           <div className="tb-status">
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -1253,6 +1274,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01" />
             </svg>
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -1262,6 +1284,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <path d="M15.5 8.5a5 5 0 0 1 0 7" />
             </svg>
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -1278,6 +1301,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="titlebar" id="explorerBar">
             <span className="win-title">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#5566c4"
@@ -1288,8 +1312,14 @@ export default function CursorDemo({ variant }: { variant: number }) {
               Home
             </span>
             <div className="win-controls">
-              <button className="win-ctl min" id="explorerMin" title="Minimize">
+              <button
+                type="button"
+                className="win-ctl min"
+                id="explorerMin"
+                title="Minimize"
+              >
                 <svg
+                  aria-hidden="true"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1298,8 +1328,14 @@ export default function CursorDemo({ variant }: { variant: number }) {
                   <path d="M5 12h14" />
                 </svg>
               </button>
-              <button className="win-ctl max" id="explorerMax" title="Maximize">
+              <button
+                type="button"
+                className="win-ctl max"
+                id="explorerMax"
+                title="Maximize"
+              >
                 <svg
+                  aria-hidden="true"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1309,11 +1345,13 @@ export default function CursorDemo({ variant }: { variant: number }) {
                 </svg>
               </button>
               <button
+                type="button"
                 className="win-ctl close"
                 id="explorerClose"
                 title="Close"
               >
                 <svg
+                  aria-hidden="true"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1329,6 +1367,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="sb-head">Places</div>
               <div className="sb-item active">
                 <svg
+                  aria-hidden="true"
                   width="14"
                   height="14"
                   viewBox="0 0 24 24"
@@ -1342,6 +1381,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               </div>
               <div className="sb-item">
                 <svg
+                  aria-hidden="true"
                   width="14"
                   height="14"
                   viewBox="0 0 24 24"
@@ -1355,6 +1395,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               </div>
               <div className="sb-item">
                 <svg
+                  aria-hidden="true"
                   width="14"
                   height="14"
                   viewBox="0 0 24 24"
@@ -1371,6 +1412,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="folder" id="folderDocs">
                 <span className="fi">
                   <svg
+                    aria-hidden="true"
                     viewBox="0 0 24 24"
                     fill="#9bb6ff"
                     stroke="#5e7ce0"
@@ -1384,6 +1426,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="folder">
                 <span className="fi">
                   <svg
+                    aria-hidden="true"
                     viewBox="0 0 24 24"
                     fill="#9bb6ff"
                     stroke="#5e7ce0"
@@ -1397,6 +1440,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="folder">
                 <span className="fi">
                   <svg
+                    aria-hidden="true"
                     viewBox="0 0 24 24"
                     fill="#9bb6ff"
                     stroke="#5e7ce0"
@@ -1410,6 +1454,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="folder">
                 <span className="fi">
                   <svg
+                    aria-hidden="true"
                     viewBox="0 0 24 24"
                     fill="#fff"
                     stroke="#9aa3bd"
@@ -1424,6 +1469,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <div className="folder">
                 <span className="fi">
                   <svg
+                    aria-hidden="true"
                     viewBox="0 0 24 24"
                     fill="#fff"
                     stroke="#9aa3bd"
@@ -1443,8 +1489,14 @@ export default function CursorDemo({ variant }: { variant: number }) {
         <section className="win modal" id="confirmModal">
           <div className="titlebar" id="confirmBar">
             <div className="win-controls">
-              <button className="win-ctl close" id="confirmX" title="Close">
+              <button
+                type="button"
+                className="win-ctl close"
+                id="confirmX"
+                title="Close"
+              >
                 <svg
+                  aria-hidden="true"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1458,6 +1510,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="modal-body">
             <div className="ic">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1472,10 +1525,10 @@ export default function CursorDemo({ variant }: { variant: number }) {
               cannot be undone.
             </p>
             <div className="modal-actions">
-              <button className="ui-btn" id="confirmNo">
+              <button type="button" className="ui-btn" id="confirmNo">
                 Cancel
               </button>
-              <button className="ui-btn danger" id="confirmYes">
+              <button type="button" className="ui-btn danger" id="confirmYes">
                 Delete
               </button>
             </div>
@@ -1487,6 +1540,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="ctx-item">
             <span className="ck">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1500,6 +1554,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="ctx-item">
             <span className="ck">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1514,6 +1569,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="ctx-item danger" id="menuDelete">
             <span className="ck">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1530,6 +1586,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="ctx-item" id="taskRestore">
             <span className="ck">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1544,6 +1601,7 @@ export default function CursorDemo({ variant }: { variant: number }) {
           <div className="ctx-item danger" id="taskClose">
             <span className="ck">
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1558,8 +1616,14 @@ export default function CursorDemo({ variant }: { variant: number }) {
 
         {/* dock */}
         <div className="dock">
-          <button className="dock-app" id="filesIcon" aria-label="Files">
+          <button
+            type="button"
+            className="dock-app"
+            id="filesIcon"
+            aria-label="Files"
+          >
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#9fc0ff"
@@ -1569,8 +1633,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
             </svg>
             <span className="run-dot"></span>
           </button>
-          <button className="dock-app" aria-label="Text Editor">
+          <button type="button" className="dock-app" aria-label="Text Editor">
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#ffd07a"
@@ -1581,8 +1646,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <path d="M9 13h6M9 16h6" />
             </svg>
           </button>
-          <button className="dock-app" aria-label="Terminal">
+          <button type="button" className="dock-app" aria-label="Terminal">
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#9be59b"
@@ -1592,8 +1658,9 @@ export default function CursorDemo({ variant }: { variant: number }) {
               <path d="m7 9 3 3-3 3M13 15h4" />
             </svg>
           </button>
-          <button className="dock-app" aria-label="Web">
+          <button type="button" className="dock-app" aria-label="Web">
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#9fd0ff"
@@ -1604,8 +1671,8 @@ export default function CursorDemo({ variant }: { variant: number }) {
             </svg>
           </button>
           <span className="dock-sep"></span>
-          <button className="dock-app" aria-label="Show Apps">
-            <svg viewBox="0 0 24 24" fill="#cfd6ff">
+          <button type="button" className="dock-app" aria-label="Show Apps">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="#cfd6ff">
               <circle cx="6" cy="6" r="2" />
               <circle cx="12" cy="6" r="2" />
               <circle cx="18" cy="6" r="2" />
@@ -1620,12 +1687,18 @@ export default function CursorDemo({ variant }: { variant: number }) {
         </div>
 
         <svg
+          aria-hidden="true"
           className="path-layer"
           id="pathLayer"
           preserveAspectRatio="none"
         ></svg>
 
-        <svg className="cursor" id="cursor" viewBox="0 0 24 24">
+        <svg
+          aria-hidden="true"
+          className="cursor"
+          id="cursor"
+          viewBox="0 0 24 24"
+        >
           <path
             d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z"
             fill="#ffffff"

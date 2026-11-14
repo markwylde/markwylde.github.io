@@ -1,4 +1,5 @@
 ---
+
 title: "Building AntNS: DNS for the Decentralized Internet"
 date: "2026-01-01"
 tags: ["Decentralization", "Autonomi", "DNS", "Cryptography", "Open Source"]
@@ -18,6 +19,7 @@ So, lets look at traditional DNS. You type `example.com` into your browser, it g
 [Autonomi](https://autonomi.com/) (formerly MaidSafe/Safe Network) is a decentralized data network where both mutable and immutable data can be stored without central servers. Think of it as web3 done right - no blockchain bloat, no proof-of-work mining, just distributed storage and compute.
 
 The network provides:
+
 - **Immutable data** (chunks) - Upload once, addressed by content hash
 - **Mutable data** (pointers, registers) - Update as needed while maintaining history
 - **No servers** - Data is distributed across nodes with automatic redundancy
@@ -36,12 +38,16 @@ Just register once, own it cryptographically, and anyone can look it up.
 Autonomi's register system creates a conflict between **discoverability** and **ownership**:
 
 ### Option 1: Unique Keys (Secure)
+
 If everyone generates their own unique register signing key, the register address is `hash(your_unique_key + domain_name)`. This means:
+
 - ✅ Only you can edit it
 - ❌ Nobody else can find it (they don't have your key)
 
 ### Option 2: Shared Key (Discoverable)
+
 If everyone uses the same well-known key, everyone derives the same address. This means:
+
 - ✅ Anyone can find it
 - ❌ Anyone can edit it
 
@@ -56,17 +62,20 @@ Before diving into my solution, it's worth looking at how [AntTP](https://github
 AntTP uses pointers with a clever trick. Autonomi pointers have a counter field that acts as a version number - the highest counter wins in conflict resolution. AntTP's experimental domain resolver works like this:
 
 **Two-level pointer system:**
+
 ```
 Name "mysite" → Shared Key Pointer (counter = MAX) → User's Own Pointer → Content
 ```
 
 **Level 1 (Shared Key Pointer):**
+
 - Derived from a shared secret everyone knows
 - First person to register sets counter to `u64::MAX` (18,446,744,073,709,551,614)
 - Attackers can't override because you literally can't go higher than MAX
 - Points to your level 2 pointer
 
 **Level 2 (User's Pointer):**
+
 - Created with your own private key
 - You can update this anytime to point to new content
 - Owner can transfer by updating level 1 to point to someone else's level 2
@@ -80,6 +89,7 @@ The trade-off? There's a race condition window until you set counter to MAX, and
 I took a different approach using registers instead of pointers. Registers keep a full history as a linked list rather than just the latest version, which lets me do application-layer validation.
 
 **The hybrid solution:**
+
 1. **Shared register key** → Universal discoverability (everyone can find `mydomain.ant`)
 2. **Ed25519 signatures** → Cryptographic ownership (only the key holder creates valid entries)
 3. **Spam filtering** → Invalid entries are ignored during lookup
@@ -95,6 +105,7 @@ Register: mydomain.ant (deterministic address via shared key)
 ```
 
 **Lookup behavior:**
+
 1. Download entry 1 to get the owner's public key
 2. Process entries 2+ in order
 3. Verify each signature against the owner's public key
@@ -104,6 +115,7 @@ Register: mydomain.ant (deterministic address via shared key)
 This is why I like the signature approach - the public key is set as the first history item, then only accepts changes signed by that key. It's application-layer ownership enforcement rather than protocol-layer.
 
 **Why this works:**
+
 - ✅ Anyone can find your domain (shared key = deterministic address)
 - ✅ Only you can update it (Ed25519 signature verification)
 - ✅ Spam is filtered client-side (invalid signatures ignored)
@@ -116,12 +128,14 @@ The trade-off? Lookup is O(n) where n = number of updates. You have to traverse 
 ## Why Decentralized Internet Matters
 
 Traditional internet infrastructure is centralized at multiple points:
+
 - **DNS** - ICANN and registrars control names
 - **Hosting** - AWS, Google, Cloudflare host most of the web
 - **CDNs** - A handful of companies serve most traffic
 - **Certificate authorities** - Trust relies on a few CAs
 
 This creates:
+
 - **Single points of failure** - One company goes down, huge swaths of the internet fail
 - **Censorship risk** - Corporations can pressure these choke points
 - **Privacy concerns** - These companies see everything
@@ -130,6 +144,7 @@ This creates:
 Autonomi solves this by distributing data across thousands of nodes with no single point of control. MaidSafe has been working on this problem since 2006, and the network is finally reaching maturity.
 
 With AntNS, you can register a domain, upload your content, and know that:
+
 - Nobody can take it away from you
 - Nobody can censor it
 - Nobody controls the infrastructure
@@ -145,6 +160,7 @@ antns names register mydomain.ant
 ```
 
 Behind the scenes:
+
 1. Generate an Ed25519 keypair for the domain
 2. Create an owner document with the public key
 3. Upload it as a chunk to Autonomi
@@ -163,6 +179,7 @@ antns names lookup mydomain.ant
 ```
 
 Behind the scenes:
+
 1. Derive register address from domain name using shared key
 2. Fetch complete register history
 3. Download entry 1 (owner document)
@@ -184,6 +201,7 @@ sudo antns server start
 ```
 
 This starts:
+
 - **DNS server (port 5354)** - Intercepts `.ant` queries and returns 127.0.0.1
 - **HTTP proxy (port 18888)** - Fetches content from Autonomi and serves to browser
 
@@ -196,6 +214,7 @@ port 5354
 ```
 
 Now when you browse to `http://mysite.ant`, your system:
+
 1. Queries DNS server for `mysite.ant`
 2. Gets back 127.0.0.1
 3. Sends HTTP request to localhost:18888
@@ -208,11 +227,13 @@ It just works. Type a `.ant` domain in your browser and get a website from the d
 ## The Implementation
 
 The core is built in Rust using the Autonomi SDK. I chose Rust because:
+
 - The Autonomi SDK is native Rust
 - Cryptographic operations need to be correct
 - Performance matters for DNS lookups
 
 Key libraries:
+
 - `ant_protocol` - Autonomi network client
 - `ed25519-dalek` - Ed25519 signatures
 - `trust-dns-server` - DNS server implementation
@@ -243,18 +264,19 @@ sudo antns server start --ttl=0
 
 Both AntTP's pointer maxing and AntNS's signature validation solve the same problem in different ways:
 
-| Aspect | AntTP (Pointers) | AntNS (Registers) |
-|--------|------------------|-------------------|
-| Lookup speed | O(1) after cache | O(n) signature checks |
-| Update limit | One (at MAX) per level | Unlimited |
-| Protocol security | Counter CRDT | Application layer |
-| Transfer complexity | Pointer chain grows | No change |
-| Spam resistance | Can't add (locked at MAX) | Client-side filtering |
-| History | Only current state | Complete audit trail |
+| Aspect              | AntTP (Pointers)          | AntNS (Registers)     |
+| ------------------- | ------------------------- | --------------------- |
+| Lookup speed        | O(1) after cache          | O(n) signature checks |
+| Update limit        | One (at MAX) per level    | Unlimited             |
+| Protocol security   | Counter CRDT              | Application layer     |
+| Transfer complexity | Pointer chain grows       | No change             |
+| Spam resistance     | Can't add (locked at MAX) | Client-side filtering |
+| History             | Only current state        | Complete audit trail  |
 
 Neither is strictly better - it depends on your use case. AntTP's approach is simpler and faster for static names. AntNS provides unlimited updates and a full audit trail.
 
 I went with registers because I wanted:
+
 - Complete update history
 - No practical limit on updates
 - Application-layer flexibility (can add features like subdomain delegation)
@@ -265,6 +287,7 @@ I went with registers because I wanted:
 AntNS currently supports basic DNS records (ANT, TEXT, CNAME). Future plans:
 
 **Subdomain support:**
+
 ```json
 {
   "type": "ant",
@@ -274,17 +297,20 @@ AntNS currently supports basic DNS records (ANT, TEXT, CNAME). Future plans:
 ```
 
 **Multiple record types:**
+
 - A records (IPv4 addresses)
 - AAAA records (IPv6)
 - MX records (email)
 - TXT records (arbitrary data)
 
 **Performance optimizations:**
+
 - Skip known spam entries
 - Cache signature verification results
 - Parallel chunk downloads
 
 **Privacy features:**
+
 - Optional encrypted records
 - Private domain registration
 

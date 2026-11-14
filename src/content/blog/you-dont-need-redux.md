@@ -1,4 +1,5 @@
 ---
+
 title: "You Don't Need Redux"
 date: "2023-04-18"
 tags: ["React", "Redux", "State Management"]
@@ -22,7 +23,7 @@ Redux is a popular state management solution for React applications, that most w
 2. Local component state: For smaller applications or components that don't need to share state, using local state with React's `useState` hook is more than sufficient.
 
 ```javascript
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const Counter = () => {
   const [count, setCount] = useState(0);
@@ -40,7 +41,7 @@ const Counter = () => {
 3. Custom hooks: If you need to share state or logic between multiple components, you can create custom hooks that encapsulate the desired functionality.
 
 ```javascript
-import { useState } from 'react';
+import { useState } from "react";
 
 const useCounter = (initialValue = 0) => {
   const [count, setCount] = useState(initialValue);
@@ -53,6 +54,7 @@ const useCounter = (initialValue = 0) => {
 ```
 
 # Using Context
+
 Using React Context API:
 
 React's useContext hook makes it easy to pass data throughout your app without manually passing props down the tree. It is a part of React's Context API, which also includes the Provider and Consumer components. Context can be a simple and effective alternative to Redux, especially for small apps or when your data is relatively simple.
@@ -62,12 +64,12 @@ Consider this example where we create a theme context to change the color theme 
 1. Create a ThemeContext:
 
 ```javascript
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from "react";
 
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
@@ -82,35 +84,35 @@ export { ThemeProvider, ThemeContext };
 2. Wrap your app with ThemeProvider:
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { ThemeProvider } from './ThemeContext';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import { ThemeProvider } from "./ThemeContext";
+import App from "./App";
 
 ReactDOM.render(
   <ThemeProvider>
     <App />
   </ThemeProvider>,
-  document.getElementById('root')
+  document.getElementById("root"),
 );
 ```
 
 3. Create a component to change the theme:
 
 ```javascript
-import React, { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import React, { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
 const ThemeSwitcher = () => {
   const { theme, setTheme } = useContext(ThemeContext);
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
     <button onClick={toggleTheme}>
-      Switch to {theme === 'light' ? 'dark' : 'light'} theme
+      Switch to {theme === "light" ? "dark" : "light"} theme
     </button>
   );
 };
@@ -121,12 +123,12 @@ export default ThemeSwitcher;
 4. Use the theme in another component:
 
 ```javascript
-import React, { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import React, { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
 const ThemedText = ({ text }) => {
   const { theme } = useContext(ThemeContext);
-  const color = theme === 'light' ? 'black' : 'white';
+  const color = theme === "light" ? "black" : "white";
 
   return <p style={{ color }}>{text}</p>;
 };

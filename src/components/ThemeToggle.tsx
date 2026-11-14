@@ -45,6 +45,7 @@ export default function ThemeToggle() {
       <span className="theme-toggle-icon">
         {isDark ? (
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
@@ -67,6 +68,7 @@ export default function ThemeToggle() {
           </svg>
         ) : (
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"

@@ -1,4 +1,5 @@
 ---
+
 title: "An introduction to the JavaScript event loop"
 date: "2022-12-11"
 tags: ["JavaScript", "Node.js", "Event Loop"]
@@ -38,13 +39,14 @@ Importantly, **microtasks** (Promise callbacks, `process.nextTick`) are executed
 After the event loop has gone through all of these phases, it will start again at the timers phase and repeat the process. This allows the event loop to continuously process events and tasks as they come in.
 
 ## Examples of Async Code
+
 One common use case for the event loop is to schedule timers or intervals. This is done using the setTimeout and setInterval functions, which allow you to specify a callback function that will be executed after a certain amount of time has passed.
 
 For example, the following code sets a timer that logs a message to the console after 2 seconds:
 
 ```javascript
 setTimeout(() => {
-  console.log('Hello, world!');
+  console.log("Hello, world!");
 }, 2000);
 ```
 
@@ -53,36 +55,36 @@ Another common use case is to process I/O operations asynchronously. This is don
 For example, the following code demonstrates how different async operations are handled:
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
-console.log('Start');
+console.log("Start");
 
 // Timer (executed in Timers phase)
 setTimeout(() => {
-  console.log('Timer callback');
+  console.log("Timer callback");
 }, 0);
 
 // I/O operation (executed in Poll phase)
 fs.readFile(__filename, () => {
-  console.log('File read callback');
-  
+  console.log("File read callback");
+
   // setImmediate inside I/O callback
   setImmediate(() => {
-    console.log('setImmediate inside I/O');
+    console.log("setImmediate inside I/O");
   });
-  
+
   // setTimeout inside I/O callback
   setTimeout(() => {
-    console.log('setTimeout inside I/O');
+    console.log("setTimeout inside I/O");
   }, 0);
 });
 
 // setImmediate (executed in Check phase)
 setImmediate(() => {
-  console.log('setImmediate callback');
+  console.log("setImmediate callback");
 });
 
-console.log('End');
+console.log("End");
 
 // Typical output:
 // Start
@@ -99,25 +101,25 @@ Node.js also provides `process.nextTick()` and `setImmediate()` for different sc
 ```javascript
 // process.nextTick has the highest priority
 process.nextTick(() => {
-  console.log('1: process.nextTick');
+  console.log("1: process.nextTick");
 });
 
 // setImmediate is executed in the Check phase
 setImmediate(() => {
-  console.log('2: setImmediate');
+  console.log("2: setImmediate");
 });
 
 // setTimeout is executed in the Timers phase
 setTimeout(() => {
-  console.log('3: setTimeout');
+  console.log("3: setTimeout");
 }, 0);
 
 // Promise callbacks are microtasks
 Promise.resolve().then(() => {
-  console.log('4: Promise');
+  console.log("4: Promise");
 });
 
-console.log('5: synchronous');
+console.log("5: synchronous");
 
 // Output order: 5, 1, 4, 3, 2
 ```
@@ -137,17 +139,19 @@ The key to understanding the event loop is knowing the execution priority:
 Understanding the event loop helps avoid common mistakes:
 
 **Avoid blocking the event loop:**
+
 ```javascript
 // Bad: Blocking operation
-const result = fs.readFileSync('large-file.txt');
+const result = fs.readFileSync("large-file.txt");
 
 // Good: Non-blocking operation
-fs.readFile('large-file.txt', (err, data) => {
+fs.readFile("large-file.txt", (err, data) => {
   // Handle the result
 });
 ```
 
 **Be careful with `process.nextTick()` recursion:**
+
 ```javascript
 // This will starve the event loop
 function recursiveNextTick() {

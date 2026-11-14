@@ -1,4 +1,5 @@
 ---
+
 title: "DarkAuth: Hardening the Zero-Knowledge Auth Server"
 date: "2026-03-02"
 tags: ["DarkAuth", "Security", "OIDC", "Zero Knowledge", "Open Source"]
@@ -65,7 +66,7 @@ So the UX got materially better, just not via a single unified component package
 
 ![DarkAuth Admin UI](../../assets/darkauth-admin-2026.png)
 
-*The Admin UI after table and RBAC workflow improvements.*
+_The Admin UI after table and RBAC workflow improvements._
 
 ## RBAC Changes
 

@@ -1,4 +1,5 @@
 ---
+
 title: "Node.js v22, v24 and v26: A Rigorous Comparative Analysis"
 date: 2026-08-23
 ---
@@ -13,11 +14,11 @@ As of **23 August 2026**, Node.js **v22 (“Jod”) is an LTS line**, **v24 (“
 
 My practical assessment is:
 
-| Version | Best characterised as | Best fit in August 2026 |
-|---|---|---|
-| **Node 22** | The interoperability release: WebSocket, stable watch mode, `require(esm)`, `node --run`, `fs.glob`, compile cache, and the beginning of native TypeScript execution | Existing LTS estates; a sensible minimum target for libraries needing modern ESM/CJS interoperability |
-| **Node 24** | The consolidation release: V8 13.6, npm 11, `URLPattern`, better `AsyncLocalStorage`, improved test runner semantics, stable built-in TypeScript stripping later in the line | **Default production choice** today where LTS is preferred |
-| **Node 26** | The modernisation release: Temporal by default, V8 14.6, Undici 8, stronger permission controls and diagnostics, simpler SEA packaging, and more aggressive legacy removals | Evaluation/new development where v26-specific capabilities matter; production adoption should account for its Current status until October 2026 |
+| Version     | Best characterised as                                                                                                                                                        | Best fit in August 2026                                                                                                                         |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Node 22** | The interoperability release: WebSocket, stable watch mode, `require(esm)`, `node --run`, `fs.glob`, compile cache, and the beginning of native TypeScript execution         | Existing LTS estates; a sensible minimum target for libraries needing modern ESM/CJS interoperability                                           |
+| **Node 24** | The consolidation release: V8 13.6, npm 11, `URLPattern`, better `AsyncLocalStorage`, improved test runner semantics, stable built-in TypeScript stripping later in the line | **Default production choice** today where LTS is preferred                                                                                      |
+| **Node 26** | The modernisation release: Temporal by default, V8 14.6, Undici 8, stronger permission controls and diagnostics, simpler SEA packaging, and more aggressive legacy removals  | Evaluation/new development where v26-specific capabilities matter; production adoption should account for its Current status until October 2026 |
 
 That positioning follows both the current support status and the magnitude of behavioural change in each line.
 
@@ -74,11 +75,11 @@ This distinction prevents several common but inaccurate claims. For example, say
 
 The three major releases also represent three substantial V8 jumps:
 
-| Node line | V8 at `.0.0` | Notable JavaScript/Wasm consequences |
-|---|---:|---|
-| v22 | 12.4 | `Array.fromAsync`, newer Set functionality, iterator functionality, WebAssembly GC; Maglev enabled by Node on supported architectures |
-| v24 | 13.6 | `Float16Array`, explicit resource management, `RegExp.escape`, Wasm Memory64, `Error.isError` |
-| v26 | 14.6 | Map/WeakMap upsert APIs, `Iterator.concat()`, plus the V8 generation in which Node enables Temporal by default |
+| Node line | V8 at `.0.0` | Notable JavaScript/Wasm consequences                                                                                                  |
+| --------- | -----------: | ------------------------------------------------------------------------------------------------------------------------------------- |
+| v22       |         12.4 | `Array.fromAsync`, newer Set functionality, iterator functionality, WebAssembly GC; Maglev enabled by Node on supported architectures |
+| v24       |         13.6 | `Float16Array`, explicit resource management, `RegExp.escape`, Wasm Memory64, `Error.isError`                                         |
+| v26       |         14.6 | Map/WeakMap upsert APIs, `Iterator.concat()`, plus the V8 generation in which Node enables Temporal by default                        |
 
 Node's v22 announcement and V8's own retrospective document the V8-era additions including `Array.fromAsync` and WebAssembly GC; Node's v24 and v26 release notes explicitly enumerate their V8-delivered APIs.
 
@@ -88,18 +89,18 @@ There is **no meaningful universal “Node 24 is X% faster than Node 22” or �
 
 Node 22.0.0 shipped on **24 April 2024**. Its defining theme is making Node feel less divided between “old Node” conventions and modern JavaScript/Web conventions: ESM becomes easier to consume from CommonJS, browser-style WebSocket support becomes built in, watch mode becomes production-quality tooling, and ordinary development commands increasingly need fewer external packages.
 
-| Area | Major v22 change | Impact |
-|---|---|---|
-| JavaScript engine | V8 upgraded to **12.4**; Maglev enabled on supported architectures | Faster tier-up can particularly benefit relatively short-lived workloads and CLI applications; modern JS/Wasm features arrive with the engine. |
-| Web APIs | Global `WebSocket` client enabled by default | WebSocket clients no longer inherently require `ws` or another package merely to obtain a client API. |
-| ESM/CJS | Synchronous `require()` of eligible ESM graphs introduced | CommonJS consumers can synchronously consume ESM that contains no top-level `await`; initially experimental. |
-| CLI tooling | Watch mode marked stable | `node --watch app.js` becomes a first-party restart-on-change workflow. |
-| CLI tooling | `node --run <script>` added | A package.json script can be invoked directly by Node rather than necessarily going through `npm run`. |
-| Filesystem | `fs.glob()` and `fs.globSync()` exposed | Basic file globbing becomes available in core. |
-| Streams | Default `highWaterMark` increased | Code sensitive to stream buffering, memory use or back-pressure thresholds needs revalidation. |
-| ESM syntax | Import assertions support dropped | Code using old `assert { type: ... }` syntax must move to import attributes. |
-| Deprecations | Direct `fs.Stats`, `Hash` and `Hmac` construction and `util.isArray()` became runtime-deprecated | Applications relying on old constructors/utilities start producing deprecation warnings and should migrate to supported factory/standard APIs. |
-| Native/build | Windows Node builds moved to C++20; `NODE_MODULE_VERSION` became **127** | Direct V8/Node C++ addons need testing/rebuilding; source-build toolchains need C++20 capability. |
+| Area              | Major v22 change                                                                                 | Impact                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript engine | V8 upgraded to **12.4**; Maglev enabled on supported architectures                               | Faster tier-up can particularly benefit relatively short-lived workloads and CLI applications; modern JS/Wasm features arrive with the engine. |
+| Web APIs          | Global `WebSocket` client enabled by default                                                     | WebSocket clients no longer inherently require `ws` or another package merely to obtain a client API.                                          |
+| ESM/CJS           | Synchronous `require()` of eligible ESM graphs introduced                                        | CommonJS consumers can synchronously consume ESM that contains no top-level `await`; initially experimental.                                   |
+| CLI tooling       | Watch mode marked stable                                                                         | `node --watch app.js` becomes a first-party restart-on-change workflow.                                                                        |
+| CLI tooling       | `node --run <script>` added                                                                      | A package.json script can be invoked directly by Node rather than necessarily going through `npm run`.                                         |
+| Filesystem        | `fs.glob()` and `fs.globSync()` exposed                                                          | Basic file globbing becomes available in core.                                                                                                 |
+| Streams           | Default `highWaterMark` increased                                                                | Code sensitive to stream buffering, memory use or back-pressure thresholds needs revalidation.                                                 |
+| ESM syntax        | Import assertions support dropped                                                                | Code using old `assert { type: ... }` syntax must move to import attributes.                                                                   |
+| Deprecations      | Direct `fs.Stats`, `Hash` and `Hmac` construction and `util.isArray()` became runtime-deprecated | Applications relying on old constructors/utilities start producing deprecation warnings and should migrate to supported factory/standard APIs. |
+| Native/build      | Windows Node builds moved to C++20; `NODE_MODULE_VERSION` became **127**                         | Direct V8/Node C++ addons need testing/rebuilding; source-build toolchains need C++20 capability.                                              |
 
 The `require(esm)` evolution is especially important. In v22.0.0 the facility was introduced behind `--experimental-require-module`; from **v22.12.0** it no longer required that flag, and from **v22.13.0** it stopped emitting the experimental warning by default. It is deliberately limited to synchronous module graphs: if the target or anything it imports contains top-level `await`, `require()` throws `ERR_REQUIRE_ASYNC_MODULE`, and the consumer should use dynamic `import()` instead.
 
@@ -107,10 +108,10 @@ That means a CommonJS application can now do something like:
 
 ```js
 // math.mjs
-export const square = x => x * x;
+export const square = (x) => x * x;
 
 // app.cjs — Node 22.12+ without the experimental flag
-const { square } = require('./math.mjs');
+const { square } = require("./math.mjs");
 
 console.log(square(5)); // 25
 ```
@@ -122,13 +123,13 @@ The complementary module-system change is syntax detection. From **v22.7.0**, No
 Node 22 also removes the need for a third-party WebSocket client in straightforward cases:
 
 ```js
-const socket = new WebSocket('wss://example.com/socket');
+const socket = new WebSocket("wss://example.com/socket");
 
-socket.addEventListener('open', () => {
-  socket.send(JSON.stringify({ type: 'hello' }));
+socket.addEventListener("open", () => {
+  socket.send(JSON.stringify({ type: "hello" }));
 });
 
-socket.addEventListener('message', event => {
+socket.addEventListener("message", (event) => {
   console.log(event.data);
 });
 ```
@@ -145,9 +146,9 @@ node --run build
 and:
 
 ```js
-import { globSync } from 'node:fs';
+import { globSync } from "node:fs";
 
-const tests = globSync('test/**/*.test.js');
+const tests = globSync("test/**/*.test.js");
 ```
 
 The former gives Node-native watch/restart and package-script invocation, while the latter moves common filesystem discovery into core.
@@ -165,7 +166,7 @@ type User = {
   name: string;
 };
 
-const user: User = { id: 1, name: 'Ada' };
+const user: User = { id: 1, name: "Ada" };
 console.log(user.name);
 ```
 
@@ -182,7 +183,7 @@ That distinction matters enormously in migration planning: native execution is g
 The other major later-v22 feature is the **module compile cache**, initially added in **v22.1.0**, with JavaScript APIs arriving in v22.8.0. Once enabled, Node persists V8 code cache for CommonJS, ESM and TypeScript modules. The first load may actually be slower because the cache must be generated, but later launches of an unchanged module graph can receive significant compilation-time savings. The cache is generally Node-version-specific.
 
 ```js
-import { enableCompileCache } from 'node:module';
+import { enableCompileCache } from "node:module";
 
 enableCompileCache();
 ```
@@ -201,19 +202,19 @@ is therefore particularly interesting for CLIs, worker processes and repeatedly 
 
 Node 24.0.0 shipped on **6 May 2025**. Compared with v22, it is less about one revolutionary module change and more about making recent innovations feel coherent and production-ready: newer ECMAScript syntax, npm 11, a stronger Web-platform surface, more reliable asynchronous context propagation and simpler test semantics.
 
-| Area | Major v24 change | Impact |
-|---|---|---|
-| JavaScript engine | V8 **13.6** | Adds `Float16Array`, explicit resource management, `RegExp.escape()`, WebAssembly Memory64 and `Error.isError()`. |
-| Package tooling | **npm 11** | Package-manager major changes enter the standard Node distribution; CI/install behaviour should be tested rather than assuming npm 10 equivalence. |
-| Async context | `AsyncLocalStorage` defaults to `AsyncContextFrame` | Node describes this as a more efficient and robust implementation for async context tracking. |
-| Web APIs | `URLPattern` becomes global | URL routing/pattern matching can use the Web API directly without an external implementation or explicit core import. |
-| Security | Permission Model CLI moves towards ordinary `--permission` usage | The capability becomes more normalised as a supported runtime control rather than an obviously experimental workflow. |
-| Testing | Parent tests automatically wait for subtests | Less manual promise coordination, but a breaking semantic change for code expecting `test()`/`t.test()` to return promises. |
-| HTTP client/Web APIs | Undici **7** | Node's underlying fetch/HTTP client implementation moves to a new major. |
-| Deprecation | `url.parse()` runtime-deprecated | Modern code should use WHATWG `URL`. |
-| Removal | `tls.createSecurePair` / `tls.SecurePair` removed | Legacy TLS code must use `TLSSocket`. |
-| Deprecations | `SlowBuffer`, zlib/repl construction without `new`, shell-mode `spawn`/`execFile` argument patterns | Older API patterns begin warning or disappear; shell arguments receive particular attention because of injection risk. |
-| Native/build | `NODE_MODULE_VERSION` **137**; ARMv7 downgraded; Windows/macOS source-build requirements tightened | Native-addon and source-build CI requires validation. |
+| Area                 | Major v24 change                                                                                    | Impact                                                                                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript engine    | V8 **13.6**                                                                                         | Adds `Float16Array`, explicit resource management, `RegExp.escape()`, WebAssembly Memory64 and `Error.isError()`.                                  |
+| Package tooling      | **npm 11**                                                                                          | Package-manager major changes enter the standard Node distribution; CI/install behaviour should be tested rather than assuming npm 10 equivalence. |
+| Async context        | `AsyncLocalStorage` defaults to `AsyncContextFrame`                                                 | Node describes this as a more efficient and robust implementation for async context tracking.                                                      |
+| Web APIs             | `URLPattern` becomes global                                                                         | URL routing/pattern matching can use the Web API directly without an external implementation or explicit core import.                              |
+| Security             | Permission Model CLI moves towards ordinary `--permission` usage                                    | The capability becomes more normalised as a supported runtime control rather than an obviously experimental workflow.                              |
+| Testing              | Parent tests automatically wait for subtests                                                        | Less manual promise coordination, but a breaking semantic change for code expecting `test()`/`t.test()` to return promises.                        |
+| HTTP client/Web APIs | Undici **7**                                                                                        | Node's underlying fetch/HTTP client implementation moves to a new major.                                                                           |
+| Deprecation          | `url.parse()` runtime-deprecated                                                                    | Modern code should use WHATWG `URL`.                                                                                                               |
+| Removal              | `tls.createSecurePair` / `tls.SecurePair` removed                                                   | Legacy TLS code must use `TLSSocket`.                                                                                                              |
+| Deprecations         | `SlowBuffer`, zlib/repl construction without `new`, shell-mode `spawn`/`execFile` argument patterns | Older API patterns begin warning or disappear; shell arguments receive particular attention because of injection risk.                             |
+| Native/build         | `NODE_MODULE_VERSION` **137**; ARMv7 downgraded; Windows/macOS source-build requirements tightened  | Native-addon and source-build CI requires validation.                                                                                              |
 
 ### New JavaScript capabilities
 
@@ -221,10 +222,10 @@ Node 24.0.0 shipped on **6 May 2025**. Compared with v22, it is less about one r
 
 ```js
 const users = new URLPattern({
-  pathname: '/users/:id'
+  pathname: "/users/:id",
 });
 
-const match = users.exec('https://example.com/users/42');
+const match = users.exec("https://example.com/users/42");
 
 console.log(match.pathname.groups.id); // "42"
 ```
@@ -234,11 +235,9 @@ This provides a standard URL-aware matcher instead of having to approximate rout
 `RegExp.escape()` solves another mundane but security- and correctness-relevant problem:
 
 ```js
-const query = 'file[1].txt';
+const query = "file[1].txt";
 
-const exactName = new RegExp(
-  `^${RegExp.escape(query)}$`
-);
+const exactName = new RegExp(`^${RegExp.escape(query)}$`);
 ```
 
 Rather than maintaining an error-prone userland escaping expression, applications can escape literal text using the language's built-in operation. `RegExp.escape()` arrives through V8 13.6.
@@ -248,7 +247,7 @@ Explicit resource management also means JavaScript can express lexical disposal:
 ```js
 class Resource {
   [Symbol.dispose]() {
-    console.log('released');
+    console.log("released");
   }
 }
 
@@ -269,11 +268,11 @@ The native `node:test` runner already existed before v24, but v24 changes a subt
 The intended style becomes:
 
 ```js
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import test from "node:test";
+import assert from "node:assert/strict";
 
-test('parent', t => {
-  t.test('child', () => {
+test("parent", (t) => {
+  t.test("child", () => {
     assert.equal(2 + 2, 4);
   });
 
@@ -318,11 +317,11 @@ Node 24 does not replace v22's ESM/CJS breakthrough; it inherits and matures it.
 The module compile cache also improves in **v24.12.0** with a portable mode:
 
 ```js
-import { enableCompileCache } from 'node:module';
+import { enableCompileCache } from "node:module";
 
 enableCompileCache({
-  directory: '/cache/node',
-  portable: true
+  directory: "/cache/node",
+  portable: true,
 });
 ```
 
@@ -342,19 +341,19 @@ The deprecation of using `child_process.spawn()` or `execFile()` with an `args` 
 
 Node 26.0.0 shipped on **5 May 2026**. It is a more aggressive major transition than v24 because it combines important new language functionality with meaningful legacy removal. As of 23 August 2026 it remains the Current line and is expected to move to LTS in October 2026.
 
-| Area | Major v26 change | Impact |
-|---|---|---|
-| Date/time | **Temporal enabled by default** | First-class date, time-zone, duration and calendar-aware operations become a built-in JavaScript capability without a flag/polyfill. |
-| JavaScript engine | V8 **14.6.202.33** | Adds Map/WeakMap upsert methods and `Iterator.concat()`. |
-| HTTP/Web APIs | Undici **8.0.2** at v26.0 | Node's fetch/HTTP client stack advances another major generation. |
-| TypeScript | `--experimental-transform-types` removed | Built-in Node execution is now clearly centred on erasable TypeScript rather than runtime code-generating TS transforms. |
-| Modules | `module.register()` runtime-deprecated | Loader authors should assess migration to newer `module.registerHooks()` APIs where their synchronous semantics fit. |
-| HTTP | `http.Server.prototype.writeHeader()` removed | Use the supported `writeHead()` API. |
-| Streams | Legacy private `_stream_*` modules removed | Packages importing Node internals rather than public `node:stream` APIs can break outright. |
-| Crypto | Short GCM tags without explicit `authTagLength` reach EOL | Applications using short AES-GCM authentication tags must explicitly declare the intended length. |
-| Crypto | Passing `CryptoKey` to certain `node:crypto` APIs / `KeyObject.from(non-extractable CryptoKey)` runtime-deprecated | WebCrypto/Core crypto boundary code needs review. |
-| Build | GCC minimum becomes **13.2** and Python 3.9 source-build support is dropped | Relevant to teams compiling Node themselves or maintaining bespoke distributions. |
-| Native addons | `NODE_MODULE_VERSION` becomes **147** | Non-Node-API binary addons generally need a v26-compatible build. |
+| Area              | Major v26 change                                                                                                   | Impact                                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Date/time         | **Temporal enabled by default**                                                                                    | First-class date, time-zone, duration and calendar-aware operations become a built-in JavaScript capability without a flag/polyfill. |
+| JavaScript engine | V8 **14.6.202.33**                                                                                                 | Adds Map/WeakMap upsert methods and `Iterator.concat()`.                                                                             |
+| HTTP/Web APIs     | Undici **8.0.2** at v26.0                                                                                          | Node's fetch/HTTP client stack advances another major generation.                                                                    |
+| TypeScript        | `--experimental-transform-types` removed                                                                           | Built-in Node execution is now clearly centred on erasable TypeScript rather than runtime code-generating TS transforms.             |
+| Modules           | `module.register()` runtime-deprecated                                                                             | Loader authors should assess migration to newer `module.registerHooks()` APIs where their synchronous semantics fit.                 |
+| HTTP              | `http.Server.prototype.writeHeader()` removed                                                                      | Use the supported `writeHead()` API.                                                                                                 |
+| Streams           | Legacy private `_stream_*` modules removed                                                                         | Packages importing Node internals rather than public `node:stream` APIs can break outright.                                          |
+| Crypto            | Short GCM tags without explicit `authTagLength` reach EOL                                                          | Applications using short AES-GCM authentication tags must explicitly declare the intended length.                                    |
+| Crypto            | Passing `CryptoKey` to certain `node:crypto` APIs / `KeyObject.from(non-extractable CryptoKey)` runtime-deprecated | WebCrypto/Core crypto boundary code needs review.                                                                                    |
+| Build             | GCC minimum becomes **13.2** and Python 3.9 source-build support is dropped                                        | Relevant to teams compiling Node themselves or maintaining bespoke distributions.                                                    |
+| Native addons     | `NODE_MODULE_VERSION` becomes **147**                                                                              | Non-Node-API binary addons generally need a v26-compatible build.                                                                    |
 
 ### Temporal is the headline capability
 
@@ -363,9 +362,7 @@ Temporal is not merely a prettier `Date`. TC39 designed it around first-class ti
 For example:
 
 ```js
-const meeting = Temporal.ZonedDateTime.from(
-  '2026-10-25T09:30[Europe/London]'
-);
+const meeting = Temporal.ZonedDateTime.from("2026-10-25T09:30[Europe/London]");
 
 const later = meeting.add({ hours: 3 });
 
@@ -379,7 +376,7 @@ For elapsed or calendar-relative intervals:
 ```js
 const duration = Temporal.Duration.from({
   days: 2,
-  hours: 5
+  hours: 5,
 });
 
 console.log(duration.toString());
@@ -397,10 +394,7 @@ The Map upsert APIs remove a recurring lookup/check/insert pattern:
 const cache = new Map();
 
 function getRecord(id) {
-  return cache.getOrInsertComputed(
-    id,
-    () => loadRecord(id)
-  );
+  return cache.getOrInsertComputed(id, () => loadRecord(id));
 }
 ```
 
@@ -429,7 +423,7 @@ type Point = { x: number; y: number };
 
 const point: Point = {
   x: 10,
-  y: 20
+  y: 20,
 };
 ```
 
@@ -451,15 +445,12 @@ node \
 ```
 
 ```js
-import fs from 'node:fs';
+import fs from "node:fs";
 
-const config = fs.readFileSync(
-  '/etc/myapp/config.json',
-  'utf8'
-);
+const config = fs.readFileSync("/etc/myapp/config.json", "utf8");
 
 // Initialisation is done: permanently give up that grant.
-process.permission.drop('fs.read', '/etc/myapp');
+process.permission.drop("fs.read", "/etc/myapp");
 ```
 
 Dropping a permission only affects future checks; it **does not revoke already-open descriptors, sockets, child processes or workers**.
@@ -572,10 +563,10 @@ v26 combines further engine evolution with inspector precise coverage, Perfetto 
 The native-addon story is perhaps the cleanest migration-risk indicator:
 
 | Node | `NODE_MODULE_VERSION` |
-|---|---:|
-| v22 | **127** |
-| v24 | **137** |
-| v26 | **147** |
+| ---- | --------------------: |
+| v22  |               **127** |
+| v24  |               **137** |
+| v26  |               **147** |
 
 Those values change because the internal native-module ABI changes across majors.
 
@@ -583,11 +574,11 @@ This does **not** mean every native addon is inherently incompatible. **Node-API
 
 For deployment planning, classify dependencies into three groups:
 
-| Dependency type | Upgrade risk |
-|---|---|
-| Pure JavaScript | Usually lowest; still susceptible to deprecated APIs/module semantics |
-| Node-API (`napi`) native addon | Designed for ABI portability; still test functionality |
-| Direct V8/Node C++ addon | Highest; expect ABI-specific builds and possible source changes |
+| Dependency type                | Upgrade risk                                                          |
+| ------------------------------ | --------------------------------------------------------------------- |
+| Pure JavaScript                | Usually lowest; still susceptible to deprecated APIs/module semantics |
+| Node-API (`napi`) native addon | Designed for ABI portability; still test functionality                |
+| Direct V8/Node C++ addon       | Highest; expect ABI-specific builds and possible source changes       |
 
 The classification follows Node's documented distinction between Node-API's ABI guarantee and direct use of changing internal/V8 interfaces.
 
@@ -599,29 +590,29 @@ Packaging improves markedly by v26 because `--build-sea` eliminates the earlier 
 
 The following matrix describes the **current capabilities of each maintained major line as of 23 August 2026**, not merely what was present in `.0.0`.
 
-| Capability | Node 22 | Node 24 | Node 26 |
-|---|---|---|---|
-| Status on 23 Aug 2026 | **LTS** | **LTS / latest LTS line** | **Current**, LTS planned Oct 2026 |
-| V8 at major launch | 12.4 | 13.6 | 14.6 |
-| Global WebSocket default | ✅ | ✅ | ✅ |
-| Global `URLPattern` | — | ✅ | ✅ |
-| Temporal enabled by default | — | — | ✅ |
-| Native TS type stripping | ✅ from 22.6; default 22.18, still transitional | ✅ **stable from 24.12** | ✅ stable |
-| `--experimental-transform-types` | ✅ from 22.7 | ✅ transitional | **Removed** |
-| Sync `require(esm)` | ✅; flagless from 22.12 | ✅ | ✅ |
-| Top-level-await ESM via `require()` | ❌ | ❌ | ❌; use `import()` |
-| Module compile cache | ✅ introduced in v22 | ✅; portable from 24.12 | ✅; mature/current API |
-| Stable watch mode | ✅ | ✅ | ✅ |
-| `node --run` | ✅ | ✅ | ✅ |
-| Auto-waiting `node:test` subtests | — | ✅ | ✅ |
-| Stable Permission Model in current line | ✅ from 22.13 | ✅ | ✅ + `permission.drop()` from 26.3 |
-| Corepack bundled with Node | ✅ | ✅ | **❌** |
-| Direct `node --build-sea` | — | — | ✅, inherited from 25.5 |
-| `NODE_MODULE_VERSION` | 127 | 137 | 147 |
-| Node-API ABI-stable addon strategy | ✅ | ✅ | ✅ |
-| `http.Server.writeHeader()` | Legacy API present | Legacy API present | **Removed; use `writeHead()`** |
-| Legacy private `_stream_*` modules | Legacy compatibility | Legacy compatibility | **Removed** |
-| npm generation | npm 10 at v22.0 | npm 11 | npm 11 line |
+| Capability                              | Node 22                                         | Node 24                   | Node 26                            |
+| --------------------------------------- | ----------------------------------------------- | ------------------------- | ---------------------------------- |
+| Status on 23 Aug 2026                   | **LTS**                                         | **LTS / latest LTS line** | **Current**, LTS planned Oct 2026  |
+| V8 at major launch                      | 12.4                                            | 13.6                      | 14.6                               |
+| Global WebSocket default                | ✅                                              | ✅                        | ✅                                 |
+| Global `URLPattern`                     | —                                               | ✅                        | ✅                                 |
+| Temporal enabled by default             | —                                               | —                         | ✅                                 |
+| Native TS type stripping                | ✅ from 22.6; default 22.18, still transitional | ✅ **stable from 24.12**  | ✅ stable                          |
+| `--experimental-transform-types`        | ✅ from 22.7                                    | ✅ transitional           | **Removed**                        |
+| Sync `require(esm)`                     | ✅; flagless from 22.12                         | ✅                        | ✅                                 |
+| Top-level-await ESM via `require()`     | ❌                                              | ❌                        | ❌; use `import()`                 |
+| Module compile cache                    | ✅ introduced in v22                            | ✅; portable from 24.12   | ✅; mature/current API             |
+| Stable watch mode                       | ✅                                              | ✅                        | ✅                                 |
+| `node --run`                            | ✅                                              | ✅                        | ✅                                 |
+| Auto-waiting `node:test` subtests       | —                                               | ✅                        | ✅                                 |
+| Stable Permission Model in current line | ✅ from 22.13                                   | ✅                        | ✅ + `permission.drop()` from 26.3 |
+| Corepack bundled with Node              | ✅                                              | ✅                        | **❌**                             |
+| Direct `node --build-sea`               | —                                               | —                         | ✅, inherited from 25.5            |
+| `NODE_MODULE_VERSION`                   | 127                                             | 137                       | 147                                |
+| Node-API ABI-stable addon strategy      | ✅                                              | ✅                        | ✅                                 |
+| `http.Server.writeHeader()`             | Legacy API present                              | Legacy API present        | **Removed; use `writeHead()`**     |
+| Legacy private `_stream_*` modules      | Legacy compatibility                            | Legacy compatibility      | **Removed**                        |
+| npm generation                          | npm 10 at v22.0                                 | npm 11                    | npm 11 line                        |
 
 ### Upgrading v22 to v24
 
@@ -690,19 +681,19 @@ Finally, performance baselines should be regenerated. The V8/Undici generations 
 
 ### Cross-version pitfalls worth explicitly testing
 
-| Symptom | Likely cause | Upgrade action |
-|---|---|---|
-| `require()` fails for an ESM dependency | ESM graph contains top-level `await` | Switch that boundary to `await import()`; sync `require(esm)` deliberately excludes async graphs. |
-| JSON/ESM import syntax error after older code is moved to v22 | Old import assertion syntax | Migrate from assertions to import attributes. |
-| `.js` unexpectedly interpreted as ESM | v22+ syntax detection and ambiguous package metadata | Add explicit `"type": "module"` or `"type": "commonjs"`. |
-| Native package fails with “module version”/binary mismatch | ABI changed 127→137→147 | Install/rebuild matching binary, preferably migrate addon to Node-API. |
-| Native `.ts` works but compiler aliases do not | Node ignores `tsconfig.json` | Use Node-compatible imports or an actual TypeScript loader/build pipeline. |
-| `.ts` syntax that used to work with an experimental flag fails on v26 | `--experimental-transform-types` removed | Rewrite to erasable TypeScript or transpile externally. |
-| Nested `node:test` abstraction behaves differently after 22→24 | Subtest return/wait semantics changed | Remove promise assumptions and retest wrappers/reporters. |
-| CI says `corepack: command not found` on v26 | Corepack no longer bundled | Install Corepack/Yarn/pnpm explicitly. |
-| Loader produces deprecation warnings on v26 | `module.register()` runtime-deprecated | Assess `module.registerHooks()` or update loader dependency. |
-| Coverage changes when compile cache is enabled | Deserialised V8 code can reduce coverage precision | Disable module compile cache for precise coverage runs. |
-| Permission is dropped but existing socket/fd still works | `permission.drop()` only affects future checks | Close existing capabilities explicitly as well as dropping the grant. |
+| Symptom                                                               | Likely cause                                         | Upgrade action                                                                                    |
+| --------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `require()` fails for an ESM dependency                               | ESM graph contains top-level `await`                 | Switch that boundary to `await import()`; sync `require(esm)` deliberately excludes async graphs. |
+| JSON/ESM import syntax error after older code is moved to v22         | Old import assertion syntax                          | Migrate from assertions to import attributes.                                                     |
+| `.js` unexpectedly interpreted as ESM                                 | v22+ syntax detection and ambiguous package metadata | Add explicit `"type": "module"` or `"type": "commonjs"`.                                          |
+| Native package fails with “module version”/binary mismatch            | ABI changed 127→137→147                              | Install/rebuild matching binary, preferably migrate addon to Node-API.                            |
+| Native `.ts` works but compiler aliases do not                        | Node ignores `tsconfig.json`                         | Use Node-compatible imports or an actual TypeScript loader/build pipeline.                        |
+| `.ts` syntax that used to work with an experimental flag fails on v26 | `--experimental-transform-types` removed             | Rewrite to erasable TypeScript or transpile externally.                                           |
+| Nested `node:test` abstraction behaves differently after 22→24        | Subtest return/wait semantics changed                | Remove promise assumptions and retest wrappers/reporters.                                         |
+| CI says `corepack: command not found` on v26                          | Corepack no longer bundled                           | Install Corepack/Yarn/pnpm explicitly.                                                            |
+| Loader produces deprecation warnings on v26                           | `module.register()` runtime-deprecated               | Assess `module.registerHooks()` or update loader dependency.                                      |
+| Coverage changes when compile cache is enabled                        | Deserialised V8 code can reduce coverage precision   | Disable module compile cache for precise coverage runs.                                           |
+| Permission is dropped but existing socket/fd still works              | `permission.drop()` only affects future checks       | Close existing capabilities explicitly as well as dropping the grant.                             |
 
 For an application upgrade, a robust order is therefore: upgrade dependencies on the old runtime first; eliminate runtime deprecations; audit native addons; run the complete suite on both runtimes; regenerate lockfiles only deliberately; test ESM/CJS edges; test package scripts and CI images; benchmark; and only then change the deployment baseline. These priorities follow directly from the ABI changes, core removals, npm/Corepack transitions and module/test semantic changes above.
 
@@ -710,19 +701,19 @@ For an application upgrade, a robust order is therefore: upgrade dependencies on
 
 The primary-source trail for these changes is unusually good. The core references are:
 
-| Primary source | Purpose |
-|---|---|
-| [Node.js v22.0.0 release notes](https://nodejs.org/en/blog/release/v22.0.0) | Authoritative v22.0 feature and semver-major list. |
-| [Node.js v24.0.0 release notes](https://nodejs.org/en/blog/release/v24.0.0) | Authoritative v24.0 feature, V8, npm, deprecation and breaking-change list. |
-| [Node.js v26.0.0 release notes](https://nodejs.org/en/blog/release/v26.0.0) | Authoritative v26.0 Temporal, V8 14.6, Undici 8, removals and build changes. |
-| [Node.js release status](https://nodejs.org/en/about/previous-releases) | Current LTS/Current status and branch dates. |
-| [Node.js TypeScript documentation](https://nodejs.org/api/typescript.html) | Exact history and limitations of native TypeScript support. |
-| [Node.js CommonJS / `require(esm)` documentation](https://nodejs.org/api/modules.html) | Exact `require(esm)` history, constraints and interoperability semantics. |
-| [Node `node:module` documentation](https://nodejs.org/api/module.html) | Compile cache, loader hooks and cache portability. |
-| [Node Permission Model documentation](https://nodejs.org/api/permissions.html) | Security model, limitations and `permission.drop()`. |
-| [Node deprecations catalogue](https://nodejs.org/api/deprecations.html) | Exact lifecycle of deprecated and removed APIs. |
-| [Node Single Executable Applications documentation](https://nodejs.org/api/single-executable-applications.html) | `--build-sea`, assets, snapshots and packaging limitations. |
-| [TC39 Temporal specification](https://tc39.es/proposal-temporal/) | Semantics and motivation of the Temporal API. |
+| Primary source                                                                                                  | Purpose                                                                      |
+| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Node.js v22.0.0 release notes](https://nodejs.org/en/blog/release/v22.0.0)                                     | Authoritative v22.0 feature and semver-major list.                           |
+| [Node.js v24.0.0 release notes](https://nodejs.org/en/blog/release/v24.0.0)                                     | Authoritative v24.0 feature, V8, npm, deprecation and breaking-change list.  |
+| [Node.js v26.0.0 release notes](https://nodejs.org/en/blog/release/v26.0.0)                                     | Authoritative v26.0 Temporal, V8 14.6, Undici 8, removals and build changes. |
+| [Node.js release status](https://nodejs.org/en/about/previous-releases)                                         | Current LTS/Current status and branch dates.                                 |
+| [Node.js TypeScript documentation](https://nodejs.org/api/typescript.html)                                      | Exact history and limitations of native TypeScript support.                  |
+| [Node.js CommonJS / `require(esm)` documentation](https://nodejs.org/api/modules.html)                          | Exact `require(esm)` history, constraints and interoperability semantics.    |
+| [Node `node:module` documentation](https://nodejs.org/api/module.html)                                          | Compile cache, loader hooks and cache portability.                           |
+| [Node Permission Model documentation](https://nodejs.org/api/permissions.html)                                  | Security model, limitations and `permission.drop()`.                         |
+| [Node deprecations catalogue](https://nodejs.org/api/deprecations.html)                                         | Exact lifecycle of deprecated and removed APIs.                              |
+| [Node Single Executable Applications documentation](https://nodejs.org/api/single-executable-applications.html) | `--build-sea`, assets, snapshots and packaging limitations.                  |
+| [TC39 Temporal specification](https://tc39.es/proposal-temporal/)                                               | Semantics and motivation of the Temporal API.                                |
 
 For ecosystem/contextual corroboration, NodeSource's v26 analysis identifies Temporal, V8 14.6, Undici 8 and deprecations as the principal v26 themes; InfoQ similarly highlights the Temporal/V8 transition and v26's pre-LTS Current status. LogRocket and Red Hat's v24 coverage both focus on the significance of the v24 generation and its path into LTS. These secondary sources agree broadly with the primary release material, but the conclusions in this report use Node/TC39 documentation as the source of truth where details differ.
 
@@ -734,4 +725,4 @@ The strategic choice among these versions is consequently fairly clear as of **2
 
 **Keep Node 22 where stability and compatibility outweigh feature gains, but do not mistake it for an obsolete runtime.** Its later LTS releases already contain the major architectural shift towards ESM/CJS coexistence, native TypeScript execution, module compilation caching and stable modern permission controls. For library authors, v22 is therefore an attractive minimum supported baseline when dropping older Node generations is acceptable.
 
-Most importantly, **the 22→24→26 evolution is not simply “newer V8, therefore faster”**. Node 22 changes *how modules and developer tooling work*; Node 24 changes *how modern JavaScript, asynchronous context, testing and TypeScript fit together*; Node 26 changes *what the JavaScript runtime itself can express while deliberately deleting transitional compatibility mechanisms*. That makes the upgrade decision principally an **API, tooling, dependency and operational compatibility decision**, with performance as something to benchmark on the real workload rather than infer from the version number.
+Most importantly, **the 22→24→26 evolution is not simply “newer V8, therefore faster”**. Node 22 changes _how modules and developer tooling work_; Node 24 changes _how modern JavaScript, asynchronous context, testing and TypeScript fit together_; Node 26 changes _what the JavaScript runtime itself can express while deliberately deleting transitional compatibility mechanisms_. That makes the upgrade decision principally an **API, tooling, dependency and operational compatibility decision**, with performance as something to benchmark on the real workload rather than infer from the version number.

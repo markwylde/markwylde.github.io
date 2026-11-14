@@ -28,6 +28,17 @@
     padding:28px 18px 48px;gap:18px;
   }
 
+  /* SVG sizes, ordered from general to specific. */
+  .btn-animate svg{width:15px;height:15px;}
+  .win-title svg{width:15px;height:15px;}
+  .win-ctl svg{width:13px;height:13px;}
+  .tray-icon svg{width:17px;height:17px;color:#dfe5ff;}
+  .task-item svg{width:15px;height:15px;}
+  .icon .glyph svg{width:24px;height:24px;}
+  .folder .fi svg{width:42px;height:34px;}
+  .ctx-item .ck svg{width:15px;height:15px;}
+  .modal-body .warn .ic svg{width:18px;height:18px;}
+
   /* ---------- tool chrome ---------- */
   .tool-header{width:min(980px,100%);display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
   .tool-header h1{font-size:18px;font-weight:650;letter-spacing:-0.01em;margin:0;display:flex;align-items:center;gap:9px;}
@@ -38,7 +49,6 @@
   .btn-animate{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:650;font-size:14px;color:#0a0c14;background:linear-gradient(180deg,#8b95ff,var(--accent));padding:11px 20px;border-radius:10px;display:flex;align-items:center;gap:9px;box-shadow:0 6px 18px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.4);transition:transform .12s ease, box-shadow .2s ease, opacity .2s ease;}
   .btn-animate:hover{transform:translateY(-1px);}
   .btn-animate:disabled{opacity:.5;cursor:default;transform:none;}
-  .btn-animate svg{width:15px;height:15px;}
   .toggles{display:flex;gap:18px;align-items:center;margin-left:auto;flex-wrap:wrap;}
   .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tool-dim);cursor:pointer;user-select:none;}
   .toggle input{position:absolute;opacity:0;width:0;height:0;}
@@ -66,7 +76,6 @@
   .icons{position:absolute;top:18px;left:18px;display:flex;flex-direction:column;gap:14px;}
   .icon{display:flex;flex-direction:column;align-items:center;gap:6px;width:78px;text-align:center;color:#fff;font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.5);cursor:pointer;}
   .icon .glyph{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);transition:transform .1s, background .15s, box-shadow .15s;}
-  .icon .glyph svg{width:24px;height:24px;}
   .icon.pressed .glyph{transform:scale(.9);background:rgba(255,255,255,.4);box-shadow:0 0 0 3px rgba(255,255,255,.25);}
 
   /* generic window */
@@ -78,13 +87,11 @@
   .win.lifted .titlebar,.win.dragging .titlebar{cursor:grabbing;}
   .win.maximized .titlebar{cursor:default;}
   .win-title{display:flex;align-items:center;gap:7px;white-space:nowrap;}
-  .win-title svg{width:15px;height:15px;}
   .win-controls{display:flex;gap:2px;}
   .win-ctl{appearance:none;border:0;background:transparent;width:30px;height:24px;border-radius:6px;display:grid;place-items:center;cursor:pointer;color:#5a6072;transition:background .12s, color .12s, transform .1s;}
   .win-ctl:hover{background:#e2e4ee;}
   .win-ctl.close:hover{background:var(--danger);color:#fff;}
   .win-ctl.pressed{transform:scale(.86);}
-  .win-ctl svg{width:13px;height:13px;}
 
   /* explorer body */
   .explorer-body{display:flex;flex:1;min-height:0;}
@@ -97,7 +104,6 @@
   .folder:hover{background:#eef1fb;}
   .folder.pressed,.folder.selected{background:#e2e7ff;border-color:#c3ccff;}
   .folder .fi{width:46px;height:38px;display:grid;place-items:center;}
-  .folder .fi svg{width:42px;height:34px;}
   .folder.deleted{opacity:0;transform:scale(.7);pointer-events:none;}
 
   /* confirm modal */
@@ -105,7 +111,6 @@
   .modal-body{padding:16px 18px 18px;}
   .modal-body .warn{display:flex;gap:12px;align-items:flex-start;}
   .modal-body .warn .ic{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ffe7e9;color:var(--danger);}
-  .modal-body .warn .ic svg{width:18px;height:18px;}
   .modal-body p{margin:0;font-size:13px;color:#444b5c;line-height:1.5;}
   .modal-body p b{color:#1d2330;}
   .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
@@ -120,7 +125,6 @@
   .ctx-menu.in{opacity:1;transform:scale(1);}
   .ctx-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;font-size:12.5px;color:#2c3344;cursor:default;}
   .ctx-item .ck{width:15px;height:15px;color:#8089a0;}
-  .ctx-item .ck svg{width:15px;height:15px;}
   .ctx-item:hover{background:#eef1fb;}
   .ctx-item.danger{color:var(--danger);}
   .ctx-item.danger .ck{color:var(--danger);}
@@ -135,9 +139,7 @@
   .start .logo span{background:#6ad1ff;border-radius:1px;}
   .start.pressed{transform:scale(.93);background:rgba(255,255,255,.2);}
   .tray-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.07);}
-  .tray-icon svg{width:17px;height:17px;color:#dfe5ff;}
   .task-item{display:none;align-items:center;gap:8px;padding:7px 14px;border-radius:9px;color:#eaf0ff;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid transparent;cursor:pointer;touch-action:none;transition:transform .1s, background .15s, border-color .15s;}
-  .task-item svg{width:15px;height:15px;}
   .task-item.active{background:rgba(255,255,255,.16);border-bottom:2px solid var(--accent-2);}
   .task-item.minimized{background:rgba(255,255,255,.10);}
   .task-item.pressed{transform:scale(.95);background:rgba(255,255,255,.24);}
@@ -161,8 +163,8 @@
   </div>
 
   <div class="panel">
-    <button class="btn-animate" id="animateBtn">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <button type="button" class="btn-animate" id="animateBtn">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       Run sequence
     </button>
     <div class="status" id="status">Idle — ready to run.</div>
@@ -177,15 +179,15 @@
     <!-- desktop icons -->
     <div class="icons">
       <div class="icon">
-        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M6 7h12l-1 13H7z"/><path d="M9 7V5h6v2"/></svg></span>
+        <span class="glyph"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M6 7h12l-1 13H7z"/><path d="M9 7V5h6v2"/></svg></span>
         Recycle Bin
       </div>
       <div class="icon" id="filesIcon">
-        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+        <span class="glyph"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
         Files
       </div>
       <div class="icon">
-        <span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m6 17 4-4 3 3 2-2 3 3"/></svg></span>
+        <span class="glyph"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m6 17 4-4 3 3 2-2 3 3"/></svg></span>
         Photos
       </div>
     </div>
@@ -194,41 +196,41 @@
     <section class="win" id="explorer">
       <div class="titlebar" id="explorerBar">
         <span class="win-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#5566c4" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
           File Explorer
         </span>
         <div class="win-controls">
-          <button class="win-ctl min" id="explorerMin" title="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
-          <button class="win-ctl max" id="explorerMax" title="Maximize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>
-          <button class="win-ctl close" id="explorerClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          <button type="button" class="win-ctl min" id="explorerMin" title="Minimize"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+          <button type="button" class="win-ctl max" id="explorerMax" title="Maximize"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>
+          <button type="button" class="win-ctl close" id="explorerClose" title="Close"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
       </div>
       <div class="explorer-body">
         <aside class="sidebar">
           <div class="sb-head">Quick access</div>
-          <div class="sb-item active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</div>
-          <div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"/></svg>Desktop</div>
-          <div class="sb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>Downloads</div>
+          <div class="sb-item active"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 10 12 3l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</div>
+          <div class="sb-item"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h7l2 2h7v11H4z"/></svg>Desktop</div>
+          <div class="sb-item"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>Downloads</div>
         </aside>
         <div class="folder-grid">
           <div class="folder" id="folderDocs">
-            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            <span class="fi"><svg aria-hidden="true" viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
             Documents
           </div>
           <div class="folder">
-            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            <span class="fi"><svg aria-hidden="true" viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
             Pictures
           </div>
           <div class="folder">
-            <span class="fi"><svg viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
+            <span class="fi"><svg aria-hidden="true" viewBox="0 0 24 24" fill="#9bb6ff" stroke="#5e7ce0" stroke-width="1.2"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>
             Projects
           </div>
           <div class="folder">
-            <span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+            <span class="fi"><svg aria-hidden="true" viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
             notes.txt
           </div>
           <div class="folder">
-            <span class="fi"><svg viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+            <span class="fi"><svg aria-hidden="true" viewBox="0 0 24 24" fill="#fff" stroke="#9aa3bd" stroke-width="1.2"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
             budget.xlsx
           </div>
         </div>
@@ -240,33 +242,33 @@
       <div class="titlebar" id="confirmBar">
         <span class="win-title">Delete folder</span>
         <div class="win-controls">
-          <button class="win-ctl close" id="confirmX" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          <button type="button" class="win-ctl close" id="confirmX" title="Close"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
       </div>
       <div class="modal-body">
         <div class="warn">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"/></svg></span>
+          <span class="ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 4l-8 14a1.5 1.5 0 0 0 1.3 2.2h16.8A1.5 1.5 0 0 0 21.7 18l-8-14a1.5 1.5 0 0 0-2.6 0z"/></svg></span>
           <p>Are you sure you want to permanently delete <b>Documents</b>? This action can't be undone.</p>
         </div>
         <div class="modal-actions">
-          <button class="ui-btn" id="confirmNo">Cancel</button>
-          <button class="ui-btn danger" id="confirmYes">Delete</button>
+          <button type="button" class="ui-btn" id="confirmNo">Cancel</button>
+          <button type="button" class="ui-btn danger" id="confirmYes">Delete</button>
         </div>
       </div>
     </section>
 
     <!-- context menus -->
     <div class="ctx-menu" id="folderMenu">
-      <div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>Open</div>
-      <div class="ctx-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"/></svg></span>Rename</div>
+      <div class="ctx-item"><span class="ck"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg></span>Open</div>
+      <div class="ctx-item"><span class="ck"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4l10-10-4-4L4 16z"/></svg></span>Rename</div>
       <div class="ctx-sep"></div>
-      <div class="ctx-item danger" id="menuDelete"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"/></svg></span>Delete</div>
+      <div class="ctx-item danger" id="menuDelete"><span class="ck"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2m-9 0 1 13h8l1-13"/></svg></span>Delete</div>
     </div>
 
     <div class="ctx-menu" id="taskMenu">
-      <div class="ctx-item" id="taskRestore"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></span>Restore</div>
+      <div class="ctx-item" id="taskRestore"><span class="ck"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></span>Restore</div>
       <div class="ctx-sep"></div>
-      <div class="ctx-item danger" id="taskClose"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"/></svg></span>Close window</div>
+      <div class="ctx-item danger" id="taskClose"><span class="ck"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6 6 18"/></svg></span>Close window</div>
     </div>
 
     <!-- taskbar -->
@@ -276,16 +278,16 @@
         Start
       </div>
       <div class="task-item" id="taskItem">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#9fc0ff" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></svg>
         File Explorer
       </div>
-      <div class="tray-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg></div>
+      <div class="tray-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg></div>
       <div class="clock"><div id="clk">10:24</div><div>Jun 15</div></div>
     </div>
 
-    <svg class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg>
+    <svg aria-hidden="true" class="path-layer" id="pathLayer" preserveAspectRatio="none"></svg>
 
-    <svg class="cursor" id="cursor" viewBox="0 0 24 24">
+    <svg aria-hidden="true" class="cursor" id="cursor" viewBox="0 0 24 24">
       <path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.3" stroke-linejoin="round"/>
     </svg>
   </div>
@@ -320,7 +322,7 @@
   const taskClose   = document.getElementById('taskClose');
   const taskRestore = document.getElementById('taskRestore');
 
-  let pos = { x: 80, y: 90 };
+  const pos = { x: 80, y: 90 };
   let running = false;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -341,7 +343,7 @@
   function pointOf(el, fx=0.5, fy=0.5){ const r = rectOf(el); return { x:r.x + r.w*fx, y:r.y + r.h*fy }; }
   const centerOf = el => pointOf(el, 0.5, 0.5);
   function posOf(el){ return { x: parseFloat(el.style.left)||0, y: parseFloat(el.style.top)||0 }; }
-  function setPos(el, x, y){ el.style.left = x + 'px'; el.style.top = y + 'px'; }
+  function setPos(el, x, y){ el.style.left = `${x}px`; el.style.top = `${y}px`; }
   function clampPos(el, x, y){
     const r = rectOf(el);
     const maxX = screen.clientWidth - r.w - 6;
@@ -432,8 +434,8 @@
 
   function spawnRipple(x, y, right=false){
     const r = document.createElement('div');
-    r.className = 'ripple' + (right ? ' right' : '');
-    r.style.left = x + 'px'; r.style.top = y + 'px';
+    r.className = `ripple${right ? ' right' : ''}`;
+    r.style.left = `${x}px`; r.style.top = `${y}px`;
     screen.appendChild(r);
     setTimeout(() => r.remove(), 600);
   }
@@ -494,7 +496,7 @@
     const W = screen.clientWidth, H = screen.clientHeight;
     return { left: W*0.20, top: H*0.15, width: W*0.54, height: H*0.62 };
   }
-  function applyGeom(g){ explorer.style.left=g.left+'px'; explorer.style.top=g.top+'px'; explorer.style.width=g.width+'px'; explorer.style.height=g.height+'px'; }
+  function applyGeom(g){ explorer.style.left=`${g.left}px`; explorer.style.top=`${g.top}px`; explorer.style.width=`${g.width}px`; explorer.style.height=`${g.height}px`; }
 
   async function openExplorer(){
     applyGeom(defaultExplorerGeom());
@@ -518,8 +520,8 @@
     explorer._restore = { left:explorer.style.left, top:explorer.style.top, width:explorer.style.width, height:explorer.style.height };
     explorer.classList.add('tween','maximized');
     explorer.style.left = '8px'; explorer.style.top = '8px';
-    explorer.style.width  = (screen.clientWidth - 16) + 'px';
-    explorer.style.height = (screen.clientHeight - 46 - 16) + 'px';
+    explorer.style.width  = `${screen.clientWidth - 16}px`;
+    explorer.style.height = `${screen.clientHeight - 46 - 16}px`;
     await sleep(300);
     explorer.classList.remove('tween');
   }
@@ -603,8 +605,8 @@
     const r = menu.getBoundingClientRect();
     const cx = Math.min(x, screen.clientWidth - r.width - 6);
     const cy = Math.min(y, screen.clientHeight - 46 - r.height - 6);
-    menu.style.left = Math.max(6, cx) + 'px';
-    menu.style.top  = Math.max(6, cy) + 'px';
+    menu.style.left = `${Math.max(6, cx)}px`;
+    menu.style.top  = `${Math.max(6, cy)}px`;
     requestAnimationFrame(() => menu.classList.add('in'));
   }
   function hideMenu(menu){ menu.classList.remove('in'); menu.style.display = 'none'; }
