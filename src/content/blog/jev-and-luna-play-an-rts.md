@@ -1,4 +1,5 @@
 ---
+
 title: "Playing with Jev - RTS Game"
 date: "2026-09-26"
 tags: ["AI", "Jev", "OpenRouter", "Game Dev", "TypeScript"]
@@ -29,14 +30,20 @@ This was the first request that worked:
 ```json
 {
   "model": "~typesafe/jev-latest",
-  "state": { "unit": { "x": 1, "y": 2, "hp": 1, "maxHp": 10 }, "enemy": { "x": 3, "y": 2, "hp": 10 } },
+  "state": {
+    "unit": { "x": 1, "y": 2, "hp": 1, "maxHp": 10 },
+    "enemy": { "x": 3, "y": 2, "hp": 10 }
+  },
   "questions": {
     "action": {
       "type": "choice",
       "instructions": "What should the unit do?",
       "criteria": { "attack": "charge the enemy", "flee": "run away" }
     },
-    "target_x": { "type": "noul", "instructions": "x coordinate to move to (0-20)" }
+    "target_x": {
+      "type": "noul",
+      "instructions": "x coordinate to move to (0-20)"
+    }
   }
 }
 ```
@@ -46,7 +53,12 @@ And the answer:
 ```json
 {
   "answers": {
-    "action": { "type": "choice", "choice": "flee", "probabilities": { "flee": 0.67, "attack": 0.33 }, "confidence": 0.34 },
+    "action": {
+      "type": "choice",
+      "choice": "flee",
+      "probabilities": { "flee": 0.67, "attack": 0.33 },
+      "confidence": 0.34
+    },
     "target_x": { "type": "noul", "noul": 0.52 }
   },
   "usage": { "input_tokens": 384, "output_tokens": 51, "cost": 0.000016128 }
@@ -145,13 +157,13 @@ Jev reads plain language, so I wrote five strategies as plain text and gave each
 
 The full text goes into `state`, and every question ends with "Follow our Rush strategy" (or whichever it is). To check it made any difference, I sent the same starting position once under each strategy:
 
-| Strategy | Built / trained | The soldier's order |
-|---|---|---|
-| Rush | house, soldier | attack |
-| Turtle | tower, soldier | defend |
-| Armor | factory, miner | defend |
-| Raider | barracks, archer | defend |
-| Boom | house, miner | defend |
+| Strategy | Built / trained  | The soldier's order |
+| -------- | ---------------- | ------------------- |
+| Rush     | house, soldier   | attack              |
+| Turtle   | tower, soldier   | defend              |
+| Armor    | factory, miner   | defend              |
+| Raider   | barracks, archer | defend              |
+| Boom     | house, miner     | defend              |
 
 Rush building a house wasn't in its plan, but the other four followed theirs. I also had to make "defend" available to fighters all the time again. Without it, a Turtle had no way to keep its army at home.
 
@@ -179,18 +191,18 @@ The name and text replace the team's strategy straight away, and the reason show
 
 The game in the video started as Armor (red) against Rush (blue). Here's what Luna called each side's strategy as the game went on:
 
-| Red | Blue |
-|---|---|
-| Armor | Rush |
-| Armor Tech | Rush |
-| Hold and Rebuild | Expand Rush |
-| Tank Buildup | Soldier Push |
-| Tank Transition | Reinforce |
-| Tank Push | Ranged Defense |
-| Tank Push | Archer Counter |
-| HQ Strike | Tank Defense |
-| HQ Assault | Hold the HQ |
-| Finish HQ | Emergency Tower |
+| Red              | Blue            |
+| ---------------- | --------------- |
+| Armor            | Rush            |
+| Armor Tech       | Rush            |
+| Hold and Rebuild | Expand Rush     |
+| Tank Buildup     | Soldier Push    |
+| Tank Transition  | Reinforce       |
+| Tank Push        | Ranged Defense  |
+| Tank Push        | Archer Counter  |
+| HQ Strike        | Tank Defense    |
+| HQ Assault       | Hold the HQ     |
+| Finish HQ        | Emergency Tower |
 
 Near the end, red's tanks reached blue's base. This is what each Luna wrote at that point:
 
@@ -206,20 +218,20 @@ Red won.
 
 These are the totals on the screen when the game in the video ended. The whole recording is under five minutes, and each Luna made 9 calls at one every 30 seconds, so the game ran for roughly four and a half minutes.
 
-| | Calls | Input tokens | Output tokens | Cost |
-|---|---|---|---|---|
-| Red, Jev | 130 | 289,457 | 36,043 | $0.01216 |
-| Blue, Jev | 109 | 212,769 | 18,515 | $0.00894 |
-| Red, Luna | 9 | 15,941 | 3,300 | $0.00364 |
-| Blue, Luna | 9 | 15,655 | 3,294 | $0.00360 |
-| **Total** | **257** | **533,822** | **61,152** | **$0.02834** |
+|            | Calls   | Input tokens | Output tokens | Cost         |
+| ---------- | ------- | ------------ | ------------- | ------------ |
+| Red, Jev   | 130     | 289,457      | 36,043        | $0.01216     |
+| Blue, Jev  | 109     | 212,769      | 18,515        | $0.00894     |
+| Red, Luna  | 9       | 15,941       | 3,300         | $0.00364     |
+| Blue, Luna | 9       | 15,655       | 3,294         | $0.00360     |
+| **Total**  | **257** | **533,822**  | **61,152**    | **$0.02834** |
 
 Split by model:
 
-| | Calls | Cost | Share | Average per call |
-|---|---|---|---|---|
-| Jev | 239 | $0.02110 | 74% | $0.00009 (about 2,100 tokens in, 230 out) |
-| Luna | 18 | $0.00724 | 26% | $0.0004 (about 1,750 tokens in, 370 out) |
+|      | Calls | Cost     | Share | Average per call                          |
+| ---- | ----- | -------- | ----- | ----------------------------------------- |
+| Jev  | 239   | $0.02110 | 74%   | $0.00009 (about 2,100 tokens in, 230 out) |
+| Luna | 18    | $0.00724 | 26%   | $0.0004 (about 1,750 tokens in, 370 out)  |
 
 Jev is about a quarter of the price per call, but it gets called 13 times as often, so it ends up as three quarters of the bill.
 

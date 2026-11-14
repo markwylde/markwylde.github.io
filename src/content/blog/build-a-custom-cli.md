@@ -1,4 +1,5 @@
 ---
+
 title: "Building a simple command-line tool with NodeJS"
 date: "2022-12-12"
 tags: ["Node.js", "CLI", "JavaScript"]
@@ -36,6 +37,7 @@ We can now run the command:
 Let's look at two ways to implement the CLI.
 
 ## Method 1: Zero dependency, bare bones
+
 However, nothing will happen just yet.
 
 ### Parsing the arguments
@@ -96,7 +98,7 @@ We can do this by checking the first item in the `args` array to see if it is a 
 const commands = {
   hello,
   eval,
-  help
+  help,
 };
 
 const commandName = args[0];
@@ -106,11 +108,12 @@ if (commandName in commands) {
   const output = commands[commandName](commandArgs);
   console.log(output);
 } else {
-  console.log('Invalid command');
+  console.log("Invalid command");
 }
 ```
 
 ## Method 2: Using Minimist
+
 But as your CLI grows, you will notice that `process.argv` can be a bit cumbersome to work with, and that's where a library like [Minimist](https://www.npmjs.com/package/minimist) comes in.
 
 Minimist is a lightweight library that allows you to parse the `process.argv` array and convert it into a more usable object.

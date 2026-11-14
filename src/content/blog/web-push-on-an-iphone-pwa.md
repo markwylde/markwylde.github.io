@@ -1,4 +1,5 @@
 ---
+
 title: "Web Push on an iPhone PWA"
 date: "2026-10-11"
 tags: ["Terminay", "PWA", "Web Push", "iOS", "Service Workers", "Claude Code"]
@@ -24,19 +25,19 @@ I had a short list of things it had to do:
 There's no Apple developer account and no Firebase project in any of this. A PWA gets push through a web standard, and the part that identifies you as the sender is called VAPID. It's a key pair. You generate it once:
 
 ```js
-const webpush = require('web-push')
-console.log(webpush.generateVAPIDKeys())
+const webpush = require("web-push");
+console.log(webpush.generateVAPIDKeys());
 ```
 
 The page gives the public key to the browser and asks for a subscription:
 
 ```js
-const reg = await navigator.serviceWorker.register('sw.js')
-await navigator.serviceWorker.ready
+const reg = await navigator.serviceWorker.register("sw.js");
+await navigator.serviceWorker.ready;
 const subscription = await reg.pushManager.subscribe({
   userVisibleOnly: true,
   applicationServerKey: keyBytes(VAPID_PUBLIC_KEY),
-})
+});
 ```
 
 What comes back is an address and two keys:
@@ -89,27 +90,34 @@ So we had documentation on one side and me being stubborn on the other. Arguing 
 I asked for the smallest possible PWA instead, hosted on a static site. It has one button to subscribe and a text box showing the subscription JSON. There's no backend. I tapped the button on my phone, copied the JSON, and pasted it into the chat. Claude kept the VAPID private key on my laptop and sent pushes from there with a few lines of Node:
 
 ```js
-webpush.setVapidDetails('mailto:me@example.com', vapid.publicKey, vapid.privateKey)
-await webpush.sendNotification(subscription, JSON.stringify(push), { TTL: 60 })
+webpush.setVapidDetails(
+  "mailto:me@example.com",
+  vapid.publicKey,
+  vapid.privateKey,
+);
+await webpush.sendNotification(subscription, JSON.stringify(push), { TTL: 60 });
 ```
 
 The service worker does exactly what the push says and nothing else:
 
 ```js
-self.addEventListener('push', (event) => event.waitUntil(handle(event)))
+self.addEventListener("push", (event) => event.waitUntil(handle(event)));
 
 async function handle(event) {
-  const push = event.data.json()
+  const push = event.data.json();
 
   if (push.close) {
-    for (const shown of await self.registration.getNotifications()) shown.close()
+    for (const shown of await self.registration.getNotifications())
+      shown.close();
   }
-  if (typeof push.badge === 'number') {
-    if (push.badge > 0) await self.navigator.setAppBadge(push.badge)
-    else await self.navigator.clearAppBadge()
+  if (typeof push.badge === "number") {
+    if (push.badge > 0) await self.navigator.setAppBadge(push.badge);
+    else await self.navigator.clearAppBadge();
   }
   if (push.notify) {
-    await self.registration.showNotification(push.notify.title, { body: push.notify.body })
+    await self.registration.showNotification(push.notify.title, {
+      body: push.notify.body,
+    });
   }
 }
 ```

@@ -1,4 +1,5 @@
 ---
+
 title: "Stop Mocking Internal Logic"
 date: "2023-06-15"
 tags: ["Testing", "Mocking", "JavaScript"]
@@ -16,31 +17,31 @@ Imagine we have a login form component that `POST`'s to an endpoint `/sessions` 
 To test a login form, we would use Jest alongside the React Testing Library (RTL). Here's an example test case where we're checking for an error message if incorrect username and password are entered.
 
 ```javascript
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import { LoginForm } from '../components/LoginForm';
-import * as Auth from '../services/auth';
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import { LoginForm } from "../components/LoginForm";
+import * as Auth from "../services/auth";
 
-jest.mock('../services/auth.ts', () => ({
-  login: jest.fn()
+jest.mock("../services/auth.ts", () => ({
+  login: jest.fn(),
 }));
 
-describe('LoginForm', () => {
-  it('shows an error if the wrong username and password is entered', async () => {
+describe("LoginForm", () => {
+  it("shows an error if the wrong username and password is entered", async () => {
     Auth.login.mockImplementation(() => Promise.reject());
 
     const { getByLabelText, getByRole, getByText } = render(<LoginForm />);
-    const usernameInput = getByLabelText('Username');
-    const passwordInput = getByLabelText('Password');
-    const submitButton = getByRole('button', { name: /submit/i });
+    const usernameInput = getByLabelText("Username");
+    const passwordInput = getByLabelText("Password");
+    const submitButton = getByRole("button", { name: /submit/i });
 
-    fireEvent.change(usernameInput, { target: { value: 'wrongUsername' } });
-    fireEvent.change(passwordInput, { target: { value: 'wrongPassword' } });
+    fireEvent.change(usernameInput, { target: { value: "wrongUsername" } });
+    fireEvent.change(passwordInput, { target: { value: "wrongPassword" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(getByText('Invalid username or password')).toBeInTheDocument();
+      expect(getByText("Invalid username or password")).toBeInTheDocument();
     });
 
     Auth.login.mockReset();
@@ -65,7 +66,7 @@ Setting up a small test server may initially seem like extra work, but it ultima
 Let's start by creating a small mock server generator function. We'll use `http.createServer` to create a mock server that responds to specific routes. The server listens on a port assigned by the operating system, avoiding potential conflicts with other tests or processes.
 
 ```javascript
-import http from 'http';
+import http from "http";
 
 // This can be abstracted into your own helper file
 function createMockServer(routes) {
@@ -86,7 +87,7 @@ function createMockServer(routes) {
 
 // Example of creating a mock server
 const server = createMockServer({
-  '/sessions': {
+  "/sessions": {
     POST: (req, res) => {
       res.writeHead(201);
       res.end();
@@ -107,8 +108,8 @@ Embracing this approach effectively simulates your application's actual external
 In our original internally mocked test, we used Jest to mock the `login` function to return a predefined response, thus making assumptions about our codebase's internals.
 
 ```javascript
-jest.mock('../services/auth.ts', () => ({
-  login: jest.fn()
+jest.mock("../services/auth.ts", () => ({
+  login: jest.fn(),
 }));
 
 // ... Test setup and execution ...
@@ -121,15 +122,15 @@ In that example, we are mocking the `login` function to always reject, simulatin
 Now, let's implement the same test using our proposed approach. Instead of mocking the `login` function, we will set up a mock server to simulate the actual API interaction.
 
 ```javascript
-import http from 'http';
-import createMockServer from './helpers/createMockServer';
+import http from "http";
+import createMockServer from "./helpers/createMockServer";
 
 const mockInvalidUsernameOrPassword = () => {
   const server = createMockServer({
-    '/sessions': {
+    "/sessions": {
       POST: (req, res) => {
         res.writeHead(401);
-        res.end(JSON.stringify({ message: 'Invalid username or password' }));
+        res.end(JSON.stringify({ message: "Invalid username or password" }));
       },
     },
   });
@@ -137,29 +138,29 @@ const mockInvalidUsernameOrPassword = () => {
 
   return {
     apiUrl,
-    server
-  }
-}
+    server,
+  };
+};
 
-describe('LoginForm', () => {
-  it('shows an error if the wrong username and password is entered', async () => {
+describe("LoginForm", () => {
+  it("shows an error if the wrong username and password is entered", async () => {
     const { apiUrl, server } = mockInvalidUsernameOrPassword();
 
     const { getByLabelText, getByRole, getByText } = render(
       <ApiContext.Provider value={{ apiUrl }}>
         <LoginForm />
-      </ApiContext.Provider>
+      </ApiContext.Provider>,
     );
-    const usernameInput = getByLabelText('Username');
-    const passwordInput = getByLabelText('Password');
-    const submitButton = getByRole('button', { name: /submit/i });
+    const usernameInput = getByLabelText("Username");
+    const passwordInput = getByLabelText("Password");
+    const submitButton = getByRole("button", { name: /submit/i });
 
-    fireEvent.change(usernameInput, { target: { value: 'wrongUsername' } });
-    fireEvent.change(passwordInput, { target: { value: 'wrongPassword' } });
+    fireEvent.change(usernameInput, { target: { value: "wrongUsername" } });
+    fireEvent.change(passwordInput, { target: { value: "wrongPassword" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(getByText('Invalid username or password')).toBeInTheDocument();
+      expect(getByText("Invalid username or password")).toBeInTheDocument();
     });
 
     server.close();

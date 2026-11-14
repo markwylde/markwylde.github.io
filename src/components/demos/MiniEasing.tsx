@@ -29,40 +29,78 @@ const CSS = `
 export default function MiniEasing() {
   const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const r = root.current!;
-    const GX0 = 30, GX1 = 230, GY0 = 190, GY1 = 30;            // graph plot box in viewBox units
+    const container = root.current;
+    if (!container) return;
+    const r = container;
+    const GX0 = 30,
+      GX1 = 230,
+      GY0 = 190,
+      GY1 = 30; // graph plot box in viewBox units
     const sx = (u: number) => GX0 + u * (GX1 - GX0);
     const sy = (v: number) => GY0 - v * (GY0 - GY1);
     const usx = (px: number) => (px - GX0) / (GX1 - GX0);
     const usy = (py: number) => (GY0 - py) / (GY0 - GY1);
 
-    const graph = r.querySelector('#graph') as SVGSVGElement;
-    const curve = r.querySelector('#curve') as SVGPathElement;
-    const cl1 = r.querySelector('#cl1') as SVGLineElement, cl2 = r.querySelector('#cl2') as SVGLineElement;
-    const h1 = r.querySelector('#h1') as SVGCircleElement, h2 = r.querySelector('#h2') as SVGCircleElement;
-    const marker = r.querySelector('#marker') as SVGCircleElement;
-    const cur = r.querySelector('#cur') as SVGSVGElement, track = cur.parentElement as HTMLElement;
-    const meter = r.querySelector('#meter') as HTMLElement;
-    const cssEl = r.querySelector('#css') as HTMLElement;
-    const presetsEl = r.querySelector('#presets') as HTMLElement;
+    const graph = r.querySelector("#graph") as SVGSVGElement;
+    const curve = r.querySelector("#curve") as SVGPathElement;
+    const cl1 = r.querySelector("#cl1") as SVGLineElement,
+      cl2 = r.querySelector("#cl2") as SVGLineElement;
+    const h1 = r.querySelector("#h1") as SVGCircleElement,
+      h2 = r.querySelector("#h2") as SVGCircleElement;
+    const marker = r.querySelector("#marker") as SVGCircleElement;
+    const cur = r.querySelector("#cur") as SVGSVGElement,
+      track = cur.parentElement as HTMLElement;
+    const meter = r.querySelector("#meter") as HTMLElement;
+    const cssEl = r.querySelector("#css") as HTMLElement;
+    const presetsEl = r.querySelector("#presets") as HTMLElement;
 
     let P = { x1: 0.42, y1: 0, x2: 0.58, y2: 1 };
-    const clamp = (lo: number, hi: number, v: number) => Math.max(lo, Math.min(hi, v));
+    const clamp = (lo: number, hi: number, v: number) =>
+      Math.max(lo, Math.min(hi, v));
 
     function solver(x1: number, y1: number, x2: number, y2: number) {
-      const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
-      const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
-      const fx = (t: number) => ((ax * t + bx) * t + cx) * t, fy = (t: number) => ((ay * t + by) * t + cy) * t, dfx = (t: number) => (3 * ax * t + 2 * bx) * t + cx;
-      return (p: number) => { if (p <= 0) return 0; if (p >= 1) return 1; let t = p; for (let i = 0; i < 8; i++) { const x = fx(t) - p; if (Math.abs(x) < 1e-5) break; const d = dfx(t); if (Math.abs(d) < 1e-6) break; t -= x / d; } return fy(clamp(0, 1, t)); };
+      const cx = 3 * x1,
+        bx = 3 * (x2 - x1) - cx,
+        ax = 1 - cx - bx;
+      const cy = 3 * y1,
+        by = 3 * (y2 - y1) - cy,
+        ay = 1 - cy - by;
+      const fx = (t: number) => ((ax * t + bx) * t + cx) * t,
+        fy = (t: number) => ((ay * t + by) * t + cy) * t,
+        dfx = (t: number) => (3 * ax * t + 2 * bx) * t + cx;
+      return (p: number) => {
+        if (p <= 0) return 0;
+        if (p >= 1) return 1;
+        let t = p;
+        for (let i = 0; i < 8; i++) {
+          const x = fx(t) - p;
+          if (Math.abs(x) < 1e-5) break;
+          const d = dfx(t);
+          if (Math.abs(d) < 1e-6) break;
+          t -= x / d;
+        }
+        return fy(clamp(0, 1, t));
+      };
     }
     let ease = solver(P.x1, P.y1, P.x2, P.y2);
 
     function redraw() {
-      curve.setAttribute('d', `M ${sx(0)} ${sy(0)} C ${sx(P.x1)} ${sy(P.y1)} ${sx(P.x2)} ${sy(P.y2)} ${sx(1)} ${sy(1)}`);
-      cl1.setAttribute('x1', String(sx(0))); cl1.setAttribute('y1', String(sy(0))); cl1.setAttribute('x2', String(sx(P.x1))); cl1.setAttribute('y2', String(sy(P.y1)));
-      cl2.setAttribute('x1', String(sx(1))); cl2.setAttribute('y1', String(sy(1))); cl2.setAttribute('x2', String(sx(P.x2))); cl2.setAttribute('y2', String(sy(P.y2)));
-      h1.setAttribute('cx', String(sx(P.x1))); h1.setAttribute('cy', String(sy(P.y1)));
-      h2.setAttribute('cx', String(sx(P.x2))); h2.setAttribute('cy', String(sy(P.y2)));
+      curve.setAttribute(
+        "d",
+        `M ${sx(0)} ${sy(0)} C ${sx(P.x1)} ${sy(P.y1)} ${sx(P.x2)} ${sy(P.y2)} ${sx(1)} ${sy(1)}`,
+      );
+      cl1.setAttribute("x1", String(sx(0)));
+      cl1.setAttribute("y1", String(sy(0)));
+      cl1.setAttribute("x2", String(sx(P.x1)));
+      cl1.setAttribute("y2", String(sy(P.y1)));
+      cl2.setAttribute("x1", String(sx(1)));
+      cl2.setAttribute("y1", String(sy(1)));
+      cl2.setAttribute("x2", String(sx(P.x2)));
+      cl2.setAttribute("y2", String(sy(P.y2)));
+      h1.setAttribute("cx", String(sx(P.x1)));
+      h1.setAttribute("cy", String(sy(P.y1)));
+      h2.setAttribute("cx", String(sx(P.x2)));
+      h2.setAttribute("cy", String(sy(P.y2)));
       cssEl.textContent = `cubic-bezier(${P.x1.toFixed(2)}, ${P.y1.toFixed(2)}, ${P.x2.toFixed(2)}, ${P.y2.toFixed(2)})`;
       ease = solver(P.x1, P.y1, P.x2, P.y2);
     }
@@ -75,56 +113,89 @@ export default function MiniEasing() {
       const py = (e.clientY - rect.top) * (220 / rect.height);
       return { u: clamp(0, 1, usx(px)), v: clamp(-0.3, 1.3, usy(py)) };
     }
-    h1.addEventListener('pointerdown', (e: PointerEvent) => { drag = '1'; h1.setPointerCapture(e.pointerId); });
-    h2.addEventListener('pointerdown', (e: PointerEvent) => { drag = '2'; h2.setPointerCapture(e.pointerId); });
-    graph.addEventListener('pointermove', (e: PointerEvent) => {
+    h1.addEventListener("pointerdown", (e: PointerEvent) => {
+      drag = "1";
+      h1.setPointerCapture(e.pointerId);
+    });
+    h2.addEventListener("pointerdown", (e: PointerEvent) => {
+      drag = "2";
+      h2.setPointerCapture(e.pointerId);
+    });
+    graph.addEventListener("pointermove", (e: PointerEvent) => {
       if (!drag) return;
       const { u, v } = toUnit(e);
-      if (drag === '1') { P.x1 = u; P.y1 = v; } else { P.x2 = u; P.y2 = v; }
-      setActivePreset(null); redraw();
+      if (drag === "1") {
+        P.x1 = u;
+        P.y1 = v;
+      } else {
+        P.x2 = u;
+        P.y2 = v;
+      }
+      setActivePreset(null);
+      redraw();
     });
-    function onPointerUp() { drag = null; }
-    window.addEventListener('pointerup', onPointerUp);
+    function onPointerUp() {
+      drag = null;
+    }
+    window.addEventListener("pointerup", onPointerUp);
 
     // ---- presets ----
     const presets = [
-      { name: 'linear', v: [0, 0, 1, 1] },
-      { name: 'ease', v: [.25, .1, .25, 1] },
-      { name: 'ease-in-out', v: [.42, 0, .58, 1] },
-      { name: 'reach', v: [.3, 0, .7, 1] },
+      { name: "linear", v: [0, 0, 1, 1] },
+      { name: "ease", v: [0.25, 0.1, 0.25, 1] },
+      { name: "ease-in-out", v: [0.42, 0, 0.58, 1] },
+      { name: "reach", v: [0.3, 0, 0.7, 1] },
     ];
     let activeBtn: HTMLElement | null = null;
-    function setActivePreset(btn: HTMLElement | null) { if (activeBtn) activeBtn.classList.remove('active'); activeBtn = btn; if (btn) btn.classList.add('active'); }
-    presets.forEach(pr => {
-      const b = document.createElement('button');
-      b.className = 'btn'; b.textContent = pr.name;
-      b.addEventListener('click', () => { P = { x1: pr.v[0], y1: pr.v[1], x2: pr.v[2], y2: pr.v[3] }; setActivePreset(b); redraw(); });
+    function setActivePreset(btn: HTMLElement | null) {
+      if (activeBtn) activeBtn.classList.remove("active");
+      activeBtn = btn;
+      if (btn) btn.classList.add("active");
+    }
+    presets.forEach((pr) => {
+      const b = document.createElement("button");
+      b.className = "btn";
+      b.textContent = pr.name;
+      b.addEventListener("click", () => {
+        P = { x1: pr.v[0], y1: pr.v[1], x2: pr.v[2], y2: pr.v[3] };
+        setActivePreset(b);
+        redraw();
+      });
       presetsEl.appendChild(b);
-      if (pr.name === 'ease-in-out') setActivePreset(b);
+      if (pr.name === "ease-in-out") setActivePreset(b);
     });
 
     // ---- animation loop ----
-    const DUR = 1500, PAUSE = 380;
-    let t0: number | null = null, prevVal = 0, prevT: number | null = null;
+    const DUR = 1500,
+      PAUSE = 380;
+    let t0: number | null = null,
+      prevVal = 0,
+      prevT: number | null = null;
     let raf = 0;
     function frame(now: number) {
       if (t0 === null) t0 = now;
-      let elapsed = now - t0;
-      let prog;
+      const elapsed = now - t0;
+      let prog: number;
       if (elapsed <= DUR) prog = elapsed / DUR;
       else if (elapsed <= DUR + PAUSE) prog = 1;
-      else { t0 = now; prog = 0; prevVal = 0; }
+      else {
+        t0 = now;
+        prog = 0;
+        prevVal = 0;
+      }
       const val = ease(prog);
-      const w = Math.max(1, track.clientWidth - 20);   // svg has no offsetWidth; cursor is 20px
+      const w = Math.max(1, track.clientWidth - 20); // svg has no offsetWidth; cursor is 20px
       cur.style.transform = `translateX(${val * w}px)`;
-      marker.setAttribute('cx', String(sx(prog))); marker.setAttribute('cy', String(sy(val)));
+      marker.setAttribute("cx", String(sx(prog)));
+      marker.setAttribute("cy", String(sy(val)));
       // speed meter = normalised instantaneous velocity
       if (prevT !== null) {
         const dt = Math.max(1, now - prevT);
-        const speed = Math.abs(val - prevVal) / dt;     // value units per ms
-        meter.style.width = clamp(0, 100, speed * 60000) + '%';
+        const speed = Math.abs(val - prevVal) / dt; // value units per ms
+        meter.style.width = `${clamp(0, 100, speed * 60000)}%`;
       }
-      prevVal = val; prevT = now;
+      prevVal = val;
+      prevT = now;
       raf = requestAnimationFrame(frame);
     }
     redraw();
@@ -132,7 +203,7 @@ export default function MiniEasing() {
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener("pointerup", onPointerUp);
     };
   }, []);
 
@@ -140,12 +211,26 @@ export default function MiniEasing() {
     <div className="demo demo-easing" ref={root}>
       <style>{CSS}</style>
       <div className="mini">
-        <div className="caption">An <b>easing function</b> remaps progress: real time goes in along the bottom, the eased value comes out up the side. The motion stays a straight A→B line — easing only changes <b>when</b> you're where. Drag the teal handles (that's literally CSS <code>cubic-bezier()</code>) and watch the dot's speed meter swell and fade.</div>
+        <div className="caption">
+          An <b>easing function</b> remaps progress: real time goes in along the
+          bottom, the eased value comes out up the side. The motion stays a
+          straight A→B line — easing only changes <b>when</b> you're where. Drag
+          the teal handles (that's literally CSS <code>cubic-bezier()</code>)
+          and watch the dot's speed meter swell and fade.
+        </div>
         <div className="play">
           <svg className="graph" id="graph" viewBox="0 0 260 220">
+            <title>Interactive easing curve</title>
             <line className="gridline" x1="30" y1="110" x2="230" y2="110" />
             <line className="gridline" x1="130" y1="30" x2="130" y2="190" />
-            <rect x="30" y="30" width="200" height="160" fill="none" className="axis" />
+            <rect
+              x="30"
+              y="30"
+              width="200"
+              height="160"
+              fill="none"
+              className="axis"
+            />
             <line className="ctrlline" id="cl1" />
             <line className="ctrlline" id="cl2" />
             <path className="curve" id="curve" />
@@ -155,12 +240,29 @@ export default function MiniEasing() {
           </svg>
           <div className="right">
             <div className="track">
-              <span className="tick" style={{ left: '0' }} /><span className="tick" style={{ right: '0' }} />
-              <svg className="cur" id="cur" viewBox="0 0 24 24"><path d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z" fill="#fff" stroke="#1a1a1a" strokeWidth="1.3" strokeLinejoin="round" /></svg>
+              <span className="tick" style={{ left: "0" }} />
+              <span className="tick" style={{ right: "0" }} />
+              <svg className="cur" id="cur" viewBox="0 0 24 24">
+                <title>Interactive easing curve</title>
+                <path
+                  d="M3 2 L3 19 L8 14.5 L11 21 L14 19.5 L11 13 L17.5 13 Z"
+                  fill="#fff"
+                  stroke="#1a1a1a"
+                  strokeWidth="1.3"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
-            <div className="meter-wrap">speed<div className="meter"><div className="meter-fill" id="meter" /></div></div>
+            <div className="meter-wrap">
+              speed
+              <div className="meter">
+                <div className="meter-fill" id="meter" />
+              </div>
+            </div>
             <div className="row" id="presets" />
-            <div><code id="css">cubic-bezier(0.42, 0, 0.58, 1)</code></div>
+            <div>
+              <code id="css">cubic-bezier(0.42, 0, 0.58, 1)</code>
+            </div>
           </div>
         </div>
       </div>

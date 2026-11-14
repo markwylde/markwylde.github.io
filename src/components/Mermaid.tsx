@@ -9,7 +9,9 @@ export default function Mermaid() {
       const mermaid = (await import("mermaid")).default;
       if (cancelled) return;
 
-      for (const pre of document.querySelectorAll("pre[data-language='mermaid']")) {
+      for (const pre of document.querySelectorAll(
+        "pre[data-language='mermaid']",
+      )) {
         if (!(pre instanceof HTMLElement) || pre.dataset.mermaidReady) continue;
         const source = pre.textContent ?? "";
         const wrap = document.createElement("div");
@@ -29,9 +31,7 @@ export default function Mermaid() {
           theme,
           securityLevel: "strict",
         });
-        const nodes = [
-          ...document.querySelectorAll<HTMLElement>(".mermaid"),
-        ];
+        const nodes = [...document.querySelectorAll<HTMLElement>(".mermaid")];
         for (const node of nodes) {
           node.removeAttribute("data-processed");
           node.textContent = node.dataset.source ?? "";

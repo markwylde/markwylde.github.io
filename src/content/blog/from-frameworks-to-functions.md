@@ -1,4 +1,5 @@
 ---
+
 title: "From Frameworks to Functions"
 date: "2023-06-22"
 tags: ["Functional Programming", "Frameworks", "Express"]
@@ -34,14 +35,14 @@ Let's dive right into my main culprit for today: Express.js. This popular framew
 Consider this snippet of Express code:
 
 ```javascript
-import express from 'express';
+import express from "express";
 const app = express();
 app.use((req, res, next) => {
-    req.session = 1234;
-    next();
+  req.session = 1234;
+  next();
 });
-app.get('/', (req, res) => {
-    res.send('You are on session ' + req.session);
+app.get("/", (req, res) => {
+  res.send("You are on session " + req.session);
 });
 app.listen(3000);
 ```
@@ -55,13 +56,13 @@ Middleware is often used to handle things like authentication, error handling, a
 Let's compare it with a more functional approach:
 
 ```javascript
-import http from 'http'
-import getSessionFromRequest from './authentication/getSessionFromRequest';
+import http from "http";
+import getSessionFromRequest from "./authentication/getSessionFromRequest";
 
 const server = http.createServer(async (request, response) => {
-  if (request.url === '/') {
+  if (request.url === "/") {
     const session = await getSessionFromRequest(request);
-    response.end('You are on session ' + session);
+    response.end("You are on session " + session);
     return;
   }
 });

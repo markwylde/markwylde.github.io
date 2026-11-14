@@ -1,4 +1,5 @@
 ---
+
 title: "Bringing Claude Code to Gitea: From GitHub Actions to Self-Hosted Git"
 date: "2025-01-31"
 tags: ["Gitea", "AI", "Claude", "GitHub Actions", "Open Source"]
@@ -123,6 +124,7 @@ The local git operations actually make certain workflows faster than the GitHub 
 Building on Anthropic's open-source foundation made this adaptation possible. The original codebase was well-structured with clear separation between GitHub-specific code and the core Claude integration logic.
 
 Key files that required modification:
+
 - API client implementation (`gitea-client.ts`)
 - Local git operations (`local-git.ts`)
 - Workflow examples (`gitea-claude.yml`)

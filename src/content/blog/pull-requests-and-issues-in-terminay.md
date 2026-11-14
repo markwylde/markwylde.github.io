@@ -1,4 +1,5 @@
 ---
+
 title: "Pull requests and issues in Terminay"
 date: "2026-11-11"
 tags: ["Terminay", "Gitea", "GitHub", "Extensions", "Claude Code", "OpenSpec"]

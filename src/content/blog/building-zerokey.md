@@ -1,4 +1,5 @@
 ---
+
 title: "Building Zerokey: A Zero-Knowledge Cross-Domain Secret Sharing Library"
 date: "2025-06-26"
 tags: ["Cryptography", "Security", "Web Development", "Zero Knowledge", "Privacy"]
@@ -57,16 +58,16 @@ I used the Web Crypto API with the P-256 curve for ECDH and AES-GCM for the actu
 async function generateKeyPair() {
   const keyPair = await crypto.subtle.generateKey(
     {
-      name: 'ECDH',
-      namedCurve: 'P-256'
+      name: "ECDH",
+      namedCurve: "P-256",
     },
     true,
-    ['deriveKey']
+    ["deriveKey"],
   );
 
   return {
     publicKey: await exportPublicKey(keyPair.publicKey),
-    privateKey: keyPair.privateKey
+    privateKey: keyPair.privateKey,
   };
 }
 ```
@@ -110,8 +111,11 @@ The redirect flow looks like this:
 
 ```javascript
 function clearFragment() {
-  window.history.replaceState(null, '',
-    window.location.pathname + window.location.search);
+  window.history.replaceState(
+    null,
+    "",
+    window.location.pathname + window.location.search,
+  );
 }
 ```
 
@@ -120,10 +124,12 @@ function clearFragment() {
 Testing cross-domain flows is notoriously difficult. I needed to simulate two different domains, test the redirect flow, and verify that secrets never leak to servers.
 
 Enter Playwright. I set up two test servers:
+
 - `localhost:3001` acting as the app domain
 - `localhost:3002` acting as the auth domain
 
 This let me test the complete flow, including edge cases like:
+
 - Browser back/forward navigation
 - Page refreshes mid-flow
 - Concurrent flows in multiple tabs
@@ -131,20 +137,20 @@ This let me test the complete flow, including edge cases like:
 - Corrupted data handling
 
 ```javascript
-test('happy path - complete secret transfer flow', async ({ page }) => {
-  await page.goto('http://localhost:3001');
-  await page.click('#requestSecret');
+test("happy path - complete secret transfer flow", async ({ page }) => {
+  await page.goto("http://localhost:3001");
+  await page.click("#requestSecret");
 
   // Should redirect to auth domain
   await page.waitForURL(/localhost:3002/);
 
   // Simulate login
-  await page.fill('#password', 'my-secret-password');
-  await page.click('#login');
+  await page.fill("#password", "my-secret-password");
+  await page.click("#login");
 
   // Should redirect back with secret
   await page.waitForURL(/localhost:3001/);
-  await expect(page.locator('#status')).toHaveText('Secret received!');
+  await expect(page.locator("#status")).toHaveText("Secret received!");
 });
 ```
 
@@ -177,12 +183,14 @@ test('happy path - complete secret transfer flow', async ({ page }) => {
 ## When Should You Use Zerokey?
 
 Zerokey is perfect when you need to:
+
 - Share secrets between different subdomains
 - Maintain zero-knowledge architecture
 - Avoid server-side session management
 - Implement client-side encryption across domains
 
 It's not suitable when:
+
 - You need to share very large amounts of data
 - The domains are not under your control
 - You require persistent server-side sessions
