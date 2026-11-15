@@ -20,7 +20,7 @@ const CSS = `
 .bl-ts .bar.dim span.on{opacity:1}
 .bl-ts .brace{display:flex;font-size:.74rem;color:var(--muted)}
 .bl-ts .brace div{border-top:2px solid var(--line);padding-top:4px;text-align:center}
-.bl-ts ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:4px 24px}
+.bl-ts ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:4px 24px}
 .bl-ts li{display:flex;gap:8px;align-items:center;font-size:.82rem;margin:0;cursor:default;padding:2px 4px;border-radius:4px}
 .bl-ts li.on{background:var(--pad-fill)}
 .bl-ts li .sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}

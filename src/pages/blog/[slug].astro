@@ -205,6 +205,15 @@ const { Content } = await render(entry);
 		vertical-align: top;
 	}
 
+	@media (max-width: 560px) {
+		.blog-content :global(th),
+		.blog-content :global(td) {
+			padding: 0.45rem 0.5rem;
+			font-size: 0.85rem;
+			overflow-wrap: anywhere;
+		}
+	}
+
 	.blog-content :global(th) {
 		background-color: var(--surface-2);
 		color: var(--heading-color);

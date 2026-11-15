@@ -1,0 +1,261 @@
+---
+title: "Bulletin, part 2: Claude rebuilds the UI in a day for $144"
+date: "2026-11-15"
+tags: ["AI", "Agents", "Claude", "UI", "Terminay", "Astro", "React"]
+excerpt: "DeepSeek built a working forum for $51, but it looked terrible. So I had Claude Opus 5.5 throw away both front ends and rebuild them, hands off, with five subagents. It took 9 hours and 10 minutes from my first message to green CI, 461.6 million tokens, and $144.49 at API prices. These are the before and after shots, the timings, what broke, and what it cost."
+---
+
+import AfterGallery from "../../components/bulletin2/AfterGallery.tsx";
+import BeforeAfter from "../../components/bulletin2/BeforeAfter.tsx";
+import ClaudeCost from "../../components/bulletin2/ClaudeCost.tsx";
+import DayGlance from "../../components/bulletin2/DayGlance.tsx";
+import WorkflowPanel2 from "../../components/bulletin2/WorkflowPanel2.tsx";
+import Cards from "../../components/bulletin/Cards.tsx";
+import RepoLink from "../../components/bulletin/RepoLink.tsx";
+import VTimeline from "../../components/bulletin/VTimeline.tsx";
+
+In [part 1](/blog/bulletin-part-1-a-forum-for-51-dollars/), DeepSeek Flash built **Bulletin**, a forum in the style of oldschool web bulletin board systems, from 25 specs for $51. The back end came out well. The UI didn't: every page looked like a default form with a blue button, and the staff console put every setting in one long column.
+
+So for part 2 I handed both front ends to Claude Opus 5.5. No DeepSeek and no Codex this time. Claude planned it, split it across five subagents, reviewed its own screenshots, and merged to main. I didn't touch the code. Here is the whole day:
+
+<DayGlance client:visible />
+
+This post covers the brief, the eight-minute plan, how the agents ran, the before and after, everything that went wrong on the way, and what it would have cost at API prices.
+
+<ul className="jump-nav">
+<li><a href="#the-brief"><span className="n">1</span> The brief</a></li>
+<li><a href="#eight-minutes-of-planning"><span className="n">2</span> Planning</a></li>
+<li><a href="#how-it-ran"><span className="n">3</span> How it ran</a></li>
+<li><a href="#before-and-after"><span className="n">4</span> Before and after</a></li>
+<li><a href="#claude-reviewing-claude"><span className="n">5</span> Self-review</a></li>
+<li><a href="#what-went-wrong"><span className="n">6</span> What went wrong</a></li>
+<li><a href="#what-it-cost"><span className="n">7</span> Costs</a></li>
+<li><a href="#the-code"><span className="n">8</span> The code</a></li>
+<li><a href="#fixing-part-1s-bugs"><span className="n">9</span> Part 1's bugs</a></li>
+</ul>
+
+<span className="tool-kicker">1 · The brief</span>
+
+## The brief
+
+I sent the request at 10:31 on Sunday morning. I asked Claude to delete every component, page and style in both front ends and start again, keeping the back end and the caching as they were. For the look, I pointed it at the clean, customisable feel of classic forum software from about 20 years ago, and asked for something modern and professional: clean SaaS, with no odd hover effects and no box shadows. It had to be its own design, not a copy of anything.
+
+I attached two screenshots of oldschool web bulletin board systems for reference, and listed what I wanted fixed: a new header and footer, no more narrow column with borders round it, breadcrumbs on every page (there weren't any), and a staff console with grouped menus and subpages instead of one flat list. The stack stayed the same: Astro for the forum, with the caching from part 1, and Vite with React for the staff console. Like part 1, it had to run hands off.
+
+<span className="tool-kicker">2 · Planning</span>
+
+## Eight minutes of planning
+
+Part 1's planning took 3h17m, with 62 questions, 20 ADRs and seven review rounds. This time Claude read the ADRs, the current templates and my part 1 post, then opened a Terminay window with six questions at 10:35. Each had its recommended answer marked.
+
+Before asking anything, it had counted the end-to-end test selectors: 451 of 458 used `data-*` attributes rather than CSS classes. That meant it could throw away every class, every bit of markup and every style, keep the `data-*` hooks, and the existing tests and client scripts would keep working.
+
+The first question nearly went wrong:
+
+<Cards items={[
+  { tone: "claude", title: "Claude asked", body: "\"Forum index: keep the classic structure (category tables with Topics/Replies/Last post columns) with a modern skin? It would become cards at 360 px.\" Recommended: yes, \"that's what makes it a forum, not a feed\"." },
+  { tone: "me", title: "I answered no", body: "\"that's actually a real pet peeve of mine. This kind of card approach of the forums and the categories I actually don't like […] I know exactly why you're asking this question, but no, I don't want that card approach.\" I did say a second card-style theme would be fine, if it took no more than a minute." },
+]} />
+
+I wanted the classic layout; what I objected to was the cards on phones. Claude read the note rather than the button: forum lists stay as rows at every width, and a separate card theme, "Lounge", became a small extra. The other five answers:
+
+- **Width:** full width up to about 1280 px, with no outer frame. I added that it had to work well on phone, tablet and desktop.
+- **Staff navigation:** an icon rail of top-level areas, then a grouped sub-menu panel.
+- **Look:** neutral greys, one blue accent, self-hosted Inter, 6 px corners, and borders instead of shadows.
+- **Who builds it:** Claude only. Claude orchestrates, and Claude subagents build in their own git worktrees. No Codex reviews this time.
+- **Merging:** auto-merge each phase to main once `bun run check`, the E2E suite and a screenshot review pass.
+
+I also mentioned I'd moved the repo. Part 1 was built on my own Gitea instance, with CI on my Gitea runners. Bulletin is now open source on [GitHub](https://github.com/markwylde/bulletin) under the AGPL-3.0-or-later licence, so Claude repointed the remote, and CI runs on GitHub Actions from here on. At 10:39 the plan was committed: [ADR 0021](https://github.com/markwylde/bulletin/blob/main/docs/adr/0021-design-system.md), the design system, and an OpenSpec change called `ui-rebuild`. ADR 0021 says outright that it overrides the "tables become cards on mobile" rule from ADR 0014 for forum lists, because part 1's ADRs are binding and you can only contradict one by superseding it.
+
+<span className="tool-kicker">3 · How it ran</span>
+
+## How it ran
+
+Claude tracked the work in a Terminay workflow. Here it is rebuilt from the transcripts, with each step's time split into AI, compute and blocked:
+
+<WorkflowPanel2 />
+
+Claude was generating for 2h49m of the agents' combined time. Tool calls and background jobs (builds, Docker, the test suites, screenshots and CI) took 8h14m, and agents sat blocked for another 4h07m, waiting for a test slot, a review or Docker to come back. The forum shell alone was blocked for 2h17m, because its E2E run was stuck on the overloaded box from 11:40 until Docker hung at 13:55. In part 1, DeepSeek waited on shell commands for more than twice as long as it spent thinking. Here it's nearly three times as long, plus the blocked time.
+
+The day ran like this:
+
+1. **Phase 0, 7 minutes.** One subagent built the tools the others would need: `ui-shots`, a script that screenshots any page at 360, 768 and 1440 px in light and dark; `ui-hooks`, a guard that fails if a `data-*` hook disappears from the markup; a tablet viewport for the E2E suite; and the Inter font, self-hosted by the app.
+2. **Two tracks in parallel.** One subagent rebuilt the forum and another rebuilt the staff console, each in its own worktree with its own 16-service Docker stack, on ports 18080 and 28080. My own stack stayed on 8080.
+3. **Gate.** Before each merge: `bun run check`, the full E2E suite against a fresh stack, the hook guard, and Claude looking at the screenshots itself.
+4. **Merge and push.** Then the next phase.
+5. **Polish, then final fixes.** Two more subagents went through every page in both apps, and fixed CI.
+
+The orchestrator's job was mostly waiting, reviewing and steering. Between them, the agents opened screenshots 142 times. The orchestrator sent fixes back to the subagents, read risky diffs before merging, and decided when each track could run its tests, because two full E2E runs at once turned out to be too much for my machine.
+
+<span className="tool-kicker">4 · Before and after</span>
+
+<div className="tool-section">
+
+## Before and after
+
+Same pages, same seed data, same viewport. Drag the handle across. The old shots were taken in dark mode, so the slider starts on the new dark theme to keep it fair.
+
+<BeforeAfter client:visible />
+
+</div>
+
+What changed, beyond the colours:
+
+- **Header.** The logo, Forums, Members, Online and Leaderboards, a search box, and the account menu. Before, it was a language dropdown, a search box and a "Search the board" label wrapping onto two lines.
+- **Breadcrumbs on every page.** There's now an E2E test that walks the pages and checks them.
+- **The board index** is categories with forum rows: activity and last post on the right, subforums underneath. On a phone, the rows stay rows.
+- **Footer.** Language, theme and colour mode, which used to sit in the header.
+- **The staff console** has an icon rail with 8 areas, a grouped panel for the 38 sections, ⌘K search across every section, and breadcrumbs. Settings pages show a save bar only when there are unsaved changes. The permission matrix scrolls sideways with the forum column fixed.
+- **The Lounge theme.** The card layout I said I didn't want, as an option. Members can switch to it from the footer.
+
+<div className="tool-section">
+
+### Every page
+
+These are the after shots Claude took for this post. Click any of them for full size.
+
+<AfterGallery client:visible />
+
+</div>
+
+<span className="tool-kicker">5 · Self-review</span>
+
+## Claude reviewing Claude
+
+The gate wasn't only tests. After every phase the orchestrator opened the screenshots, wrote down what looked wrong, and sent it back before merging. Part 1 had no step like this. Some of what it caught in its own subagents' work:
+
+<VTimeline items={[
+  { when: "11:41", who: "claude", title: "Board index", body: "The unread dot floated loose in category headers, rows with no last post showed a bare dash, and the footer needed an Apply button." },
+  { when: "12:36", who: "claude", title: "Staff shell", body: "The sidebar background stopped at the bottom of the screen on long pages, and every forum row had a solid red Delete button. \"Those need to become quiet actions or a ⋯ menu.\"" },
+  { when: "15:55", who: "claude", title: "Forum pages", body: "Plugin slots left big empty gaps in posts on phones, a white plugin box showed in dark mode, the forum footer read \"Moderated by Moderators\" instead of naming them, and the phone post actions needed labels and bigger tap targets." },
+  { when: "16:02", who: "claude", title: "Staff pages", body: "The \"Save board settings\" button floated over the content, and the plugin columns in the permission table ran off the edge." },
+  { when: "16:46", who: "claude", title: "Group settings", body: "The toggles sat oddly far from their labels." },
+  { when: "18:37", who: "claude", title: "The after shots", body: "Checking the shots for this post, it found an empty strip under every post's reactions, plain blue avatar circles with no initials, a demo plugin printing \"viewer:guest\", and profile breadcrumbs that skipped Members. It started one more fix round rather than publish those." },
+]} />
+
+The page reviews also turned up real bugs that weren't about looks: profile initials showed as escaped HTML, private message bodies showed raw `<p>` tags, the privacy page's breadcrumbs had Home in them twice, and search results were squeezed into one row by a CSS specificity bug.
+
+<span className="tool-kicker">6 · What went wrong</span>
+
+## What went wrong
+
+The UI work went well. The machine it ran on, and the gate, didn't.
+
+### Three stacks were too many
+
+Each Bulletin stack is 16 containers: Postgres, Caddy, the apps, the APIs, workers, plugin host and nine mocks. With both tracks running and my own stack on 8080, that's three stacks and two Chrome-driven E2E suites on one machine: the same GMKtec mini PC from part 1, a Ryzen 9 with 8 cores and 32 GB of RAM.
+
+From about midday, Chrome kept crashing mid-test, and the failures looked like real regressions until Claude noticed they were all in forum tests running alongside the staff suite. At 13:55 Docker hung completely and took my 8080 stack down with it. Claude restarted Docker, brought my stack back, and from then on only let one track run E2E at a time.
+
+Most of two hours went on that, and nothing had merged by 14:30.
+
+### The disk filled up twice
+
+At 15:42 the forum stack couldn't rebuild because Docker's disk was full. Every rebuild leaves the old images behind, and two tracks had been rebuilding all day. Claude freed 22 GB, then found about 96 GB of unused images and cleared those in the background. At 16:51 the disk ran out again mid-build, so it removed the merged staff stack's containers and pruned again. At cleanup it also found ten half-finished build containers from the out-of-disk builds still holding space. Docker went from 20 GB free to 97 GB.
+
+### Test data on my stack
+
+At 15:32 Claude told me some of the staff agent's test reruns had gone to my 8080 stack. An `export A=… B=$(…)` line in the agent's shell had left the variable pointing the tests at its own stack unset, so they fell back to the default, which is mine. It left some extra themes, a warning reason and push subscriptions on my stack, and they went when Claude rebuilt it from scratch at the end.
+
+### Main was red for 4h50m
+
+The first merge went in at 14:37. CI on main didn't go green until 19:41, seven failed runs later. Claude's explanation: "Main is red because of my gate, not CI: before each merge I ran `bun run check` and the browser tests locally, but never the integration test suite that CI runs."
+
+That suite runs with `BULLETIN_INTEGRATION=1 bun run test:integration`, and it isn't part of `bun run check`. It's the same trap as part 1, where `bun run check` quietly skipped about 450 database tests, and this time Claude fell into it. It took three rounds of fixes, and most of them were real bugs rather than tests that needed updating:
+
+- A `data-*` attribute that an integration test relied on had gone from the new header.
+- Some pages crashed rendering the new footer, because they weren't given the values it needs.
+- The theme picker in the footer called the server while a member's session was being silently renewed, got a 401, and broke the redirect. The fix makes the theme list answer as if you're a guest during re-authentication, since guests can see that list anyway. Claude read that diff itself before merging, because it touches sessions.
+- The language switcher on phones only worked once the whole page had loaded, so one slow resource left it dead. Footer controls now hydrate after 1.5 seconds regardless.
+- Chromium fetched the forum's app icon late, after the test had already moved to the staff console, and the staff console's Content Security Policy (correctly) blocked it. Claude filtered exactly that message in the test helper and added a test proving any other blocked image still fails the run.
+
+One is still unexplained: Chromium sometimes reports `manifest.webmanifest` as invalid ("Line: 1, column: 1, Syntax error"), even though the server returns valid JSON with a 200 every time. Claude didn't hide the error or ship a guessed fix. It didn't come up on the run that went green, but it came back on a later run, after the bug fixes below, and passed when the shard was rerun. It's still open.
+
+### Turn limits
+
+Each of the three big subagents (forum, staff and polish) hit Claude Code's turn limit once and stopped mid-task. The orchestrator noticed each time and told it to carry on from where it was, batching its steps. The forum agent stopped partway through the account pages, the staff agent at the Plugins page, and the polish agent halfway through the CI fixes. Each one picked up where it stopped.
+
+<span className="tool-kicker">7 · Costs</span>
+
+<div className="tool-section">
+
+## What it cost
+
+To compare it with part 1, I added up every API call in the session and its subagent transcripts and priced them at Anthropic's API list prices. Switch scenarios to see what caching saved:
+
+<ClaudeCost client:visible />
+
+</div>
+
+The numbers:
+
+- **2,132 API calls and 461.6 million tokens.** 454.7 million were cache reads (98.5%), 5.7 million cache writes, 1.19 million output, and only 4,520 uncached input tokens.
+- **$144.49 at list prices.** Cache reads were $90.94 of it, cache writes $29.92 and output $23.61. That's about $16 an hour from my first message to green CI.
+- **Without prompt caching it would be about $1,866.** Every one of those calls resends the conversation so far, and caching is what makes that affordable.
+- **The orchestrator was cheap.** It ran all day for $14.26, because it spent most of its time waiting on background tasks. The two build tracks were 68% of the cost.
+
+The main session wrote its cache with a one-hour lifetime, and the subagents with five minutes. Most of the orchestrator's waits were long, so the one-hour cache meant it mostly read from cache when it woke up instead of writing everything again.
+
+### Compared with part 1
+
+<Cards items={[
+  { tone: "deepseek", stat: "$50.91", statLabel: "DeepSeek bill", title: "Part 1: the whole forum", body: "DeepSeek Flash built 23½ of 25 changes in 5½ days: 9.96 billion tokens, over 300k added lines. Claude's orchestration on top would have been about $247 at API prices, and Codex's reviews about $55." },
+  { tone: "claude", stat: "$144.49", statLabel: "at API list prices", title: "Part 2: both front ends", body: "Claude Opus 5.5 rebuilt the forum UI and the staff console in 9h10m: 461.6 million tokens, 47 commits, +27.2k and −12.4k lines. No other model involved, apart from a Haiku 5.5 subagent that read my part 1 post." },
+]} />
+
+Per token, Claude is far more expensive: part 1's DeepSeek tokens cost about half a cent per million, and part 2's Claude tokens about 31 cents. But part 2 used about 20 times fewer tokens than DeepSeek did in part 1, and the job was different. A UI rebuild needs taste and lots of looking at screenshots, and that's the part DeepSeek didn't do at all.
+
+By the same community estimates I used in part 1, which are rough, 461.6 million Claude tokens is roughly 40–47% of one week of Claude Max.
+
+<span className="tool-kicker">8 · The code</span>
+
+## The code
+
+From the plan commit to the last fix, there are 47 commits touching 224 files: 27,201 lines added and 12,435 removed.
+
+| Area | Files | Added | Removed |
+|---|---:|---:|---:|
+| Staff console | 75 | 16,703 | 8,935 |
+| Forum app | 45 | 6,769 | 2,196 |
+| Packages, mostly templates | 57 | 1,977 | 1,182 |
+| Tests | 31 | 732 | 95 |
+| Screenshot and hook scripts | 2 | 702 | 0 |
+| user-api | 2 | 20 | 8 |
+
+I asked Claude to delete all the components, pages and styles. It deleted all the styles and rewrote the markup, but kept the file names and every `data-*` hook, so the 40 Liquid templates are rewritten in place rather than deleted. That's why the back end barely changed: 28 lines in user-api, and one new `passiveSession()` function in the domain package for the re-authentication fix.
+
+<Cards items={[
+  { tone: "good", stat: "38", statLabel: "staff sections on one kit", title: "One set of staff components", body: "Every staff page uses the same buttons, tables, fields, settings rows, save bar and empty states. Before, the staff styles were one 1,732-line file." },
+  { tone: "good", stat: "2", statLabel: "new E2E checks", title: "Tests for the new layout", body: "One walks the pages and checks the breadcrumbs. The other loads every page at 360 px and fails if anything scrolls sideways. There are also tests for the staff navigation and for `passiveSession()`." },
+  { tone: "warn", stat: "3,436", statLabel: "lines in one CSS file", title: "A lot of CSS", body: "The old UI had 3,664 lines of CSS in two files. The new one has about 9,600 across 12, split into layers (tokens, base, layout, components, pages), and the forum's `pages.css` alone is 3,436 lines." },
+  { tone: "warn", stat: "242", statLabel: "Python heredocs", title: "Edits through the shell", body: "In part 1 I complained that DeepSeek edited files with Python scripts in the shell. Claude's subagents did it too: 242 shell commands ran a Python heredoc, and 238 of those wrote files. The Edit tool was used 25 times. Bash was 1,862 of the 2,225 tool calls." },
+]} />
+
+Counted the same way as in part 1, the rebuild took the suites from 1,333 unit, 1,062 database and 194 E2E tests to 1,346, 1,064 and 201, all passing in CI on `d52cfbea`. The test runners report bigger totals because they count differently. 41 of the 2,225 tool calls returned an error (1.8%).
+
+<span className="tool-kicker">9 · Part 1's bugs</span>
+
+## Fixing part 1's bugs
+
+Part 1 promised that part 2 would fix a few bugs, and the UI rebuild didn't touch any of them. So after the rebuild I gave one more Claude subagent the two worst from part 1's list:
+
+<Cards items={[
+  { tone: "good", title: "The plugin marketplace installs plugins", body: "Before, plugin-host ran exactly one bundle, named in an environment variable, and the install code only ran in a test. Now a `PluginManager` runs every installed and enabled plugin, each in its own nsjail sandbox with its own broker, socket, schema and egress list. The `core.plugins` table is the source of truth, and a Postgres `NOTIFY` wakes plugin-host to pick up installs without a restart. Staff install from a Marketplace panel with a capability review. The install checks the bundle's checksum and signature against the signed catalog, refuses an approval that doesn't match the manifest, and needs a recent sign-in." },
+  { tone: "good", title: "Demo data no longer seeds in production", body: "Demo content now needs `BULLETIN_SEED_DEMO`. It's on by default in dev and test, and off in production, where turning it on fails config validation. Board defaults (settings, reactions, emoticons, the theme) still seed everywhere, and local dev is still clone, then `docker compose up --watch`, with the same rich seed data." },
+]} />
+
+The new tests cover a staff install through the UI rendering the plugin's slot, a tampered bundle ending up `failed` and never running, and the refusals: 403 without the plugins permission, and 401 without a recent sign-in. The 17 malicious-plugin tests still pass.
+
+It took 1h26m, from 20:58 to 22:24: 3 commits, 60 files, +2,556 and −744 lines. That's 254 API calls and 65.3 million tokens, or $24.36 at API list prices. It hit the turn limit once, partway through adding translations. This time the gate included the database suite that CI runs, and CI passed on the merge after one rerun of the flaky manifest shard.
+
+## What I'd do differently
+
+- **Don't run three stacks on one box.** Three 16-service stacks and two E2E suites at once was too much for the Ryzen, and it cost about two hours. One test run at a time from the start would have been faster.
+- **Gate on what CI runs.** The local gate skipped the integration suite. Running it would have kept main green and saved three fix rounds.
+- **Prune images as you go.** Two parallel tracks rebuilding all day filled about 100 GB.
+
+## Where part 2 ends
+
+Part 1 got the back end for $51 and part 2 got the front end for $144 at API prices. In part 1 I wrote that apart from Claude and GPT, basically no model builds a decent UI without detailed prompting. My prompt for part 2 was one request and six answers.
+
+<RepoLink repo="markwylde/bulletin" description="The ADRs, the specs, the code and the tests, with ADR 0021 for the new design system." />

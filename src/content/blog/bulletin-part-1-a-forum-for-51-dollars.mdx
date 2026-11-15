@@ -2,7 +2,7 @@
 title: "Bulletin, part 1: 25 specs, 130 hours and $51 of DeepSeek"
 date: "2026-11-15"
 tags: ["AI", "Agents", "DeepSeek", "Claude", "Codex", "OpenSpec", "Terminay", "Bun", "Postgres"]
-excerpt: "I had DeepSeek Flash build a whole IPB-style forum from 25 OpenSpec changes, with Claude steering and Codex reviewing every change. It took 130 hours, almost 10 billion tokens and $50.91. This is what it did, what it got wrong, what it would have cost on Claude or OpenAI, and what the code looks like."
+excerpt: "I had DeepSeek Flash build a whole forum in the style of oldschool web bulletin board systems from 25 OpenSpec changes, with Claude steering and Codex reviewing every change. It took 130 hours, almost 10 billion tokens and $50.91. This is what it did, what it got wrong, what it would have cost on Claude or OpenAI, and what the code looks like."
 ---
 
 import { Image } from "astro:assets";
@@ -24,7 +24,7 @@ import VTimeline from "../../components/bulletin/VTimeline.tsx";
 import WhoDidWhat from "../../components/bulletin/WhoDidWhat.tsx";
 import deepseekUsage from "../../assets/bulletin-part-1/deepseek-usage-cards.webp";
 
-I wanted to know how far a cheap model can get on a big project if you give it good specs, a strict process and someone checking its work. So I picked a community forum in the style of Invision Power Board and vBulletin, with forums, topics, private messages, moderation, permission masks, themes, plugins and a staff console. I planned it with Claude Opus 5.5, then handed it over: Claude ran the build unattended through a Terminay workflow, DeepSeek Flash wrote nearly all of the code, and Codex reviewed every change.
+I wanted to know how far a cheap model can get on a big project if you give it good specs, a strict process and someone checking its work. So I picked a community forum in the style of oldschool web bulletin board systems, with forums, topics, private messages, moderation, permission masks, themes, plugins and a staff console. I planned it with Claude Opus 5.5, then handed it over: Claude ran the build unattended through a Terminay workflow, DeepSeek Flash wrote nearly all of the code, and Codex reviewed every change.
 
 I called the project **Bulletin**, and the code is on GitHub at [markwylde/bulletin](https://github.com/markwylde/bulletin). It ran from Monday morning to Saturday night:
 
@@ -50,7 +50,7 @@ I split the work across three models:
 
 <WhoDidWhat />
 
-My instruction at the start was "implementor: deekseed / high level steering: claude / review/second opinion: codex" (typos mine). I also asked for auto-merge once tests passed and Codex signed off, and for all 25 changes to run back to back, pausing only for a failed spike or a fundamental problem. It never paused, and DeepSeek never wrote the `BLOCKED.md` file it was told to write if a spec couldn't be met. From there the build ran hands off.
+My instruction at the start was "implementor: deepseek / high level steering: claude / review/second opinion: codex". I also asked for auto-merge once tests passed and Codex signed off, and for all 25 changes to run back to back, pausing only for a failed spike or a fundamental problem. It never paused, and DeepSeek never wrote the `BLOCKED.md` file it was told to write if a spec couldn't be met. From there the build ran hands off.
 
 <span className="tool-kicker">1 · Planning</span>
 
@@ -346,7 +346,6 @@ CI found a real sandbox bug that local runs never hit: on the x86_64 runners, Bu
 
 <Cards items={[
   { tone: "bad", title: "One headline feature isn't real", body: "ADR 0009 says admins install plugins from a marketplace at runtime, and the install task is ticked. But plugin-host runs exactly one bundle, from an environment variable, and the lifecycle code is only used in a test with a fake runtime. The sandbox works; there's no way to install a plugin into it. Codex flagged \"not wired\" in plugin-platform three times, and this one still slipped through." },
-  { tone: "bad", title: "A benchmark hook ships in production", body: "`?bench=<n>` becomes part of the cache key on the main routes. The comment says \"dev-only\", but nothing checks." },
   { tone: "bad", title: "Demo data seeds on every start", body: "There's no production guard." },
   { tone: "warn", stat: "53", statLabel: "files define their own `isRecord`", title: "Copy-paste everywhere", body: "40 define their own `json()` helper and 7 their own `escapeHtml`. A dev secret is hard-coded as a fallback in 17 places. Each agent run wrote its own helpers instead of finding the shared ones." },
   { tone: "warn", stat: "1,418", statLabel: "lines of if-chain", title: "Two API styles", body: "staff-api uses a typed route table with a permission per route. user-api is one `if (method && pathname)` chain with 70 copies of `if (session === null) return 401`." },
@@ -376,9 +375,9 @@ Two kinds of test are specific to this design:
 - **Permission-denial tests.** About 463 test names are refusals: "a guest is refused…", "denies…", "403…". The overlay test asks for a private staff topic's ID and checks it doesn't leak into unread markers, editable posts or anything else.
 - **Cache-variant tests.** A shared harness renders each registered route twice for each viewer case. The variants must differ, the second render must be a cache hit, and "leak markers" planted in privileged content must never appear in a less privileged variant.
 
-There are also architecture tests that check structure statically (no direct writes to the cache tag table, content queries only in permission-filtered repositories), a latency benchmark that fails the build if p95 response times go over the ADR's thresholds, and, during the build, a nightly load test with a million posts.
+There are also architecture tests that check structure statically (no direct writes to the cache tag table, content queries only in permission-filtered repositories) and, during the build, a nightly load test with a million posts.
 
-During the build, CI ran on my Gitea runners. It failed on every run for the first four days, because it needed `sudo` the runners didn't have, a Postgres health check raced, and E2E took 14 minutes. Claude fixed it on the last day: each run gets its own compose project and port, E2E is split into eight shards plus a full-stack shard, and the benchmark runs alone at the end. Getting CI green found four real bugs that local Docker never hit, including the seccomp one above and a race in marking conversations as read.
+During the build, CI ran on my Gitea runners. It failed on every run for the first four days, because it needed `sudo` the runners didn't have, a Postgres health check raced, and E2E took 14 minutes. Claude fixed it on the last day: each run gets its own compose project and port, and E2E is split into eight shards plus a full-stack shard. Getting CI green found four real bugs that local Docker never hit, including the seccomp one above and a race in marking conversations as read.
 
 Some integration test files are huge (one is 1,911 lines) and redeclare the same helpers, and the E2E tests average 2.3 cases per file because each one walks through a long journey.
 
