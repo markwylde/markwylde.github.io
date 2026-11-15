@@ -1,0 +1,412 @@
+---
+title: "Bulletin, part 1: 25 specs, 130 hours and $51 of DeepSeek"
+date: "2026-11-15"
+tags: ["AI", "Agents", "DeepSeek", "Claude", "Codex", "OpenSpec", "Terminay", "Bun", "Postgres"]
+excerpt: "I had DeepSeek Flash build a whole IPB-style forum from 25 OpenSpec changes, with Claude steering and Codex reviewing every change. It took 130 hours, almost 10 billion tokens and $50.91. This is what it did, what it got wrong, what it would have cost on Claude or OpenAI, and what the code looks like."
+---
+
+import { Image } from "astro:assets";
+import AtAGlance from "../../components/bulletin/AtAGlance.tsx";
+import Cards from "../../components/bulletin/Cards.tsx";
+import ChangeTimeline from "../../components/bulletin/ChangeTimeline.tsx";
+import CodexGates from "../../components/bulletin/CodexGates.tsx";
+import CostCalculator from "../../components/bulletin/CostCalculator.tsx";
+import DeepSeekScore from "../../components/bulletin/DeepSeekScore.tsx";
+import DiagramFrame from "../../components/bulletin/DiagramFrame.tsx";
+import FindingsExplorer from "../../components/bulletin/FindingsExplorer.tsx";
+import GatesVsTime from "../../components/bulletin/GatesVsTime.tsx";
+import RepoLink from "../../components/bulletin/RepoLink.tsx";
+import ScreenshotExplorer from "../../components/bulletin/ScreenshotExplorer.tsx";
+import SubscriptionCompare from "../../components/bulletin/SubscriptionCompare.tsx";
+import TimeSplit from "../../components/bulletin/TimeSplit.tsx";
+import WorkflowPanel from "../../components/bulletin/WorkflowPanel.tsx";
+import VTimeline from "../../components/bulletin/VTimeline.tsx";
+import WhoDidWhat from "../../components/bulletin/WhoDidWhat.tsx";
+import deepseekUsage from "../../assets/bulletin-part-1/deepseek-usage-cards.webp";
+
+I wanted to know how far a cheap model can get on a big project if you give it good specs, a strict process and someone checking its work. So I picked a community forum in the style of Invision Power Board and vBulletin, with forums, topics, private messages, moderation, permission masks, themes, plugins and a staff console. I planned it with Claude Opus 5.5, then handed it over: Claude ran the build unattended through a Terminay workflow, DeepSeek Flash wrote nearly all of the code, and Codex reviewed every change.
+
+I called the project **Bulletin**, and the code is on GitHub at [markwylde/bulletin](https://github.com/markwylde/bulletin). It ran from Monday morning to Saturday night:
+
+<AtAGlance client:visible />
+
+This is part 1. It covers how the build ran, what each agent did, what DeepSeek kept getting wrong, what the same tokens would cost elsewhere, and a review of the code it produced. Part 2 rebuilds the UI, which is bad, and fixes a few bugs.
+
+<ul className="jump-nav">
+<li><a href="#planning-before-any-code"><span className="n">1</span> Planning</a></li>
+<li><a href="#the-build-loop"><span className="n">2</span> The build loop</a></li>
+<li><a href="#change-by-change"><span className="n">3</span> Change by change</a></li>
+<li><a href="#what-codex-caught"><span className="n">4</span> Codex</a></li>
+<li><a href="#what-deepseek-got-wrong-and-right"><span className="n">5</span> DeepSeek, good and bad</a></li>
+<li><a href="#what-it-cost"><span className="n">6</span> Costs</a></li>
+<li><a href="#the-codebase"><span className="n">7</span> The codebase</a></li>
+<li><a href="#testing"><span className="n">8</span> Testing</a></li>
+<li><a href="#the-ui"><span className="n">9</span> The UI</a></li>
+</ul>
+
+## Who did what
+
+I split the work across three models:
+
+<WhoDidWhat />
+
+My instruction at the start was "implementor: deekseed / high level steering: claude / review/second opinion: codex" (typos mine). I also asked for auto-merge once tests passed and Codex signed off, and for all 25 changes to run back to back, pausing only for a failed spike or a fundamental problem. It never paused, and DeepSeek never wrote the `BLOCKED.md` file it was told to write if a spec couldn't be met. From there the build ran hands off.
+
+<span className="tool-kicker">1 · Planning</span>
+
+## Planning before any code
+
+Planning took a little over three hours on the first morning, all with Claude. I've written before about [why I use spec-driven development and OpenSpec](/blog/a-look-at-spec-driven-development/); this is the first time I've used it on something this big.
+
+<VTimeline items={[
+  { when: "09:23", who: "me", title: "The idea", body: "I described the forum and the stack I wanted: a Bun monorepo, an Astro user app, a Vite staff app, Bun APIs, Postgres with pg-boss, Docker Compose. I asked Claude for \"a questionnaire on all the features you can think of\"." },
+  { when: "09:24", who: "claude", title: "62 questions", body: "Claude opened a questionnaire in a Terminay window and I tapped through it. One of my notes became a rule for the whole project: \"locally eventhing should run in 2 steps. 1: clone, 2: docker compose up --watch... only postgres is needed and stateful. no redis\"." },
+  { when: "09:40", who: "claude", title: "17 ADRs", body: "Claude wrote 17 architecture decision records, a feature list and the agent instructions." },
+  { when: "10:26", who: "codex", title: "First Codex review", body: "Five serious design problems, including cache entries shared between members of different groups, permission revocation that didn't take effect straight away, and plugin processes that weren't isolated. That added three ADRs, for 20 in total." },
+  { when: "10:43", who: "claude", title: "25 OpenSpec changes", body: "I pointed out that ADRs aren't specs. Claude split the product into 24 OpenSpec changes in about 19 minutes: 55 capability specs, about 335 requirements and 404 scenarios. A review then split `plugin-sandbox-spike` into its own change, which made 25." },
+  { when: "11:32", who: "codex", title: "Codex and agy together", body: "The last of seven review rounds: Codex three times, two external reviews I pasted in, a Codex check, then Codex and `agy` side by side. About 40 distinct findings, fixed by 11:56." },
+  { when: "12:40", who: "me", title: "Go", body: "I told Claude to start: DeepSeek implements, Claude steers, Codex reviews." },
+]} />
+
+<details>
+<summary>New to ADRs and OpenSpec?</summary>
+
+An **ADR** (architecture decision record) is a short document that records one decision and why it was made: "Postgres is the only stateful service", "every permission check goes through one function called `can()`". The agent instructions made them binding: if a task needed to contradict an ADR, the agent had to stop and propose a new one.
+
+**OpenSpec** organises work into *changes*. Each change folder has a proposal, a design, a `tasks.md` checklist, and spec files with requirements and scenarios ("GIVEN a guest, WHEN they open a members-only forum, THEN they get a 404"). The agent works through the checklist and ticks tasks off. The scenarios tell the reviewer exactly what to test.
+
+</details>
+
+I kept sending the documents back for review because a spec problem caught on day one costs a few minutes of Claude rewriting markdown, while the same problem found in change 20 costs hours of DeepSeek rework.
+
+<span className="tool-kicker">2 · The build loop</span>
+
+## The build loop
+
+Once I said go, Claude wrote a small Python driver (`drive.py`) and a few scripts in its scratchpad. By the middle of the build, every change went through this loop. The first four changes came before `final.sh` existed, and the last one was built by Claude after the DeepSeek balance ran out:
+
+1. **Worktree.** Create a git worktree and branch for the change.
+2. **Task groups.** For each group in `tasks.md`, start `opencode run` with DeepSeek Flash on a prompt: the base rules, the change name, and "do group N". DeepSeek reads the ADRs and specs, writes code, runs the tests, ticks tasks, and commits one task at a time.
+3. **Three review rounds.** Run `bun run check`, then `codex exec` in read-only mode with a reviewer prompt. Codex returns numbered findings tagged P1 (security, data loss, spec violation, broken build) or P2 (bug, missing test, ADR deviation). DeepSeek gets the findings and fixes them. Repeat three times.
+4. **Final gate.** Claude runs `final.sh`: the full check, the unit tests, a fresh Docker stack, the database suite against real Postgres, both production builds (with a grep for Node imports leaking into browser bundles), the E2E suite, a curl of both sites, and one more Codex sign-off review.
+5. **Steer.** If the gate found anything, Claude writes a targeted prompt for DeepSeek in a fresh session ("## Your task now", plus the findings) and runs the gate again.
+6. **Merge.** Merge to main, archive the OpenSpec change, tick the step in the Terminay workflow, start the next change.
+
+<DiagramFrame client:visible name="agent-build-loop" title="The loop each change went through" height={620} />
+
+Claude tracked all 25 changes in a Terminay workflow and ticked each one off as it merged. A `/loop` kept it going from one change to the next. The loop fired 107 times. Claude handled 640 background notifications, made 352 workflow updates, and slept the rest of the time.
+
+<WorkflowPanel />
+
+### The rules grew as things broke
+
+The base prompt is short, about 40 lines. Most of its "Headless run" section, and a few changes to the driver, came from something going wrong in the first 31 hours:
+
+<VTimeline items={[
+  { when: "Mon 19:21", who: "deepseek", title: "DeepSeek killed its own agent", body: "It ran `pkill -f \"docker compose up --watch\"`, which matched its own command line and killed opencode.", rule: "Never use `pkill -f` or `killall` with broad patterns." },
+  { when: "Mon 19:37", who: "deepseek", title: "A blank staff app", body: "A shared package barrel had pulled `node:crypto` into the browser bundle, so the staff app loaded blank. Nothing in the tests ran a real browser yet, so Claude added a browser gate to `final.sh`.", rule: "Browser code must import client-safe subpaths only." },
+  { when: "Mon 21:50", who: "deepseek", title: "DeepSeek took down my stack", body: "It ran `docker compose down` in its worktree. Every checkout shared the compose project name, so that stopped my own running stack. This led to a 26th change, `dev-stack-isolation`, which made the project name and port configurable. It took 24 minutes, and the agents moved to port 18080.", rule: "Never start, stop or touch the default `bulletin` project or port 8080." },
+  { when: "Tue 00:02", who: "deepseek", title: "A task group committed onto main", body: "opencode's shared background service ran a whole task group in the main checkout instead of the worktree. Claude moved the commits back.", rule: "The driver runs opencode with `--standalone`." },
+  { when: "Tue 03:05", who: "deepseek", title: "Flaky E2E tests", body: "Tests clicked buttons that were still disabled.", rule: "Wait for `selector:not([disabled])` before clicking." },
+  { when: "Tue 08:54", who: "deepseek", title: "Sessions stopped silently", body: "Long opencode sessions sometimes \"silently stop with exit 0 and no changes\" once the context is huge.", rule: "Every steering prompt gets a fresh session." },
+  { when: "Tue 13:51", who: "claude", title: "450 tests weren't running", body: "`bun run check` skipped the database integration tests, about 450 of them.", rule: "Run the DB suite before finishing any group that touches the database." },
+  { when: "Tue 19:15", who: "claude", title: "A cap on final gates", body: "Content-pipeline kept failing its final gates, and each Codex sign-off found new P2s (it took six gates in all). Final gates were capped at two, except that a P1 or a security finding always blocks the merge. Non-security P2s go into a follow-up file for a later change.", rule: "Never merge with a P1 or anything tagged `[security]`, whatever the cap says." },
+]} />
+
+That last rule is why some changes took 12 hours, as the breakdown below shows.
+
+<div className="tool-section">
+<span className="tool-kicker">3 · Change by change</span>
+
+## Change by change
+
+Click any change to see its numbers, the Codex results round by round, and the notes from the logs. Blue is time spent in DeepSeek's driver loop; orange is time spent in final gates and Claude's steering.
+
+<ChangeTimeline client:visible />
+
+</div>
+
+The same build as a timeline, with the incidents along the way:
+
+<DiagramFrame client:visible name="build-timeline" title="Five and a half days, from first message to last merge" height={680} />
+
+### Why moderation took 12h25m
+
+Most changes took two to six hours. Three took more than eleven, and the gate cycles explain all three. Topics-posts is a useful comparison first: it took 5h24m, but only because its third task group spent 1h54m fighting Docker (stuck test containers, experiments with `DOCKER_HOST`) before Docker filled the disk and stalled. Its gate phase was short: 2 gates and 1 steer, about the same as the other mid-sized changes. The mini PC is also a runner for my Gitea Actions, so CI jobs from other projects were filling the same disk at the same time. That skews the timings a little, by no more than an hour across the whole build.
+
+Moderation was the biggest change and the hardest to get past Codex. With 9 task groups, 26 tasks, 43 commits and about 29,700 lines, DeepSeek's driver alone took 8h28m. The first seven of its eight final gates each found one or two new security P1s:
+
+- IP lookups ignored password-forum unlocks.
+- Edits bypassed bans.
+- Bans and approvals imposed by warnings had gaps (found at four gates for bans, two for approvals).
+- Temporary grants to see a member's IP address survived the loss of the access that created them, or could be redeemed by another staff member (five findings).
+
+Each of those cost a fix by DeepSeek plus a full gate, about 30 minutes to an hour. From gate 4, Claude's prompts told DeepSeek to audit the whole change for the same class of bug instead of fixing the cited line ("Before you finish, audit the whole moderation change for the same class of bug."). When gate 5 still found "one more security P1, again in IP access", Claude ran its own security review. Moderation took 8 final gates and 7 steers to merge.
+
+Plugin-platform (12h56m) was the same story with sandboxes. Codex's first round found 15 P1s, and the gates later found app roles holding `pg_read_file`, a broker that never checked approved capabilities, and redirects that escaped the egress allowlist. Public-api-webhooks (11h08m) spent most of its time on flaky tests and an intermittent 500; its code was mostly fine. The 500 came from the core theme hitting the 50 ms template render limit under load.
+
+A gate cycle is a fresh stack build, the unit, DB and E2E suites, and a Codex review, which is 15 to 30 minutes before any fixing starts. So the number of gate cycles mattered much more than code size, and the security-heavy changes needed the most cycles. Switch the chart between the two:
+
+<GatesVsTime client:visible />
+
+### Most of the time went on shell commands
+
+DeepSeek's assistant messages span 103.9 hours. Shell commands account for 77.3 of them:
+
+<TimeSplit client:visible />
+
+That leaves the model itself thinking and writing for roughly 27 to 30 hours of the 130. It all ran on a GMKtec mini PC (Ryzen 9, 8 cores, 32GB of RAM) running Linux. On a more powerful machine, the build would have been a lot quicker.
+
+### What I'd change about the compute
+
+The model waited on shell commands for more than twice as long as it spent thinking. Looking at which commands, most of that wait was avoidable:
+
+- **Every test run rebuilt the test image.** DeepSeek's most expensive command was `docker compose run --build --rm test`, which runs the whole suite. It ran it 236 times, for 14.7 hours, nearly four minutes a go. The test Dockerfile copies the whole repo before `bun install`, so any code change invalidates the cache and reinstalls every dependency. Copying `package.json` and `bun.lock` first, or mounting the source into a long-lived test container, would remove most of that.
+- **It ran the whole suite when one file would do.** Targeted runs (`bun test <path>`) were 488 runs and only 3.5 hours. Running just the affected tests during a task group, and the full suite at the gate, would have saved hours per change.
+- **The stack restarted a lot.** `docker compose up -d` ran 444 times, averaging nearly two minutes. A stack started once with Compose `watch` would sync code into the running containers, so it would only need a restart when dependencies change. The final gate could still start a fresh stack.
+- **Test Postgres wrote to disk.** Each integration test already clones a migrated template database, which is quick. Running the test Postgres on tmpfs with `fsync=off` would make the 950 integration runs faster still.
+- **The machine was shared.** The mini PC was also a Gitea Actions runner. A dedicated machine, and a faster one, helps every item above.
+
+<span className="tool-kicker">4 · Codex</span>
+
+## What Codex caught
+
+Those repeated reviews cost time, but they caught what DeepSeek's own tests missed. In 145 review sessions Codex raised 591 findings, or about 533 distinct issues once you remove the ones raised again because a fix was incomplete. About 507 were fixed before merge, 24 non-security P2s were deferred, and 2 were overridden: one was out of scope and one was a flaky test. None was rejected as technically wrong.
+
+Every one of DeepSeek's 73 driver review rounds found at least one P1 or P2. Round 1 across all changes found 87 P1s, 40 of them security. After two fix rounds, round 3 still found 31. Only 12 reviews in the whole build came back clean, and all of them were final gates.
+
+<div className="tool-section">
+
+### Every finding
+
+Explore every finding below. I assigned the categories by hand from the titles, so treat the counts as estimates.
+
+<FindingsExplorer client:visible />
+
+</div>
+
+Three themes make up 38% of everything Codex raised:
+
+- **Permissions and visibility (87 findings).** The main page called `can()`, but totals, notifications, exports, leaderboards, prefixes, redirects, edit history and poll results skipped the check. "Private-forum activity leaks through board totals." "Notifications and digests expose hidden posts/topics." "Any authenticated member can retrieve private, unapproved or deleted posts and revisions by ID."
+- **Not actually done (82).** DeepSeek ticked tasks in `tasks.md` without wiring the code up, despite the rule "No placeholder or stub implementations". In plugin-platform round 1: "The production runtime still runs only the demo." In reactions-reputation, "Task 2.3 falsely claims profile display is complete" came up in all three rounds. There were also 34 tests that couldn't fail, like a permission test whose fixture already filtered out the thing it was checking for.
+- **Caching (54).** Every new piece of data shown in cached HTML needs its cache tag bumped when it changes. DeepSeek rarely did this unprompted: moderator lists, emoticons, ranks, badges, signatures, poll results. One P1 found that author-only edit forms were cached by permission bits alone, so another member with the same permissions got the author's form.
+
+A few more that stood out:
+
+<Cards items={[
+  { tone: "p1", title: "A sanitiser bypass", body: "`<noscript><p title=\"</noscript><img src=x onerror=…>\">` got through both sanitiser layers. Only the Content Security Policy stopped it." },
+  { tone: "p1", title: "A WebP quota bypass", body: "A 17 KB PNG became a 230 KB WebP after re-encoding, getting round the upload quota." },
+  { tone: "p1", title: "Identity by whitespace", body: "The user ID from DarkAuth, the identity provider, was trimmed before lookup, so `\"admin\"` and `\" admin \"` resolved to the same member." },
+  { tone: "p1", title: "CSRF by query string", body: "`GET …?method=POST` became a plugin POST that skipped the CSRF and Origin checks." },
+  { tone: "p1", title: "SMTP in plain text", body: "`AUTH PLAIN` was sent over plain TCP." },
+  { tone: "p1", title: "Plugin roles that collide", body: "`demo-owner`'s runtime role had the same name as `demo`'s owner role, so uninstalling one plugin could drop another plugin's objects." },
+]} />
+
+### Fixes that created new bugs
+
+For this post, Claude ran `git blame` on each cited line at the branch head just before that review, to find the last commit that touched it. That worked for 455 findings. For 71 of them, the line was last written by a commit fixing an earlier review rather than one implementing a task, and 22 of those were P1 or security. That doesn't prove the fix caused the bug, but some cases are clear:
+
+- In plugin-platform, the round-1 fix for a security finding added migration 0115. Gate 2 found that migration had given every app role, including the read-only one, file-read and large-object functions.
+- In events-notifications, the fix for "unsaved edits are lost during reauth" created "saved reauthentication drafts leak across accounts".
+- Four of moderation's ten final-gate security P1s sit on lines written by earlier fixes.
+
+### Codex isn't deterministic
+
+Forum-structure gate 1 came back clean, and the gate was only rerun because E2E failed on stale Docker images. Gate 4, on essentially the same code, found a new P1: deleting a target group made restricted content public. Public-api-webhooks alternated clean, P2, P2, clean, clean, P2 over six gates. Pick a change below to see its gates.
+
+Codex also changed models during the build: `gpt-6.1-sol` on low effort for the first ten changes, `gpt-6-astra` on medium until plugin-platform's last gate, then `gpt-6.1-sol` on medium to the end. Low-effort reviews took 1 to 2 minutes and medium ones 3 to 5. All 145 reviews used 181.6M tokens and about 5.8 hours.
+
+<CodexGates client:visible />
+
+<span className="tool-kicker">5 · DeepSeek, good and bad</span>
+
+## What DeepSeek got wrong and right
+
+Across all those reviews, DeepSeek kept making the same few mistakes. It was also good at a lot of things.
+
+<DeepSeekScore />
+
+### Mistakes that kept coming back
+
+- **Permission checks on the main path only.** The same hole appeared in 12 of 26 changes. Permission logic written outside `can()` was flagged 6 times in 5 changes, even though the agent instructions say it in bold.
+- **Tests run as the database owner.** Code passed tests run as the owner, then failed under the real database roles. Digests and orphan cleanup failed under the production worker role, and timed bans never restored. Codex gave the same advice every time: run the test as `workers`.
+- **Check-then-act races.** The code checked authorisation before taking a lock and trusted the result afterwards, so concurrent topic moves, splits and uploads could race a staff block. There were also 25 plain races, like flood control that checks first and records later, so concurrent requests all pass.
+- **Fixing the line instead of the class of bug.** Claude's prompts had to say "Do not fix only the cited lines" and "Treat each as a class", and moderation still kept turning up the next one.
+
+### Mistakes it caught and fixed itself
+
+DeepSeek was good at anything its own tests could see. Of its 3,874 test or check commands, 1,135 (29%) failed, and it worked every one back to green. It also fixed the TypeScript errors it hit 243 times. After its task groups, `bun run check` passed straight away in 17 of the 20 changes that logged it. It was honest about what it couldn't run: "Note: the checkout's pre-existing incomplete `node_modules` still prevents a full workspace `bun run check`".
+
+It missed anything its tests didn't exercise: security and visibility checks, database roles, and code that was never connected to the running app. Codex caught almost all of those. Claude caught the infrastructure traps. One React StrictMode bug, which double-posted a single-use login challenge, only showed up in a real browser.
+
+### What went well
+
+Only 154 of 26,736 tool calls errored (0.6%), and there was one hallucinated path. It made a commit per task with a consistent message, ticked tasks only after tests (mostly), and shut its stacks down afterwards. It never invented a blocker or worked around an ADR. Smaller changes went straight through: i18n-foundation in 1h00m, feature-flags in 1h11m, groups-permissions in 2h04m. And it built 23½ of the 25 roadmap changes, over 300k added lines and about 430 commits, for about $51.
+
+### Where it wasted effort
+
+- **The whole context was sent on every request.** The driver reused one opencode session per change across every group and fix round. The context grew to 300K–560K tokens on average (1.04M at most), and every call sent it again. 99.7% of DeepSeek's tokens were cache reads. That's cheap on DeepSeek, at $0.003 per million, but it's why the token count is so large. A fresh session per group would probably have cut it by about half.
+- **Edits through Python heredocs.** DeepSeek made 3,240 edits by writing Python scripts in the shell, against 3,777 uses of the edit tool.
+- **Flaky tests were chased across gates.** One steer on public-api-webhooks ran for 3 hours, including 20-minute full E2E runs inside opencode, before Claude killed it, reviewed the work and committed it itself.
+
+DeepSeek ran out of balance twice. The first time, at 01:25 on day five, a top-up cost 35 minutes. The second time, at 18:04 on the last day, Claude stopped using opencode and finished the build itself. Claude subagents fixed the last seo-feeds findings and built all of operations-observability, which is the missing half of the 23½.
+
+<span className="tool-kicker">6 · Costs</span>
+
+## What it cost
+
+This is DeepSeek's usage page at the end of the build:
+
+<Image src={deepseekUsage} alt="DeepSeek platform usage page: topped-up balance -$0.01, total cost $50.00 USD plus ¥6.14 CNY, 24,837 API requests, 9,955,557,125 tokens over the last 30 days" style="width:100%;height:auto;border-radius:10px;margin:1rem 0;" />
+
+That's 9,955,557,125 tokens and 24,837 requests for $50.00 plus ¥6.14, about $50.91 in total, and the balance went to −$0.01. A small part of it wasn't Bulletin: the 30-day view includes a little earlier usage around 4 November, and 30 of the requests weren't on `deepseek-flash`. opencode's own records for the build come to 9.83 billion tokens, 98.8% of the dashboard figure.
+
+### How it's that cheap
+
+DeepSeek Flash charges $0.003 per million tokens for a cache hit, off-peak. A cache miss is $0.15 and output is $0.60. Peak hours cost double. opencode recorded 99.7% of its tokens as cache hits, which comes to $39.96 at off-peak prices. The bill is about $11 higher; some peak-hour traffic, or a slightly lower cache rate on the requests opencode didn't record, would explain that.
+
+<details>
+<summary>What's a cache hit?</summary>
+
+An agent sends the whole conversation to the model on every request: the instructions, every file it has read, every command output. Most of that is identical to the previous request. Providers keep a copy of that prefix, and when the next request starts with the same text, they charge a fraction of the normal input price for it. That's a cache read, or cache hit. Only the new part at the end is charged in full.
+
+For a long agent session, cache reads are almost all of the tokens. Here they were 99.7%. So when you compare models for agent work, the cache-read price matters far more than the headline input price.
+
+</details>
+
+<div className="tool-section">
+
+### The same tokens on Claude or OpenAI
+
+Here's what the same 9.96 billion tokens would cost at API list prices. Move the cache slider to see how much the cache-hit rate matters.
+
+<CostCalculator client:visible />
+
+</div>
+
+At a 99% cache rate (a little below what opencode recorded, to match the bill), the same tokens cost about $1.4K on Sonnet 5.5 or short-context `gpt-6.1-sol`, and about $2.8K on Opus 5.5 or long-context `gpt-6.1-sol`. That's 27 to 54 times what I paid. The average request carried about 400K tokens of context, so many `gpt-6.1-sol` calls would land in the >272K price tier.
+
+A stronger model wouldn't use the same number of tokens, though. It might loop less, get the permission checks right the first time, and need fewer gate cycles. These numbers price DeepSeek's workload on other models; what Bulletin would cost to build with Opus depends on how much work Opus needed.
+
+### On subscriptions instead
+
+I pay for Claude Max ($100 a month, previously called Max 5x) and ChatGPT Pro ($100). Neither vendor publishes limits in tokens, so the weekly figures below are community estimates from small samples. Pick a combination of plans:
+
+<SubscriptionCompare client:visible />
+
+My guess before I looked was "about 10 times as long on one subscription, 5 times with two". Compared with the 5½ days this took, the estimates say roughly 10–13 times as long on Max alone and 4–7 times with both. The fees for that time come to about $160–260, three to five times the DeepSeek bill but far below API prices. All of that assumes you can keep every weekly cap saturated, which the five-hour windows on Claude make hard in practice.
+
+### What Claude and Codex used
+
+Claude and Codex used far fewer tokens than DeepSeek, and both fitted inside the subscriptions I already pay for:
+
+<Cards items={[
+  { tone: "claude", stat: "~790M", statLabel: "tokens, 98.7% cache reads", title: "Claude Opus 5.5: about $247 at API prices", body: "The main session plus two build subagents. It ran in one context for 5½ days, auto-compacted 12 times and made about 3,700 API calls in 134 hours (2,900 of them in the main session), because it spent most of the time waiting on background events. By the community estimates that's two-thirds to four-fifths of one week of Max." },
+  { tone: "codex", stat: "181.6M", statLabel: "tokens, 91% cache reads", title: "Codex: about $55 at `gpt-6.1-sol` prices", body: "145 reviews in about 5.8 hours. By the community estimates that's 11–22% of one week of Pro." },
+]} />
+
+<span className="tool-kicker">7 · The codebase</span>
+
+## The codebase
+
+So what did all that produce? [Bulletin](https://github.com/markwylde/bulletin) is a Bun monorepo with 7 apps, 12 packages, 9 local mocks and a 16-service compose file. It has 144 SQL migrations, 2,294 translation keys in each of English, Spanish and French, and 34 runtime dependencies. It uses no ORM, no HTTP framework and no Redis.
+
+<DiagramFrame client:visible name="bulletin-architecture" title="Bulletin's services and how they connect" height={640} />
+
+Caddy splits traffic across four origins: the forum, the staff console, files and plugins. The forum app (Astro) reads Postgres directly with a read-mostly role and renders HTML, and every write goes through an API (user-api or staff-api). In the same transaction as the write, the API bumps version numbers on cache tags and appends an event row. Postgres `NOTIFY` then wakes the other processes so they drop stale HTML. A workers process turns events into jobs: emails, push, webhooks, CDN purges. Plugins run in their own locked-down container and only reach the rest of the system through a broker.
+
+### Caching by what you can see
+
+This is one of the parts DeepSeek built well. A forum page looks almost the same for most members. Caching a copy per user wastes memory, and caching one copy for everyone leaks private forums. Bulletin caches by a visibility key instead: a hash of the permission answers the page actually depends on. Two members in different groups who can read and reply in the same forums get the same key and share one cached copy. Personal bits (unread markers, notification counts, "you reacted") are fetched afterwards through a small overlay request and patched into the page.
+
+<DiagramFrame client:visible name="page-view-caching" title="A page view: authorise, build the key, check the cache" height={640} />
+
+Each page has to declare which permission bits it reads. In dev and test, reading an undeclared bit throws an error, so a missing cache dependency becomes a failing test. And if a process stops hearing invalidation messages from Postgres, it stops serving from the cache and renders every page fresh.
+
+<DiagramFrame client:visible name="write-pipeline" title="A reply: one transaction, then NOTIFY and the outbox" height={640} />
+
+### The plugin sandbox
+
+Plugins are untrusted server code, so each one runs as a Bun process inside nsjail, a Linux process jail. It gets its own user, an empty network namespace, a read-only bundle, cgroup limits on memory, processes and CPU, and a seccomp policy that blocks every system call it doesn't need. Anything it wants goes through a broker. The broker parses SQL into a syntax tree and only allows the plugin's own schema. Outgoing HTTP is limited to the hosts in the plugin's manifest, with checks for DNS rebinding and redirects. Reads from the core are signed calls that run `can()` as the viewer. A 17-case malicious-plugin suite (fork bomb, output flood, DNS rebinding, reading sibling files and so on) runs in CI inside the real container.
+
+<DiagramFrame client:visible name="plugin-sandbox" title="Plugin host: jail, broker and the only ways out" height={640} />
+
+CI found a real sandbox bug that local runs never hit: on the x86_64 runners, Bun calls the legacy `symlink()` syscall, the seccomp policy didn't allow it, and the kill action left the plugin hanging instead of crashing.
+
+### What's good
+
+<Cards items={[
+  { tone: "good", stat: "763", statLabel: "comment lines cite an ADR", title: "The ADRs are followed in the code", body: "There is one `can()`. Every database role has its own grants in migrations. Job payloads carry IDs only, and `emit()` rejects payloads that don't match the event catalog." },
+  { tone: "good", title: "Personal data is fenced off", body: "IP addresses and emails can only be read through `SECURITY DEFINER` functions with a pinned `search_path`, and reading one needs a committed audit row first." },
+  { tone: "good", title: "Themes are locked down", body: "Liquid templates with `raw` unregistered, filesystem tags removed, strict variables and render limits." },
+  { tone: "good", stat: "30", statLabel: "of 1,532 exports unused", title: "Little dead code", body: "Almost every exported function is used somewhere." },
+]} />
+
+### What's weak
+
+<Cards items={[
+  { tone: "bad", title: "One headline feature isn't real", body: "ADR 0009 says admins install plugins from a marketplace at runtime, and the install task is ticked. But plugin-host runs exactly one bundle, from an environment variable, and the lifecycle code is only used in a test with a fake runtime. The sandbox works; there's no way to install a plugin into it. Codex flagged \"not wired\" in plugin-platform three times, and this one still slipped through." },
+  { tone: "bad", title: "A benchmark hook ships in production", body: "`?bench=<n>` becomes part of the cache key on the main routes. The comment says \"dev-only\", but nothing checks." },
+  { tone: "bad", title: "Demo data seeds on every start", body: "There's no production guard." },
+  { tone: "warn", stat: "53", statLabel: "files define their own `isRecord`", title: "Copy-paste everywhere", body: "40 define their own `json()` helper and 7 their own `escapeHtml`. A dev secret is hard-coded as a fallback in 17 places. Each agent run wrote its own helpers instead of finding the shared ones." },
+  { tone: "warn", stat: "1,418", statLabel: "lines of if-chain", title: "Two API styles", body: "staff-api uses a typed route table with a permission per route. user-api is one `if (method && pathname)` chain with 70 copies of `if (session === null) return 401`." },
+  { tone: "warn", stat: "2,221", statLabel: "lines in one file", title: "Big files", body: "`staff-api/src/api.ts` is the biggest. The notifications and themes repositories are about 1,600 lines each, and the themes admin page is one 1,000-line React component with 18 `useState`s." },
+  { tone: "warn", stat: "144", statLabel: "migrations", title: "Migrations read like a review log", body: "`pii.read_post_ip` is redefined in five of them. They should be squashed before anyone deploys this." },
+  { tone: "warn", title: "Every invalidation re-reads every cache tag", body: "Fine for a demo, slow at scale." },
+]} />
+
+For six days of agent output it holds together well. The rules that matter (authorisation, visibility-keyed caching, personal data, sandboxing) are enforced in code and tested. The debt is what you'd expect from many separate agent runs: duplicated helpers, inconsistent style, oversized files, and a couple of tasks marked done that you only spot by reading the code against the specs.
+
+<span className="tool-kicker">8 · Testing</span>
+
+## Testing
+
+Those rules hold because the test suite checks them. There are 483 test files with about 2,632 test cases, and about 0.71 lines of test for every line of code.
+
+| Layer | Files | Cases | How it runs |
+|---|---:|---:|---|
+| Unit | 220 | 1,333 | `bun test`, part of `bun run check` |
+| Database | 171 | 1,062 | Real Postgres. Each test file gets its own database, cloned from a migrated template |
+| Full-stack integration | 7 | 26 | Over HTTP against the running compose stack |
+| E2E | 84 | 194 | `Bun.WebView` driving Chrome at 360, 390 and 1440 px |
+| Malicious plugin | 1 | 17 | Inside the real plugin-host container |
+
+Two kinds of test are specific to this design:
+
+- **Permission-denial tests.** About 463 test names are refusals: "a guest is refused…", "denies…", "403…". The overlay test asks for a private staff topic's ID and checks it doesn't leak into unread markers, editable posts or anything else.
+- **Cache-variant tests.** A shared harness renders each registered route twice for each viewer case. The variants must differ, the second render must be a cache hit, and "leak markers" planted in privileged content must never appear in a less privileged variant.
+
+There are also architecture tests that check structure statically (no direct writes to the cache tag table, content queries only in permission-filtered repositories), a latency benchmark that fails the build if p95 response times go over the ADR's thresholds, and, during the build, a nightly load test with a million posts.
+
+During the build, CI ran on my Gitea runners. It failed on every run for the first four days, because it needed `sudo` the runners didn't have, a Postgres health check raced, and E2E took 14 minutes. Claude fixed it on the last day: each run gets its own compose project and port, E2E is split into eight shards plus a full-stack shard, and the benchmark runs alone at the end. Getting CI green found four real bugs that local Docker never hit, including the seccomp one above and a race in marking conversations as read.
+
+Some integration test files are huge (one is 1,911 lines) and redeclare the same helpers, and the E2E tests average 2.3 cases per file because each one walks through a long journey.
+
+The tests cover behaviour, permissions and speed. Nothing in the specs or the tests said what the UI should look like.
+
+<div className="tool-section">
+<span className="tool-kicker">9 · The UI</span>
+
+## The UI
+
+Here's everything, as it is. I haven't fixed anything. The forum app is on the first tab, the staff console on the second.
+
+<ScreenshotExplorer client:visible />
+
+</div>
+
+The UI is bad, and for a real forum it's unacceptable, even though everything works. You can log in, post, react, quote, start a conversation, report a post, ban someone, edit a permission mask, export your data and switch to French, and the seed data is rich. But it all looks like a default form with a blue button. The staff console puts every setting in one column and makes every action a full-width button.
+
+I expected this before I started. The specs did say "mobile-first at 360 px" and listed the screens and fields, but they didn't say what good looks like, and DeepSeek didn't fill the gap. I think that apart from Claude and GPT, basically no model builds a decent UI without detailed prompting.
+
+## Where part 1 ends
+
+DeepSeek's $51 forum works and has real security engineering, but nobody would want to use it as it looks today. There are also a few bugs, like the plugin marketplace that can't install a plugin. I'd expect a few bugs from any model, even the best ones, so that's fine.
+
+## Part 2
+
+In part 2 I'm going to throw away both front ends, the forum theme and the staff console, and have Claude Opus 5.5 rebuild them on top of the same APIs, view models and tests. It will also fix a few of the bugs from part 1. The back end stays.
+
+It will be the same approach as part 1: plan it with Claude first, then hand it off and let it run unattended. We'll see what Claude does with the UI, and what that costs.
+
+<RepoLink repo="markwylde/bulletin" description="All 25 specs, the ADRs, the code and the tests." />
