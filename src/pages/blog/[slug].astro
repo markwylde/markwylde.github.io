@@ -295,6 +295,10 @@ const { Content } = await render(entry);
 		margin-top: 1.5rem;
 	}
 
+	.blog-content :global(.tool-kicker + h2) {
+		margin-top: 0.4rem;
+	}
+
 	.blog-content :global(.tool-section .tool-kicker) {
 		margin-top: 0;
 		padding-top: 1.5rem;
@@ -345,7 +349,13 @@ const { Content } = await render(entry);
 		padding: 0 1.25rem;
 	}
 
+	.blog-content :global(details[open] > summary) {
+		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 1rem;
+	}
+
 	.blog-content :global(details > *:last-child) {
+		margin-bottom: 0;
 		padding-bottom: 1.25rem;
 	}
 
